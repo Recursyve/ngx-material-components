@@ -4,9 +4,7 @@
     "compileOnSave": false,
     "compilerOptions": {
         "paths": {
-            "components": [
-                "./dist/components"
-            ]
+            "@recursyve/ngx-material-components/*": ["../material-components/*"]
         },
         "outDir": "./dist/out-tsc",
         "strict": true,

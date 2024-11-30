@@ -1,0 +1,20 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+$my-theme: mat.define-theme((
+    color: (
+        theme-type: light,
+        primary: mat.$violet-palette,
+    ),
+));
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html {
+    // Apply the light theme by default
+    @include mat.core-theme($my-theme);
+    @include mat.all-component-themes($my-theme);
+
+    @include mat.system-level-colors($my-theme);
+}
