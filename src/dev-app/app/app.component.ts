@@ -6,6 +6,7 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NiceChipListDirective, NiceChipListItems } from "@recursyve/ngx-material-components/chip-list";
+import { NiceDropzone } from "@recursyve/ngx-material-components/dropzone";
 import { NiceFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
 import {
@@ -18,6 +19,7 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
 @Component({
     selector: "nice-root",
     imports: [
+        NiceDropzone,
         MatLabel,
         MatFormField,
         NiceTypeahead,
