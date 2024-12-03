@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "app-root",
+    selector: "nice-root",
     standalone: true,
     imports: [],
     templateUrl: "./app.template.html",
