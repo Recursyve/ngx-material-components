@@ -1,0 +1,60 @@
+<div
+    #fallbackOverlayOrigin="cdkOverlayOrigin"
+    class="nice-typeahead"
+    cdk-overlay-origin
+>
+    <div class="nice-typeahead-value">
+        @if (_empty()) {
+            <span class="nice-typeahead-placeholder">{{ _placeholder() }}</span>
+        } @else {
+            <span class="nice-typeahead-value-text">
+                <span class="mat-mdc-select-min-line">{{ _value() }}</span>
+            </span>
+        }
+    </div>
+</div>
+
+<ng-template
+    cdk-connected-overlay
+    cdkConnectedOverlayLockPosition
+    cdkConnectedOverlayHasBackdrop
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    [cdkConnectedOverlayOpen]="panelOpen"
+    [cdkConnectedOverlayWidth]="_overlayWidth"
+    [cdkConnectedOverlayOrigin]="_preferredOverlayOrigin || fallbackOverlayOrigin"
+    (attach)="_onAttached()"
+    (backdropClick)="close()"
+    (detach)="close()"
+>
+    <div
+        #panel
+        role="listbox"
+        tabindex="-1"
+        class="nice-typeahead-panel nice-typeahead--open"
+        [attr.id]="id + '-panel'"
+        [@transformPanel]="'showing'"
+        (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
+        (keydown)="_handleKeydown($event)"
+    >
+        <div class="nice-typeahead-search-input">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <input
+                    #input
+                    class="nice-typeahead__input"
+                    matInput
+                    [formControl]="_searchControl"
+                >
+            </mat-form-field>
+        </div>
+
+        @for (item of filteredValues(); track item) {
+            <mat-option [value]="item">
+                {{ item }}
+            </mat-option>
+        } @empty {
+            <mat-option disabled>
+                <span class="nice-typeahead__no-items">No items found</span>
+            </mat-option>
+        }
+    </div>
+</ng-template>

@@ -1,0 +1,74 @@
+nice-typeahead {
+    .nice-typeahead {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nice-typeahead-value {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .nice-typeahead-value-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    // From official Angular mat-select
+    .mat-mdc-select-min-line:empty::before {
+        content: ' ';
+        white-space: pre;
+        width: 1px;
+        display: inline-block;
+
+        // Prevents some browsers from rendering the element in high contrast mode. Use `visibility`
+        // instead of `opacity` since VoiceOver + Chrome still reads out the space with the latter.
+        visibility: hidden;
+    }
+
+    .nice-typeahead__input {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        color: inherit;
+    }
+}
+
+.mat-mdc-form-field-type-nice-typeahead:not(.mat-form-field-disabled) {
+    .mat-mdc-text-field-wrapper {
+        cursor: pointer;
+    }
+}
+
+div.nice-typeahead-panel {
+    width: 100%;
+    outline: 0;
+    overflow: auto;
+    padding: 8px 0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    position: static;
+    background-color: var(--mat-select-panel-background-color, var(--mat-app-surface-container));
+
+    .nice-typeahead-search-input {
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-bottom: 8px;
+
+        .mat-mdc-form-field-infix {
+            width: 100%;
+        }
+    }
+}
+
+div.nice-typeahead-panel {
+    box-shadow: var(--mat-select-container-elevation-shadow);
+}
