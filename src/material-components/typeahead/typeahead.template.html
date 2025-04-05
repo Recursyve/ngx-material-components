@@ -8,7 +8,11 @@
             <span class="nice-typeahead-placeholder">{{ _placeholder() }}</span>
         } @else {
             <span class="nice-typeahead-value-text">
-                <span class="mat-mdc-select-min-line">{{ _value() }}</span>
+                <span class="mat-mdc-select-min-line">
+                    @if (_value(); as activeValue) {
+                        {{ formatLabel(activeValue) }}
+                    }
+                </span>
             </span>
         }
     </div>
@@ -35,6 +39,7 @@
         [@transformPanel]="'showing'"
         (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
         (keydown)="_handleKeydown($event)"
+        (scrollend)="_handleScrollEnd()"
     >
         <div class="nice-typeahead-search-input">
             <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -47,14 +52,16 @@
             </mat-form-field>
         </div>
 
-        @for (item of filteredValues(); track item) {
-            <mat-option [value]="item">
-                {{ item }}
-            </mat-option>
-        } @empty {
-            <mat-option disabled>
-                <span class="nice-typeahead__no-items">No items found</span>
-            </mat-option>
-        }
+        <div #optionsContainer class="nice-typeahead-options" role="presentation">
+            @for (item of filteredValues(); track item) {
+                <mat-option [value]="item">
+                    {{ formatLabel(item) }}
+                </mat-option>
+            } @empty {
+                <mat-option disabled>
+                    <span class="nice-typeahead__no-items">No items found</span>
+                </mat-option>
+            }
+        </div>
     </div>
 </ng-template>

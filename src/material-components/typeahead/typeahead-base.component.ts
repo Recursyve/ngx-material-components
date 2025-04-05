@@ -4,15 +4,19 @@ import { DOWN_ARROW, ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_A
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
 import {
     AfterViewInit,
-    ChangeDetectorRef, computed,
+    ChangeDetectorRef,
+    computed,
     DestroyRef,
-    Directive, effect,
+    Directive,
+    effect,
     ElementRef,
     inject,
+    input,
     OnDestroy,
     OnInit,
-    QueryList, signal, viewChild,
-    ViewChild,
+    QueryList,
+    signal,
+    viewChild,
     ViewChildren
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -45,18 +49,17 @@ export class NiceTypeaheadBase<T>
         AfterViewInit,
         OnDestroy
 {
-    private readonly _input = viewChild<ElementRef<HTMLInputElement>>("input");
-
     @ViewChildren(MatOption)
     private readonly options!: QueryList<MatOption>;
 
-    @ViewChild(CdkConnectedOverlay)
-    protected _overlayDir!: CdkConnectedOverlay;
-
-    @ViewChild("panel")
-    public readonly panel!: ElementRef;
+    public readonly labelProperty = input<string>();
+    public readonly formatLabelFn = input<((value: T) => string)>();
 
     private static nextId = 0;
+
+    protected readonly _input = viewChild<ElementRef<HTMLInputElement>>("input");
+    protected readonly _panel = viewChild<ElementRef<HTMLElement>>("panel");
+    protected readonly _overlayDir = viewChild(CdkConnectedOverlay);
 
     protected _focused = false;
     protected _required = false;
@@ -249,6 +252,34 @@ export class NiceTypeaheadBase<T>
         this._onTouch = fn;
     }
 
+    public formatLabel(item: T): string {
+        if (typeof item === "string") {
+            return item;
+        }
+
+        const fn = this.formatLabelFn();
+        if (fn) {
+            return fn(item);
+        }
+
+        const property = this.labelProperty();
+        if (!property) {
+            return item?.toString() ?? "";
+        }
+
+        if (!(typeof item === "object") || item === null) {
+            return item?.toString() ?? "";
+        }
+
+        if (property in item) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return item[property];
+        }
+
+        return item.toString();
+    }
+
     public open(): void {
         if (!this._canOpen()) {
             return;
@@ -301,12 +332,16 @@ export class NiceTypeaheadBase<T>
         }
     }
 
+    public _handleScrollEnd(): void {
+        console.log("scroll end")
+    }
+
     protected _canOpen(): boolean {
         return !this._panelOpen && !this.disabled;
     }
 
     protected _onAttached(): void {
-        this._overlayDir.positionChange.pipe(take(1)).subscribe(() => {
+        this._overlayDir()?.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this._positioningSettled();
         });
@@ -332,7 +367,7 @@ export class NiceTypeaheadBase<T>
         });
 
         this._keyManager.change.subscribe(() => {
-            if (this._panelOpen && this.panel) {
+            if (this._panelOpen && this._panel()) {
                 this._scrollOptionIntoView(this._keyManager.activeItemIndex || 0);
             } else if (!this._panelOpen && this._keyManager.activeItem) {
                 this._keyManager.activeItem._selectViaInteraction();
@@ -362,24 +397,28 @@ export class NiceTypeaheadBase<T>
 
     protected _scrollOptionIntoView(index: number): void {
         const option = this.options.toArray()[index];
+        if (!option) {
+            return;
+        }
 
-        if (option) {
-            const panel: HTMLElement = this.panel.nativeElement;
-            const element = option._getHostElement();
+        const panel = this._panel()?.nativeElement;
+        if (!panel) {
+            return;
+        }
 
-            if (index === 0) {
-                // If we've got one group label before the option and we're at the top option,
-                // scroll the list to the top. This is better UX than scrolling the list to the
-                // top of the option, because it allows the user to read the top group's label.
-                panel.scrollTop = 0;
-            } else {
-                panel.scrollTop = _getOptionScrollPosition(
-                    element.offsetTop,
-                    element.offsetHeight,
-                    panel.scrollTop,
-                    panel.offsetHeight,
-                );
-            }
+        const element = option._getHostElement();
+        if (index === 0) {
+            // If we've got one group label before the option and we're at the top option,
+            // scroll the list to the top. This is better UX than scrolling the list to the
+            // top of the option, because it allows the user to read the top group's label.
+            panel.scrollTop = 0;
+        } else {
+            panel.scrollTop = _getOptionScrollPosition(
+                element.offsetTop,
+                element.offsetHeight,
+                panel.scrollTop,
+                panel.offsetHeight,
+            );
         }
     }
 

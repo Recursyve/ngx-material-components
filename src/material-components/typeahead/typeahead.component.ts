@@ -60,6 +60,10 @@ export class NiceTypeaheadComponent<T> extends NiceTypeaheadBase<T> {
     }
 
     public filterValuesFromSearch(searchValue: string, values: T[]): T[] {
+        if (!searchValue) {
+            return values;
+        }
+
         const _searchValue = searchValue.toLowerCase();
         const fn = this.searchFn();
         if (fn) {
@@ -71,7 +75,17 @@ export class NiceTypeaheadComponent<T> extends NiceTypeaheadBase<T> {
                 return v.toLowerCase().includes(_searchValue);
             }
 
-            // TODO: Check for properties in object?
+            const property = this.labelProperty();
+            if (!property) {
+                return false;
+            }
+
+            if (typeof v === "object" && v && property in v) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                return v[property].toString().toLowerCase().includes(_searchValue);
+            }
+
             return false;
         });
     }

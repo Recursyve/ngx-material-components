@@ -51,7 +51,6 @@ nice-typeahead {
 div.nice-typeahead-panel {
     width: 100%;
     outline: 0;
-    overflow: auto;
     padding: 8px 0;
     border-radius: 4px;
     box-sizing: border-box;
@@ -66,6 +65,11 @@ div.nice-typeahead-panel {
         .mat-mdc-form-field-infix {
             width: 100%;
         }
+    }
+
+    .nice-typeahead-options {
+        overflow: auto;
+        max-height: calc(48px * 8);
     }
 }
 

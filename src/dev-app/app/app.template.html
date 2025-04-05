@@ -17,6 +17,22 @@
                 }
             </mat-select>
         </mat-form-field>
+
+        <div></div>
+
+        <mat-form-field appearance="outline">
+            <mat-label>My AsyncTypeahead</mat-label>
+
+            <nice-async-typeahead formControlName="asyncTypeahead" resource="colors"></nice-async-typeahead>
+        </mat-form-field>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <mat-form-field appearance="outline">
+            <mat-label>My Typeahead (with object)</mat-label>
+
+            <nice-typeahead [values]="objectItems" labelProperty="value"></nice-typeahead>
+        </mat-form-field>
     </div>
 
     <div>
