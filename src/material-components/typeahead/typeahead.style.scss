@@ -1,9 +1,38 @@
-nice-typeahead {
+nice-typeahead, nice-async-typeahead {
+    display: inline-block;
+    width: 100%;
+    outline: none;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    color: var(--mat-select-enabled-trigger-text-color, var(--mat-app-on-surface));
+    font-family: var(--mat-select-trigger-text-font, var(--mat-app-body-large-font));
+    line-height: var(--mat-select-trigger-text-line-height, var(--mat-app-body-large-line-height));
+    font-size: var(--mat-select-trigger-text-size, var(--mat-app-body-large-size));
+    font-weight: var(--mat-select-trigger-text-weight, var(--mat-app-body-large-weight));
+    letter-spacing: var(--mat-select-trigger-text-tracking, var(--mat-app-body-large-tracking));
+
     .nice-typeahead {
         width: 100%;
         display: inline-flex;
         align-items: center;
         justify-content: space-between;
+
+        cursor: pointer;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .nice-typeahead-suffix {
+        height: 24px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+
+        --mdc-icon-button-state-layer-size: 24px;
+
+        .nice-typeahead-remove {
+            margin-right: -6px;
+        }
     }
 
     .nice-typeahead-value {
@@ -47,6 +76,13 @@ nice-typeahead {
         cursor: pointer;
     }
 }
+
+.mat-mdc-form-field-type-nice-typeahead.mat-form-field-appearance-outline {
+    .mdc-notched-outline__notch {
+        max-width: calc(100% - 60px);
+    }
+}
+
 
 div.nice-typeahead-panel {
     width: 100%;

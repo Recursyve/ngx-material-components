@@ -280,6 +280,13 @@ export class NiceTypeaheadBase<T>
         return item.toString();
     }
 
+    public removeActiveValue(): void {
+        this.value = null;
+        this._selectionModel.clear();
+        this._keyManager.setActiveItem(-1);
+        this._changeDetectorRef.markForCheck();
+    }
+
     public open(): void {
         if (!this._canOpen()) {
             return;

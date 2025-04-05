@@ -1,6 +1,7 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
 import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
+import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
 import { MatFormField, MatFormFieldControl } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
@@ -18,7 +19,8 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
         ReactiveFormsModule,
         MatOption,
         MatFormField,
-        MatInput
+        MatInput,
+        MatIconButton
     ],
     templateUrl: "./typeahead.template.html",
     styleUrl: "./typeahead.style.scss",

@@ -5,7 +5,7 @@
 >
     <div class="nice-typeahead-value">
         @if (_empty()) {
-            <span class="nice-typeahead-placeholder">{{ _placeholder() }}</span>
+            <span class="nice-typeahead-placeholder mat-mdc-select-min-line">{{ _placeholder() }}</span>
         } @else {
             <span class="nice-typeahead-value-text">
                 <span class="mat-mdc-select-min-line">
@@ -14,6 +14,22 @@
                     }
                 </span>
             </span>
+        }
+    </div>
+
+    <div class="nice-typeahead-suffix">
+        @if (_empty()) {
+            <div class="mat-mdc-select-arrow">
+                <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true">
+                    <path d="M7 10l5 5 5-5z"></path>
+                </svg>
+            </div>
+        } @else {
+            <button class="nice-typeahead-remove" mat-icon-button (click)="$event.stopPropagation(); removeActiveValue()">
+                <svg viewBox="0 -960 960 960">
+                    <path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/>
+                </svg>
+            </button>
         }
     </div>
 </div>

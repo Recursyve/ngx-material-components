@@ -10,6 +10,7 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
+import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
 import { MatFormField, MatFormFieldControl } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
@@ -26,7 +27,8 @@ import { NiceTypeaheadBase } from "./typeahead-base.component";
         ReactiveFormsModule,
         MatOption,
         MatFormField,
-        MatInput
+        MatInput,
+        MatIconButton
     ],
     templateUrl: "./typeahead.template.html",
     styleUrl: "./typeahead.style.scss",
@@ -116,6 +118,12 @@ export class NiceAsyncTypeaheadComponent<T> extends NiceTypeaheadBase<T> impleme
 
     public override formatLabel(item: T): string {
         return this.service.formatLabel(item);
+    }
+
+    public override removeActiveValue() {
+        super.removeActiveValue();
+
+        this.service.setActive(null);
     }
 
     protected onScroll(event: Event): void {
