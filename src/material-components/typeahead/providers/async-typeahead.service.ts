@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { catchError, defer, EMPTY, finalize, map, Observable, Subject, switchMap } from "rxjs";
-import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "../async-typeahead.constant";
+import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "../constants";
 import { NiceAsyncTypeaheadResourceProvider } from "./async-typeahead.provider";
 
 export type AsyncTypeaheadRequests = {
@@ -48,11 +48,6 @@ export class NiceTypeaheadService<T extends object> {
         if (provider) {
             this.resourceProvider = provider as NiceAsyncTypeaheadResourceProvider<T>;
         }
-
-        this.fetchResources$.next({
-            page: 0,
-            searchQuery: ""
-        });
     }
 
     public setSearchOptions(options: object | null): void {

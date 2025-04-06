@@ -1,5 +1,5 @@
 export * from "./providers/async-typeahead.provider";
 export * from "./provider";
 
-export * from "./async-typeahead.component";
-export * from "./typeahead.component";
+export * from "./async-typeahead";
+export * from "./typeahead";

@@ -5,8 +5,8 @@ import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatOption, MatSelect } from "@angular/material/select";
 import {
-    NiceAsyncTypeaheadComponent,
-    NiceTypeaheadComponent,
+    NiceAsyncTypeahead,
+    NiceTypeahead,
     provideAsyncTypeaheadResources
 } from "@recursyve/ngx-material-components/typeahead";
 import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-resource.provider";
@@ -17,13 +17,13 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
     imports: [
         MatLabel,
         MatFormField,
-        NiceTypeaheadComponent,
+        NiceTypeahead,
         MatSelect,
         MatOption,
         MatButton,
         ReactiveFormsModule,
         JsonPipe,
-        NiceAsyncTypeaheadComponent
+        NiceAsyncTypeahead
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",

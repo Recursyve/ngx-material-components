@@ -16,7 +16,7 @@ import { MatFormField, MatFormFieldControl } from "@angular/material/form-field"
 import { MatInput } from "@angular/material/input";
 import { matSelectAnimations } from "@angular/material/select";
 import { NiceTypeaheadService } from "@recursyve/ngx-material-components/typeahead/providers/async-typeahead.service";
-import { NiceTypeaheadBase } from "./typeahead-base.component";
+import { NiceTypeaheadBase } from "./typeahead-base";
 
 @Component({
     selector: "nice-async-typeahead",
@@ -30,13 +30,13 @@ import { NiceTypeaheadBase } from "./typeahead-base.component";
         MatInput,
         MatIconButton
     ],
-    templateUrl: "./typeahead.template.html",
-    styleUrl: "./typeahead.style.scss",
+    templateUrl: "./typeahead.html",
+    styleUrl: "./typeahead.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     animations: [matSelectAnimations.transformPanel],
     providers: [
-        { provide: MatFormFieldControl, useExisting: NiceAsyncTypeaheadComponent },
+        { provide: MatFormFieldControl, useExisting: NiceAsyncTypeahead },
         NiceTypeaheadService
     ],
     host: {
@@ -58,7 +58,7 @@ import { NiceTypeaheadBase } from "./typeahead-base.component";
         "(blur)": "onFocusChanged(false)"
     }
 })
-export class NiceAsyncTypeaheadComponent<T> extends NiceTypeaheadBase<T> implements OnInit {
+export class NiceAsyncTypeahead<T> extends NiceTypeaheadBase<T> implements OnInit {
     public readonly resource = input.required<string>();
 
     public readonly filteredValues = computed(() => this.service.items());
@@ -67,13 +67,13 @@ export class NiceAsyncTypeaheadComponent<T> extends NiceTypeaheadBase<T> impleme
 
     private readonly service = inject(NiceTypeaheadService);
 
-    override _compareWith = (o1: T, o2: T) => {
+    protected override _compareWith = (o1: T, o2: T) => {
         if (!(typeof o1 === "object" && o1 && typeof o2 === "object" && o2)) {
-            return o1 === o1;
+            return o1 === o2;
         }
 
         if (!("id" in o1) || !("id" in o2)) {
-            return o1 === o1;
+            return o1 === o2;
         }
 
         return o1.id === o2.id;

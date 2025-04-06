@@ -6,7 +6,7 @@ import { MatOption } from "@angular/material/core";
 import { MatFormField, MatFormFieldControl } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { matSelectAnimations } from "@angular/material/select";
-import { NiceTypeaheadBase } from "./typeahead-base.component";
+import { NiceTypeaheadBase } from "./typeahead-base";
 
 export type SearchFunction<T> = (search: string, item: T) => boolean;
 
@@ -22,12 +22,12 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
         MatInput,
         MatIconButton
     ],
-    templateUrl: "./typeahead.template.html",
-    styleUrl: "./typeahead.style.scss",
+    templateUrl: "./typeahead.html",
+    styleUrl: "./typeahead.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     animations: [matSelectAnimations.transformPanel],
-    providers: [{ provide: MatFormFieldControl, useExisting: NiceTypeaheadComponent }],
+    providers: [{ provide: MatFormFieldControl, useExisting: NiceTypeahead }],
     host: {
         "role": "combobox",
         "aria-haspopup": "listbox",
@@ -47,7 +47,7 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
         "(blur)": "onFocusChanged(false)"
     }
 })
-export class NiceTypeaheadComponent<T> extends NiceTypeaheadBase<T> {
+export class NiceTypeahead<T> extends NiceTypeaheadBase<T> {
     public readonly values = input.required<T[]>();
     public readonly searchFn = input<SearchFunction<T>>();
 

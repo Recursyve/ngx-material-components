@@ -1,5 +1,5 @@
 import { Provider, Type } from "@angular/core";
-import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "./async-typeahead.constant";
+import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "./constants";
 import { NiceAsyncTypeaheadResourceProvider } from "./providers/async-typeahead.provider";
 
 export function provideAsyncTypeaheadResources(

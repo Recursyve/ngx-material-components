@@ -39,6 +39,7 @@ module.exports = tseslint.config(
             "quotes": ["error", "double"],
             "@typescript-eslint/consistent-type-definitions": ["error", "type"],
             "@typescript-eslint/dot-notation": "off",
+            "@angular-eslint/component-class-suffix": "off",
             "@angular-eslint/directive-selector": [
                 "error",
                 {
