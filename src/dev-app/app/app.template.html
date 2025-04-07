@@ -33,6 +33,19 @@
 
             <nice-typeahead [values]="objectItems" labelProperty="value"></nice-typeahead>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 300px;">
+            <mat-label>My Typeahead (with custom template)</mat-label>
+
+            <nice-async-typeahead resource="colors" [optionTemplate]="colorTemplate">
+                <ng-template #colorTemplate let-item>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <span style="width: 16px; height: 16px; background-color: {{ item.hex }}"></span>
+                        <span>{{ item.name }}</span>
+                    </div>
+                </ng-template>
+            </nice-async-typeahead>
+        </mat-form-field>
     </div>
 
     <div>

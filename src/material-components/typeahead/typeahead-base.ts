@@ -16,6 +16,7 @@ import {
     OnInit,
     QueryList,
     signal,
+    TemplateRef,
     viewChild,
     ViewChildren
 } from "@angular/core";
@@ -55,6 +56,7 @@ export class NiceTypeaheadBase<T>
     public readonly noItemsFoundLabel = input<string>("No items found");
     public readonly labelProperty = input<string>();
     public readonly formatLabelFn = input<((value: T) => string)>();
+    public readonly optionTemplate = input<TemplateRef<{ $implicit: T }>>();
 
     private static nextId = 0;
 

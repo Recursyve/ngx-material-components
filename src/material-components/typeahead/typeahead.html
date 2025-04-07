@@ -71,7 +71,11 @@
         <div #optionsContainer class="nice-typeahead-options" role="presentation">
             @for (item of filteredValues(); track item) {
                 <mat-option [value]="item">
-                    {{ formatLabel(item) }}
+                    @if (optionTemplate(); as optionTemplate) {
+                        <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: item }"></ng-container>
+                    } @else {
+                        {{ formatLabel(item) }}
+                    }
                 </mat-option>
             } @empty {
                 <mat-option disabled>

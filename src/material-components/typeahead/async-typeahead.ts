@@ -1,12 +1,15 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
+import { NgTemplateOutlet } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    effect, ElementRef,
+    effect,
+    ElementRef,
     inject,
     input,
-    OnInit, viewChild,
+    OnInit,
+    viewChild,
     ViewEncapsulation
 } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -28,7 +31,8 @@ import { NiceTypeaheadService } from "./providers";
         MatOption,
         MatFormField,
         MatInput,
-        MatIconButton
+        MatIconButton,
+        NgTemplateOutlet
     ],
     templateUrl: "./typeahead.html",
     styleUrl: "./typeahead.scss",
