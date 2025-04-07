@@ -75,7 +75,9 @@
                 </mat-option>
             } @empty {
                 <mat-option disabled>
-                    <span class="nice-typeahead__no-items">No items found</span>
+                    <span class="nice-typeahead__no-items">
+                        {{ noItemsFoundLabel() }}
+                    </span>
                 </mat-option>
             }
         </div>

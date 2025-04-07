@@ -52,6 +52,7 @@ export class NiceTypeaheadBase<T>
     @ViewChildren(MatOption)
     private readonly options!: QueryList<MatOption>;
 
+    public readonly noItemsFoundLabel = input<string>("No items found");
     public readonly labelProperty = input<string>();
     public readonly formatLabelFn = input<((value: T) => string)>();
 

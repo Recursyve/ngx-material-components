@@ -58,8 +58,9 @@ import { NiceTypeaheadService } from "./providers";
         "(blur)": "onFocusChanged(false)"
     }
 })
-export class NiceAsyncTypeahead<T> extends NiceTypeaheadBase<T> implements OnInit {
+export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeaheadBase<T> implements OnInit {
     public readonly resource = input.required<string>();
+    public readonly searchOptions = input<S | null>(null);
 
     public readonly filteredValues = computed(() => this.service.items());
 
@@ -87,6 +88,12 @@ export class NiceAsyncTypeahead<T> extends NiceTypeaheadBase<T> implements OnIni
 
     constructor() {
         super();
+
+        effect(() => {
+            this.service.setSearchOptions(this.searchOptions());
+        }, {
+            allowSignalWrites: true
+        });
 
         effect(() => this.service.search(this._searchValue()), {
             allowSignalWrites: true
