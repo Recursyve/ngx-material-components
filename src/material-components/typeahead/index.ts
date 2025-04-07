@@ -1,4 +1,4 @@
-export * from "./providers/async-typeahead.provider";
+export * from "./providers";
 export * from "./provider";
 
 export * from "./async-typeahead";

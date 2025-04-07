@@ -15,8 +15,8 @@ import { MatOption } from "@angular/material/core";
 import { MatFormField, MatFormFieldControl } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { matSelectAnimations } from "@angular/material/select";
-import { NiceTypeaheadService } from "@recursyve/ngx-material-components/typeahead/providers/async-typeahead.service";
 import { NiceTypeaheadBase } from "./typeahead-base";
+import { NiceTypeaheadService } from "./providers";
 
 @Component({
     selector: "nice-async-typeahead",

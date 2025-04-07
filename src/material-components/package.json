@@ -1,6 +1,6 @@
 {
     "name": "@recursyve/ngx-material-components",
-    "version": "18.0.0-beta.0",
+    "version": "0.0.0-PLACEHOLDER",
     "peerDependencies": {
         "@angular/common": "^18.2.0",
         "@angular/core": "^18.2.0"
