@@ -1,0 +1,83 @@
+<div
+    #fallbackOverlayOrigin="cdkOverlayOrigin"
+    class="nice-typeahead"
+    cdk-overlay-origin
+>
+    <div class="nice-typeahead-value">
+        @if (_empty()) {
+            <span class="nice-typeahead-placeholder mat-mdc-select-min-line">{{ _placeholder() }}</span>
+        } @else {
+            <span class="nice-typeahead-value-text">
+                <span class="mat-mdc-select-min-line">
+                    @if (_value(); as activeValue) {
+                        {{ formatLabel(activeValue) }}
+                    }
+                </span>
+            </span>
+        }
+    </div>
+
+    <div class="nice-typeahead-suffix">
+        @if (_empty()) {
+            <div class="mat-mdc-select-arrow">
+                <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true">
+                    <path d="M7 10l5 5 5-5z"></path>
+                </svg>
+            </div>
+        } @else {
+            <button class="nice-typeahead-remove" mat-icon-button (click)="$event.stopPropagation(); removeActiveValue()">
+                <svg viewBox="0 -960 960 960">
+                    <path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/>
+                </svg>
+            </button>
+        }
+    </div>
+</div>
+
+<ng-template
+    cdk-connected-overlay
+    cdkConnectedOverlayLockPosition
+    cdkConnectedOverlayHasBackdrop
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    [cdkConnectedOverlayOpen]="panelOpen"
+    [cdkConnectedOverlayWidth]="_overlayWidth"
+    [cdkConnectedOverlayOrigin]="_preferredOverlayOrigin || fallbackOverlayOrigin"
+    (attach)="_onAttached()"
+    (backdropClick)="close()"
+    (detach)="close()"
+>
+    <div
+        #panel
+        role="listbox"
+        tabindex="-1"
+        class="nice-typeahead-panel nice-typeahead--open"
+        [attr.id]="id + '-panel'"
+        [@transformPanel]="'showing'"
+        (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
+        (keydown)="_handleKeydown($event)"
+        (scrollend)="_handleScrollEnd()"
+    >
+        <div class="nice-typeahead-search-input">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <input
+                    #input
+                    class="nice-typeahead__input"
+                    matInput
+                    [formControl]="_searchControl"
+                >
+            </mat-form-field>
+        </div>
+
+        <div #optionsContainer class="nice-typeahead-options" role="presentation">
+            @for (item of filteredValues(); track item) {
+                <mat-option [value]="item">
+                    {{ formatLabel(item) }}
+                </mat-option>
+            } @empty {
+                <mat-option disabled>
+                    <span class="nice-typeahead__no-items">No items found</span>
+                </mat-option>
+            }
+        </div>
+    </div>
+</ng-template>

@@ -1,1 +1,48 @@
-<h3>MyComponents</h3>
+<div style="padding: 16px;">
+    <h3>MyComponents</h3>
+
+    <div style="display: flex; align-items: center; gap: 16px;" [formGroup]="formGroup">
+        <mat-form-field appearance="outline">
+            <mat-label>My Typeahead</mat-label>
+
+            <nice-typeahead formControlName="typeahead" [values]="items"></nice-typeahead>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>My Typeahead (with object)</mat-label>
+
+            <mat-select>
+                @for (item of items; track item) {
+                    <mat-option [value]="item">{{ item }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <div></div>
+
+        <mat-form-field appearance="outline">
+            <mat-label>My AsyncTypeahead</mat-label>
+
+            <nice-async-typeahead formControlName="asyncTypeahead" resource="colors"></nice-async-typeahead>
+        </mat-form-field>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <mat-form-field appearance="outline">
+            <mat-label>My Typeahead (with object)</mat-label>
+
+            <nice-typeahead [values]="objectItems" labelProperty="value"></nice-typeahead>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <button mat-flat-button (click)="displayResult()">
+            View results
+        </button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 4px; padding-top: 16px;">
+        <span>Value:</span>
+        <span>{{ typeaheadValue() | json }}</span>
+    </div>
+</div>
