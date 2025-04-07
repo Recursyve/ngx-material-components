@@ -98,7 +98,7 @@ div.nice-typeahead-panel {
         padding-right: 8px;
         padding-bottom: 8px;
 
-        .mat-mdc-form-field-infix {
+        .mat-mdc-form-field, .mat-mdc-form-field-infix {
             width: 100%;
         }
     }
