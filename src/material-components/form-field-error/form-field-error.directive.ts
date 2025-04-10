@@ -10,7 +10,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControlDirective, NgControl } from "@angular/forms";
 import { MatFormField } from "@angular/material/form-field";
-import { combineLatest } from "rxjs";
+import { combineLatest, startWith } from "rxjs";
 import { NiceFormErrorComponent } from "./form-field-error";
 import { ErrorTransformers } from "./error-transformer";
 import { ErrorTranslater } from "./error-translater";
@@ -60,7 +60,10 @@ export class NiceFormFieldErrorDirective implements AfterViewInit {
         this.control = this.formField._control.ngControl;
 
         if (this.control !== null && this.control.statusChanges !== null) {
-            combineLatest([this.formField._control.stateChanges, this.control.statusChanges])
+            combineLatest([
+                this.formField._control.stateChanges,
+                this.control.statusChanges.pipe(startWith(this.control.status))
+            ])
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.onChange());
         }
@@ -91,6 +94,6 @@ export class NiceFormFieldErrorDirective implements AfterViewInit {
             this.elementRef.nativeElement.classList.remove("form-error-show");
         }
 
-        this.ref.instance.error = this.translater(text, params);
+        this.ref.instance.error = text.length > 0 ? this.translater(text, params) : text;
     }
 }
