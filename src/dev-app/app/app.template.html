@@ -58,4 +58,20 @@
         <span>Value:</span>
         <span>{{ typeaheadValue() | json }}</span>
     </div>
+
+    <div style="padding-top: 100px"></div>
+
+    <div style="display: flex; align-items: center; gap: 16px;" [formGroup]="formGroupWithErrors">
+        <mat-form-field appearance="outline" niceFormFieldError>
+            <mat-label>Name</mat-label>
+
+            <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" niceFormFieldError>
+            <mat-label>Count</mat-label>
+
+            <input type="number" matInput formControlName="count">
+        </mat-form-field>
+    </div>
 </div>

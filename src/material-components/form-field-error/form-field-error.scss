@@ -1,0 +1,5 @@
+.form-error-show {
+    .mat-mdc-form-field-subscript-wrapper.override-height::before {
+        height: 32px !important;
+    }
+}
