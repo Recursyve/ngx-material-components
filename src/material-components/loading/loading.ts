@@ -1,12 +1,12 @@
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
-import { Directive, effect, ElementRef, inject, input } from "@angular/core";
+import { Directive, effect, inject, input, OnDestroy } from "@angular/core";
 import { NICE_LOADING_OPTIONS } from "./constant";
 import { NiceLoadingSpinner } from "./loading-spinner";
 import { NiceLoadingOptions } from "./options";
 
 @Directive({ selector: "[niceLoadingOverlay]", standalone: true })
-export class NiceLoadingDirective {
+export class NiceLoadingDirective implements OnDestroy {
     private readonly options = inject<NiceLoadingOptions>(NICE_LOADING_OPTIONS, { optional: true });
     private readonly overlay = inject(Overlay);
 
@@ -40,5 +40,15 @@ export class NiceLoadingDirective {
                 this.overlayRef.detach();
             }
         });
+    }
+
+    public ngOnDestroy(): void {
+        if (!this.overlayRef) {
+            return;
+        }
+
+        if (this.overlayRef.hasAttached()) {
+            this.overlayRef.detach();
+        }
     }
 }
