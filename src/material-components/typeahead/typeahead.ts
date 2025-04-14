@@ -1,5 +1,5 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
-import { NgTemplateOutlet } from "@angular/common";
+import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
@@ -22,6 +22,7 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
         MatFormField,
         MatInput,
         MatIconButton,
+        NgClass,
         NgTemplateOutlet
     ],
     templateUrl: "./typeahead.html",

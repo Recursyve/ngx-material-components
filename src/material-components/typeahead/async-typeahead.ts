@@ -1,5 +1,5 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
-import { NgTemplateOutlet } from "@angular/common";
+import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -32,6 +32,7 @@ import { NiceTypeaheadService } from "./providers";
         MatFormField,
         MatInput,
         MatIconButton,
+        NgClass,
         NgTemplateOutlet
     ],
     templateUrl: "./typeahead.html",

@@ -24,7 +24,7 @@
                     <path d="M7 10l5 5 5-5z"></path>
                 </svg>
             </div>
-        } @else {
+        } @else if (canRemoveValue()) {
             <button class="nice-typeahead-remove" mat-icon-button (click)="$event.stopPropagation(); removeActiveValue()">
                 <svg viewBox="0 -960 960 960">
                     <path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/>
@@ -51,6 +51,7 @@
         role="listbox"
         tabindex="-1"
         class="nice-typeahead-panel nice-typeahead--open"
+        [ngClass]="panelClass()"
         [attr.id]="id + '-panel'"
         [@transformPanel]="'showing'"
         (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"

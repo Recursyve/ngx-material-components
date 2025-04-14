@@ -57,6 +57,8 @@ export class NiceTypeaheadBase<T>
     public readonly labelProperty = input<string>();
     public readonly formatLabelFn = input<((value: T) => string)>();
     public readonly optionTemplate = input<TemplateRef<{ $implicit: T }>>();
+    public readonly panelClass = input<string | string[]>([]);
+    public readonly canRemoveValue = input<boolean>(true);
 
     private static nextId = 0;
 
