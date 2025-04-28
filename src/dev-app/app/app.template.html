@@ -2,7 +2,7 @@
     <h3>MyComponents</h3>
 
     <div style="display: flex; align-items: center; gap: 16px;" [formGroup]="formGroup">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" niceFormFieldError>
             <mat-label>My Typeahead</mat-label>
 
             <nice-typeahead formControlName="typeahead" [values]="items"></nice-typeahead>
@@ -11,7 +11,7 @@
         <mat-form-field appearance="outline">
             <mat-label>My Typeahead (with object)</mat-label>
 
-            <mat-select [disabled]="formGroup.disabled">
+            <mat-select formControlName="select">
                 @for (item of items; track item) {
                     <mat-option [value]="item">{{ item }}</mat-option>
                 }
@@ -55,6 +55,10 @@
 
         <button mat-flat-button (click)="disableAsyncTypeahead()">
             Disable async typeahead
+        </button>
+
+        <button mat-flat-button (click)="forceRequired()">
+            Force required
         </button>
     </div>
 

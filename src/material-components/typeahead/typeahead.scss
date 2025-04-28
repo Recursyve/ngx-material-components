@@ -19,6 +19,12 @@ nice-typeahead, nice-async-typeahead {
         }
     }
 
+    &.nice-typeahead-invalid {
+        .mat-mdc-select-arrow {
+            color: var(--mat-select-invalid-arrow-color);
+        }
+    }
+
     .nice-typeahead {
         width: 100%;
         display: inline-flex;

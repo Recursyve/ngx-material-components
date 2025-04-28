@@ -7,7 +7,7 @@ import {
     ChangeDetectorRef,
     computed,
     DestroyRef,
-    Directive,
+    Directive, DoCheck,
     effect,
     ElementRef,
     inject,
@@ -21,8 +21,13 @@ import {
     ViewChildren
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ControlValueAccessor, FormBuilder, NgControl } from "@angular/forms";
-import { _getOptionScrollPosition, MatOption, MatOptionSelectionChange } from "@angular/material/core";
+import { ControlValueAccessor, FormBuilder, FormGroupDirective, NgControl, NgForm, Validators } from "@angular/forms";
+import {
+    _ErrorStateTracker,
+    _getOptionScrollPosition, ErrorStateMatcher,
+    MatOption,
+    MatOptionSelectionChange
+} from "@angular/material/core";
 import { MAT_FORM_FIELD, MatFormField, MatFormFieldControl } from "@angular/material/form-field";
 import {
     debounceTime,
@@ -48,6 +53,7 @@ export class NiceTypeaheadBase<T>
         ControlValueAccessor,
         OnInit,
         AfterViewInit,
+        DoCheck,
         OnDestroy
 {
     @ViewChildren(MatOption)
@@ -66,8 +72,10 @@ export class NiceTypeaheadBase<T>
     protected readonly _panel = viewChild<ElementRef<HTMLElement>>("panel");
     protected readonly _overlayDir = viewChild(CdkConnectedOverlay);
 
+    protected _errorStateTracker?: _ErrorStateTracker;
+
+    protected _required: boolean | null = null;
     protected _focused = false;
-    protected _required = false;
     protected _disabled = false;
     protected _panelOpen = false;
     protected _compareWith = (o1: T, o2: T) => o1 === o2;
@@ -112,7 +120,7 @@ export class NiceTypeaheadBase<T>
     public _overlayWidth!: string | number;
     public _selectionModel!: SelectionModel<MatOption>;
     public _onChange?: (value: T | null) => void;
-    public _onTouch?: () => void;
+    public _onTouched?: () => void;
 
     public get placeholder(): string {
         return this._placeholder();
@@ -133,7 +141,7 @@ export class NiceTypeaheadBase<T>
     }
 
     public get required(): boolean {
-        return this._required;
+        return this._required ?? this.ngControl?.control?.hasValidator(Validators.required) ?? false;
     }
 
     public set required(isRequired: boolean) {
@@ -171,7 +179,15 @@ export class NiceTypeaheadBase<T>
     }
 
     public get errorState(): boolean {
-        return false; // Implement error state logic as needed
+        return this._errorStateTracker?.errorState ?? false;
+    }
+
+    public set errorState(value: boolean) {
+        if (!this._errorStateTracker) {
+            return;
+        }
+
+        this._errorStateTracker.errorState = value;
     }
 
     public get panelOpen(): boolean {
@@ -188,6 +204,18 @@ export class NiceTypeaheadBase<T>
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        const defaultErrorStateMatcher = inject(ErrorStateMatcher);
+        const ngControl = inject(NgControl, { optional: true, self: true });
+        const parentFormGroup = inject(FormGroupDirective, { optional: true });
+        const parentForm = inject(NgForm, { optional: true });
+        this._errorStateTracker = new _ErrorStateTracker(
+            defaultErrorStateMatcher,
+            ngControl,
+            parentFormGroup,
+            parentForm,
+            this.stateChanges,
+        );
     }
 
     public ngOnInit(): void {
@@ -210,6 +238,12 @@ export class NiceTypeaheadBase<T>
             this._resetOptions();
             this._initializeSelection();
         });
+    }
+
+    public ngDoCheck(): void {
+        if (this.ngControl) {
+            this.updateErrorState();
+        }
     }
 
     public ngOnDestroy(): void {
@@ -254,7 +288,7 @@ export class NiceTypeaheadBase<T>
     }
 
     public registerOnTouched(fn: () => void): void {
-        this._onTouch = fn;
+        this._onTouched = fn;
     }
 
     public setDisabledState(isDisabled: boolean): void {
@@ -298,6 +332,10 @@ export class NiceTypeaheadBase<T>
         this._changeDetectorRef.markForCheck();
     }
 
+    public updateErrorState(): void {
+        this._errorStateTracker?.updateErrorState();
+    }
+
     public open(): void {
         if (!this._canOpen()) {
             return;
@@ -329,6 +367,8 @@ export class NiceTypeaheadBase<T>
         this._changeDetectorRef.markForCheck();
 
         this._searchValue.set("");
+
+        this._onTouched?.();
 
         // Required for the MDC form field to pick up when the overlay has been closed.
         this.stateChanges.next();

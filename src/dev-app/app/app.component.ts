@@ -67,6 +67,7 @@ export class AppComponent {
 
     public formGroup = this._fb.group({
         typeahead: this._fb.control(""),
+        select: this._fb.control("", [Validators.required]),
         asyncTypeahead: this._fb.control(""),
     });
 
@@ -92,5 +93,10 @@ export class AppComponent {
         } else if (this.formGroup.disabled) {
             this.formGroup.enable();
         }
+    }
+
+    public forceRequired(): void {
+        this.formGroup.get("typeahead")?.setValidators([Validators.required]);
+        this.formGroup.get("typeahead")?.updateValueAndValidity();
     }
 }
