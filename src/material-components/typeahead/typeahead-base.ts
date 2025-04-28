@@ -257,6 +257,12 @@ export class NiceTypeaheadBase<T>
         this._onTouch = fn;
     }
 
+    public setDisabledState(isDisabled: boolean): void {
+        this._disabled = isDisabled;
+        this._changeDetectorRef.markForCheck();
+        this.stateChanges.next();
+    }
+
     public formatLabel(item: T): string {
         if (typeof item === "string") {
             return item;
