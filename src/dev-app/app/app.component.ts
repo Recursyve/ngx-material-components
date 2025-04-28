@@ -87,11 +87,10 @@ export class AppComponent {
     }
 
     public disableAsyncTypeahead(): void {
-        const control = this.formGroup.get("asyncTypeahead");
-        if (control?.enabled) {
-            control.disable();
-        } else if (control?.disabled) {
-            control.enable();
+        if (this.formGroup.enabled) {
+            this.formGroup.disable();
+        } else if (this.formGroup.disabled) {
+            this.formGroup.enable();
         }
     }
 }

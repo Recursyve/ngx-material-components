@@ -11,7 +11,7 @@
         <mat-form-field appearance="outline">
             <mat-label>My Typeahead (with object)</mat-label>
 
-            <mat-select>
+            <mat-select [disabled]="formGroup.disabled">
                 @for (item of items; track item) {
                     <mat-option [value]="item">{{ item }}</mat-option>
                 }
