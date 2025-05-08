@@ -23,7 +23,6 @@ import { NiceTypeaheadService } from "./providers";
 
 @Component({
     selector: "nice-async-typeahead",
-    standalone: true,
     imports: [
         CdkOverlayOrigin,
         CdkConnectedOverlay,

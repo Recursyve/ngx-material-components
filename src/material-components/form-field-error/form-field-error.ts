@@ -25,8 +25,7 @@ import { MatError } from "@angular/material/form-field";
     encapsulation: ViewEncapsulation.None,
     imports: [
         MatError
-    ],
-    standalone: true
+    ]
 })
 export class NiceFormErrorComponent {
     public message = "";

@@ -16,7 +16,6 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
 
 @Component({
     selector: "nice-root",
-    standalone: true,
     imports: [
         MatLabel,
         MatFormField,

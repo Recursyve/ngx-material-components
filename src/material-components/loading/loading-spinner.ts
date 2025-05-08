@@ -5,8 +5,7 @@ import { MatProgressSpinner, ProgressSpinnerMode } from "@angular/material/progr
     selector: "nice-loading-spinner",
     templateUrl: "loading-spinner.html",
     styleUrls: ["./loading-spinner.scss"],
-    imports: [MatProgressSpinner],
-    standalone: true
+    imports: [MatProgressSpinner]
 })
 export class NiceLoadingSpinner {
     public readonly loading = input<boolean>(false);

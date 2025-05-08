@@ -13,7 +13,6 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
 
 @Component({
     selector: "nice-typeahead",
-    standalone: true,
     imports: [
         CdkOverlayOrigin,
         CdkConnectedOverlay,
