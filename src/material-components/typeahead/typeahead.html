@@ -50,11 +50,9 @@
         #panel
         role="listbox"
         tabindex="-1"
-        class="nice-typeahead-panel nice-typeahead--open"
+        class="nice-typeahead-panel nice-typeahead--open nice-typehead-animations-enabled"
         [ngClass]="panelClass()"
         [attr.id]="id + '-panel'"
-        [@transformPanel]="'showing'"
-        (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
         (keydown)="_handleKeydown($event)"
         (scrollend)="_handleScrollEnd()"
     >
