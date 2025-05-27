@@ -1,17 +1,18 @@
-import { BooleanInput, coerceBooleanProperty } from "@angular/cdk/coercion";
+import { coerceBooleanProperty } from "@angular/cdk/coercion";
 import {
-    Component, DoCheck,
+    Component,
     effect,
     ElementRef,
     forwardRef,
-    inject, Input,
+    inject,
+    input,
     OnDestroy,
     OnInit,
     viewChild,
     ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from "@angular/forms";
-import { MatRipple, MatRippleLoader } from "@angular/material/core";
+import { MatRippleLoader } from "@angular/material/core";
 import { NiceDropzoneDirective } from "./dropzone.directive";
 
 export type NiceSelectedFiles = {
@@ -23,7 +24,7 @@ export type NiceSelectedFiles = {
     selector: "nice-dropzone",
     templateUrl: "dropzone.template.html",
     styleUrl: "dropzone.style.scss",
-    imports: [NiceDropzoneDirective, MatRipple],
+    imports: [NiceDropzoneDirective],
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     providers: [
@@ -34,37 +35,36 @@ export type NiceSelectedFiles = {
         }
     ]
 })
-export class NiceDropzone implements OnInit, OnDestroy, DoCheck, ControlValueAccessor {
-    @Input()
-    public accept?: string[];
-
-    @Input()
-    public multiple = false;
-
-    @Input()
-    public set disabled(value: BooleanInput) {
-        this._disabled = coerceBooleanProperty(value);
-    }
-    public get disabled(): boolean {
-        return this._disabled;
-    }
+export class NiceDropzone implements OnInit, OnDestroy, ControlValueAccessor {
+    public accept = input<string[]>();
+    public multiple = input(false, { transform: coerceBooleanProperty });
+    public disabled = input(false, { transform: coerceBooleanProperty });
 
     protected _elementRef = viewChild("element", { read: ElementRef });
 
     /**
      * Handles the lazy creation of the MatButton ripple.
-     * Used to improve initial load time of large applications.
+     * Used to improve the initial load time of large applications.
      */
     protected _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
-    protected _ngControl = inject(NgControl, { optional: true, self: true });
+
+    protected _disabled = false;
 
     private _onChange!: (value: NiceSelectedFiles | NiceSelectedFiles[]) => void;
-    private _disabled = false;
     private _value: NiceSelectedFiles | NiceSelectedFiles[] | null = null;
 
     constructor() {
         effect(() => {
-            this._rippleLoader.configureRipple(this._elementRef()?.nativeElement, { className: "nice-dropzone-ripple" });
+            const elementRef = this._elementRef();
+            if (!elementRef) {
+                return;
+            }
+
+            this._rippleLoader.configureRipple(elementRef.nativeElement, { className: "nice-dropzone-ripple" });
+        });
+
+        effect(() => {
+            this._disabled = this.disabled();
         });
     }
 
@@ -72,18 +72,6 @@ export class NiceDropzone implements OnInit, OnDestroy, DoCheck, ControlValueAcc
 
     public ngOnDestroy(): void {
         this._rippleLoader.destroyRipple(this._elementRef()?.nativeElement);
-    }
-
-    public ngDoCheck(): void {
-        if (!this._ngControl) {
-            return;
-        }
-
-        // We can't use the `_ngControl.statusChanges`, because it won't fire if the input is disabled
-        // with `emitEvents = false`, despite the input becoming disabled.
-        if (this._ngControl.disabled !== null && this._ngControl.disabled !== this.disabled) {
-            this.disabled = this._ngControl.disabled;
-        }
     }
 
     public writeValue(value: NiceSelectedFiles | NiceSelectedFiles[]): void {
@@ -97,7 +85,7 @@ export class NiceDropzone implements OnInit, OnDestroy, DoCheck, ControlValueAcc
     public registerOnTouched(fn: () => void): void {}
 
     public setDisabledState(disabled: boolean): void {
-        this.disabled = disabled;
+        this._disabled = disabled;
     }
 
     public onFileChanged(event: Event): void {
@@ -110,12 +98,13 @@ export class NiceDropzone implements OnInit, OnDestroy, DoCheck, ControlValueAcc
     }
 
     public onFilesDropped(fileList: FileList): void {
-        if (this.multiple && !this._value) {
+        if (this.multiple() && !this._value) {
             this._value = [];
         }
 
+        const accept = this.accept();
         for (const file of Array.from(fileList)) {
-            if (this.accept && !this.accept.includes(file.type)) {
+            if (accept && !accept.includes(file.type)) {
                 continue;
             }
 
@@ -123,7 +112,7 @@ export class NiceDropzone implements OnInit, OnDestroy, DoCheck, ControlValueAcc
                 file,
                 name: file.name
             };
-            if (this.multiple) {
+            if (this.multiple()) {
                 (this._value as NiceSelectedFiles[]).push(value);
             } else {
                 this._value = value;

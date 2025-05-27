@@ -72,12 +72,16 @@ export class AppComponent {
     public formGroup = this._fb.group({
         typeahead: this._fb.control(""),
         select: this._fb.control("", [Validators.required]),
-        asyncTypeahead: this._fb.control(""),
+        asyncTypeahead: this._fb.control("")
     });
 
     public formGroupWithErrors = this._fb.group({
         name: this._fb.control("", Validators.required),
         count: this._fb.control(0, [Validators.required, Validators.min(1)]),
+    });
+
+    public dropzoneFormGroup = this._fb.group({
+        dropzone: this._fb.control(null)
     });
 
     public typeaheadValue = signal({});
@@ -102,5 +106,9 @@ export class AppComponent {
     public forceRequired(): void {
         this.formGroup.get("typeahead")?.setValidators([Validators.required]);
         this.formGroup.get("typeahead")?.updateValueAndValidity();
+    }
+
+    public disableDropzone(): void {
+        this.dropzoneFormGroup.controls.dropzone.disable();
     }
 }

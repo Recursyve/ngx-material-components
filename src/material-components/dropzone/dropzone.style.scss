@@ -4,7 +4,6 @@
     --mat-ripple-color: var(--nice-dropzone-ripple-color);
 
     .nice-dropzone {
-
         position: relative;
         display: flex;
         justify-content: center;
@@ -63,15 +62,7 @@
         &.nice-dropzone-disabled {
             cursor: default;
             pointer-events: none;
-
-            .nice-dropzone-icon {
-                color: var(--nice-dropzone-disabled-icon-color);
-            }
-
-            .nice-dropzone-description {
-                user-select: none;
-                color: var(--nice-dropzone-disabled-text-color);
-            }
+            opacity: 0.5;
         }
     }
 }

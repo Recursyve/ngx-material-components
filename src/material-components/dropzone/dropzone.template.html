@@ -1,20 +1,19 @@
 <div
     class="nice-dropzone-container"
-
-    matRipple
-    [matRippleDisabled]="disabled"
 >
     <div
         #element
         role="none"
         class="nice-dropzone"
-        [class.nice-dropzone-disabled]="disabled"
+        [class.nice-dropzone-disabled]="_disabled"
 
         niceDropzone
         (filesDropped)="onFilesDropped($event)"
         (click)="fileInput.click()"
         (keyup.enter)="fileInput.click()"
     >
+        <div class="nice-dropzone-ripple"></div>
+
         <div class="nice-dropzone-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="43" viewBox="0 0 40 43" fill="none">
                 <path d="M29.333 1.5H2.66634C1.92996 1.5 1.33301 2.09695 1.33301 2.83333V33.0556C1.33301 33.7919 1.92996 34.3889 2.66634 34.3889H29.333C30.0694 34.3889 30.6663 33.7919 30.6663 33.0556V2.83333C30.6663 2.09695 30.0694 1.5 29.333 1.5Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -30,4 +29,4 @@
 
 </div>
 
-<input #fileInput style="display: none;" type="file" [accept]="accept" [multiple]="multiple" (change)="onFileChanged($event)" />
+<input #fileInput style="display: none;" type="file" [accept]="accept()" [multiple]="multiple()" (change)="onFileChanged($event)" />

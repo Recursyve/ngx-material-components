@@ -83,20 +83,14 @@
         </mat-form-field>
     </div>
 
-    <div style="padding-top: 100px"></div>
+    <div style="width: 750px; padding-top: 64px;" [formGroup]="dropzoneFormGroup">
+        <nice-dropzone formControlName="dropzone" />
+    </div>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Async + chips</mat-label>
-
-        <nice-async-typeahead resource="colors" niceChipList [withItemList]="itemsList"></nice-async-typeahead>
-    </mat-form-field>
-
-    <nice-chip-list-items #itemsList></nice-chip-list-items>
-
-    <div style="padding-top: 100px"></div>
-
-    <div style="width: 750px;">
-        <nice-dropzone />
+    <div style="padding-top: 32px;">
+        <button mat-flat-button (click)="disableDropzone()">
+            Disable dropzone
+        </button>
     </div>
 </div>
 
