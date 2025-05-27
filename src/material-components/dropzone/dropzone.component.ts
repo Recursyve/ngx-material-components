@@ -1,4 +1,4 @@
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from "@angular/cdk/coercion";
 import {
     Component, DoCheck,
     effect,
@@ -10,9 +10,9 @@ import {
     viewChild,
     ViewEncapsulation
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
-import { MatRippleLoader } from "@angular/material/core";
-import { NiceDropzoneDirective } from './dropzone.directive';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from "@angular/forms";
+import { MatRipple, MatRippleLoader } from "@angular/material/core";
+import { NiceDropzoneDirective } from "./dropzone.directive";
 
 export type NiceSelectedFiles = {
     file: File | null;
@@ -23,7 +23,7 @@ export type NiceSelectedFiles = {
     selector: "nice-dropzone",
     templateUrl: "dropzone.template.html",
     styleUrl: "dropzone.style.scss",
-    imports: [NiceDropzoneDirective],
+    imports: [NiceDropzoneDirective, MatRipple],
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     providers: [
@@ -95,6 +95,10 @@ export class NiceDropzone implements OnInit, OnDestroy, DoCheck, ControlValueAcc
     }
 
     public registerOnTouched(fn: () => void): void {}
+
+    public setDisabledState(disabled: boolean): void {
+        this.disabled = disabled;
+    }
 
     public onFileChanged(event: Event): void {
         const files = (event.target as HTMLInputElement).files;
