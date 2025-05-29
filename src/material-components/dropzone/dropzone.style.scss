@@ -14,7 +14,7 @@
         padding: var(--nice-dropzone-horizontal-padding, 32px) var(--nice-dropzone-vertical-padding, 32px);
 
         border-style: dashed;
-        border-radius: var(--nice-dropzone-shape, 5px);
+        border-radius: var(--nice-dropzone-shape, 8px);
         border-width: var(--nice-dropzone-border-width, 1px);
         border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
 
@@ -22,9 +22,26 @@
             color: var(--nice-dropzone-icon-color, var(--mat-sys-primary));
         }
 
-        .nice-dropzone-description {
+        .nice-dropzone-content {
             user-select: none;
             color: var(--nice-dropzone-text-color, var(--mat-sys-primary));
+
+            .nice-dropzone-content-title {
+                font-size: var(--nice-dropzone-content-title-font-size, 18px);
+                font-weight: var(--nice-dropzone-content-title-font-weight, 600);
+                line-height: var(--nice-dropzone-content-title-line-height, 22px);
+            }
+
+            .nice-dropzone-content-description {
+                padding-top: 4px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                font-size: var(--nice-dropzone-content-description-font-size, 14px);
+                font-weight: var(--nice-dropzone-content-description-font-weight, 400);
+                line-height: var(--nice-dropzone-content-description-line-height, 16px);
+            }
         }
 
         .nice-dropzone-ripple,

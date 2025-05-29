@@ -3,6 +3,9 @@
 {
   "extends": "../dev-app/tsconfig.json",
   "compilerOptions": {
+    "paths": {
+      "@recursyve/material-components/common/*": ["./common/*"]
+    },
     "outDir": "../../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
