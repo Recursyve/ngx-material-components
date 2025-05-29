@@ -82,4 +82,14 @@
             <input type="number" matInput formControlName="count">
         </mat-form-field>
     </div>
+
+    <div style="padding-top: 100px"></div>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Async + chips</mat-label>
+
+        <nice-async-typeahead resource="colors" niceChipList [withItemList]="itemsList"></nice-async-typeahead>
+    </mat-form-field>
+
+    <nice-chip-list-items #itemsList></nice-chip-list-items>
 </div>

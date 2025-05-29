@@ -13,7 +13,7 @@ import {
     inject,
     input,
     OnDestroy,
-    OnInit,
+    OnInit, output,
     QueryList,
     signal,
     TemplateRef,
@@ -65,6 +65,8 @@ export class NiceTypeaheadBase<T>
     public readonly optionTemplate = input<TemplateRef<{ $implicit: T }>>();
     public readonly panelClass = input<string | string[]>([]);
     public readonly canRemoveValue = input<boolean>(true);
+
+    public readonly selected = output<T | null>();
 
     private static nextId = 0;
 
@@ -167,6 +169,7 @@ export class NiceTypeaheadBase<T>
 
         if (hasAssigned) {
             this._onChange?.(value);
+            this.selected.emit(value);
         }
     }
 
@@ -195,9 +198,7 @@ export class NiceTypeaheadBase<T>
     }
 
     constructor() {
-        effect(() => {
-            this._input()?.nativeElement.focus();
-        });
+        effect(() => this._input()?.nativeElement.focus());
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of

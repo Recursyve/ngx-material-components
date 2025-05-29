@@ -1,0 +1,17 @@
+@if (items) {
+    <mat-chip-set>
+        @for (item of items(); track item) {
+            <mat-chip-row [highlighted]="true" (removed)="remove($index)">
+                @if (formatLabelFn) {
+                    {{ formatLabelFn(item) }}
+                } @else {
+                    {{ item }}
+                }
+
+                <button matChipRemove>
+                    <nice-chip-list-items-clear-icon />
+                </button>
+            </mat-chip-row>
+        }
+    </mat-chip-set>
+}
