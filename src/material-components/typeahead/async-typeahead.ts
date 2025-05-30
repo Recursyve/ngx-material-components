@@ -15,10 +15,11 @@ import {
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
-import { MatFormField, MatFormFieldControl } from "@angular/material/form-field";
+import { MatFormField, MatFormFieldControl, MatPrefix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { NiceTypeaheadBase } from "./typeahead-base";
+import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
 import { NiceTypeaheadService } from "./providers";
+import { NiceTypeaheadBase } from "./typeahead-base";
 
 @Component({
     selector: "nice-async-typeahead",
@@ -30,8 +31,10 @@ import { NiceTypeaheadService } from "./providers";
         MatFormField,
         MatInput,
         MatIconButton,
+        MatPrefix,
         NgClass,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        NiceTypeaheadSearchIcon
     ],
     templateUrl: "./typeahead.html",
     styleUrl: "./typeahead.scss",
@@ -91,15 +94,9 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
     constructor() {
         super();
 
-        effect(() => {
-            this.service.setSearchOptions(this.searchOptions());
-        }, {
-            allowSignalWrites: true
-        });
+        effect(() => this.service.setSearchOptions(this.searchOptions()));
 
-        effect(() => this.service.search(this._searchValue()), {
-            allowSignalWrites: true
-        });
+        effect(() => this.service.search(this._searchValue()));
 
         effect(() => {
             const container = this.optionsContainer();
@@ -133,6 +130,10 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         super.removeActiveValue();
 
         this.service.setActive(null);
+    }
+
+    public setSearchOptions(options: S | null): void {
+        this.service.setSearchOptions(options);
     }
 
     protected onScroll(event: Event): void {

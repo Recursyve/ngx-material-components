@@ -4,8 +4,9 @@ import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation 
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
-import { MatFormField, MatFormFieldControl } from "@angular/material/form-field";
+import { MatFormField, MatFormFieldControl, MatPrefix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
+import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
 import { NiceTypeaheadBase } from "./typeahead-base";
 
 export type SearchFunction<T> = (search: string, item: T) => boolean;
@@ -20,8 +21,10 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
         MatFormField,
         MatInput,
         MatIconButton,
+        MatPrefix,
         NgClass,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        NiceTypeaheadSearchIcon
     ],
     templateUrl: "./typeahead.html",
     styleUrl: "./typeahead.scss",
