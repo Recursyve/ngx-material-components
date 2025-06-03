@@ -12,11 +12,14 @@
         cursor: pointer;
 
         min-height: 124px;
-
-        border-style: dashed;
         border-radius: var(--nice-dropzone-shape, 8px);
-        border-width: var(--nice-dropzone-border-width, 1px);
-        border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
+
+        &.nice-dropzone-single:not(.nice-dropzone-selected),
+        &.nice-dropzone-multiple {
+            border-style: dashed;
+            border-width: var(--nice-dropzone-border-width, 1px);
+            border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
+        }
 
         .nice-dropzone-placeholder {
             display: flex;

@@ -6,6 +6,12 @@
         role="none"
         class="nice-dropzone"
         [class.nice-dropzone-disabled]="_disabled"
+        [class.nice-dropzone-multiple]="multiple()"
+        [class.nice-dropzone-single]="!multiple()"
+        [class.nice-dropzone-image]="mode() === 'image'"
+        [class.nice-dropzone-file]="mode() === 'file'"
+        [class.nice-dropzone-all]="mode() === 'all'"
+        [class.nice-dropzone-selected]="files().length > 0"
 
         niceDropzone
         (filesDropped)="onFilesDropped($event)"
