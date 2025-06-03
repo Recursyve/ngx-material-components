@@ -72,7 +72,7 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
 
     protected _disabled = false;
 
-    private _onChange!: (value: NiceSelectedFiles | NiceSelectedFiles[]) => void;
+    private _onChange!: (value: NiceSelectedFiles | NiceSelectedFiles[] | null) => void;
     private _value: NiceSelectedFiles | NiceSelectedFiles[] | null = null;
 
     constructor() {
@@ -94,14 +94,14 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
         this._rippleLoader.destroyRipple(this._elementRef()?.nativeElement);
     }
 
-    public writeValue(value: NiceSelectedFiles | NiceSelectedFiles[]): void {
+    public writeValue(value: NiceSelectedFiles | NiceSelectedFiles[] | null): void {
         this._value = value;
         if (value) {
             this.files.set(Array.isArray(value) ? value : [value]);
         }
     }
 
-    public registerOnChange(fn: (value: NiceSelectedFiles | NiceSelectedFiles[]) => void): void {
+    public registerOnChange(fn: (value: NiceSelectedFiles | NiceSelectedFiles[] | null) => void): void {
         this._onChange = fn;
     }
 
@@ -157,17 +157,22 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
     }
 
     public onFileDelete(index: number): void {
-        const files = [...this.files()];
-        files.splice(index, 1);
-        this.propagateChanges(files);
-
-        if (!this.multiple()) {
+        if (this.multiple()) {
+            const files = [...this.files()];
+            files.splice(index, 1);
+            this.propagateChanges(files);
+        } else {
+            this.propagateChanges(null);
             this.resetInput();
         }
     }
 
-    protected propagateChanges(value: NiceSelectedFiles | NiceSelectedFiles[]): void {
-        this.files.set(Array.isArray(value) ? value : [value]);
+    protected propagateChanges(value: NiceSelectedFiles | NiceSelectedFiles[] | null): void {
+        if (value) {
+            this.files.set(Array.isArray(value) ? value : [value]);
+        } else {
+            this.files.set([]);
+        }
 
         this._value = value;
         this._onChange(value);

@@ -84,13 +84,17 @@
     </div>
 
     <div style="width: 750px; padding-top: 64px;" [formGroup]="dropzoneFormGroup">
-        <nice-dropzone formControlName="dropzone" mode="image" [accept]="['image/png']" [config]="dropzoneImageConfig" [maxFileSize]="dropzoneFileConfig" />
+        <nice-dropzone formControlName="dropzone" mode="image" [accept]="['image/png']" [config]="dropzoneImageConfig" [maxFileSize]="dropzoneFileConfig" [multiple]="true" />
     </div>
 
-    <div style="padding-top: 32px;">
+    <div style="padding-top: 32px; display: flex; gap: 16px;">
         <button mat-flat-button (click)="disableDropzone()">
             Disable dropzone
         </button>
+
+        <div>
+            {{ dropzoneFormGroup.get("dropzone")?.value | json }}
+        </div>
     </div>
 </div>
 
