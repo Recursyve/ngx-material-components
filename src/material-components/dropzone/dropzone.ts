@@ -20,7 +20,7 @@ import {
     NiceDropzoneFileSizeConfig,
     NiceDropzoneImageConfig,
     NiceDropzoneTranslationKeyConfig
-} from "./dropzone.config";
+} from "./config";
 import { NiceDropzoneDirective } from "./dropzone.directive";
 import { NiceDropzoneFileIcon } from "./icons/file/file-icon.component";
 import { NiceDropzoneImageIcon } from "./icons/image/image-icon.component";
@@ -32,8 +32,8 @@ export type NiceDropzoneModes = (typeof niceDropzoneModes)[number];
 
 @Component({
     selector: "nice-dropzone",
-    templateUrl: "dropzone.template.html",
-    styleUrl: "dropzone.style.scss",
+    templateUrl: "dropzone.html",
+    styleUrl: "dropzone.scss",
     imports: [
         NiceDropzoneDirective,
         NiceDropzoneImageIcon,
@@ -41,7 +41,6 @@ export type NiceDropzoneModes = (typeof niceDropzoneModes)[number];
         NiceDropzoneFilePreview,
         NiceTranslatePipe
     ],
-    standalone: true,
     encapsulation: ViewEncapsulation.None,
     providers: [
         {

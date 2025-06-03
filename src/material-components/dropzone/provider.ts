@@ -1,6 +1,6 @@
 import { Provider } from "@angular/core";
 import { NICE_DROPZONE_TRANSLATION_KEYS } from "./constant";
-import { NiceDropzoneTranslationKeyConfig } from "./dropzone.config";
+import { NiceDropzoneTranslationKeyConfig } from "./config";
 import { NiceDropzoneOptions } from "./options";
 
 const defaultTranslationKeys: NiceDropzoneTranslationKeyConfig = {

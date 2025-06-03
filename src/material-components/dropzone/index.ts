@@ -3,7 +3,7 @@
  */
 
 export * from "./dropzone.directive";
-export * from "./dropzone.component";
-export * from "./dropzone.config";
+export * from "./dropzone";
+export * from "./config";
 export * from "./options";
 export * from "./provider";

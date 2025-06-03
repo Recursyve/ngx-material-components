@@ -1,4 +1,4 @@
-import { NiceDropzoneTranslationKeyConfig } from "./dropzone.config";
+import { NiceDropzoneTranslationKeyConfig } from "./config";
 
 export type NiceDropzoneOptions = {
     translationKeys: NiceDropzoneTranslationKeyConfig;

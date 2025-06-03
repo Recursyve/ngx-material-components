@@ -2,8 +2,8 @@ import { Component, computed, inject, input, output } from "@angular/core";
 import { NiceTranslatePipe } from "@recursyve/ngx-material-components/common";
 
 import { NICE_DROPZONE_TRANSLATION_KEYS } from "../constant";
-import { NiceDropzoneModes } from "../dropzone.component";
-import { NiceDropzoneTranslationKeyConfig } from "../dropzone.config";
+import { NiceDropzoneModes } from "../dropzone";
+import { NiceDropzoneTranslationKeyConfig } from "../config";
 import { isLocalFile, NiceFileDimensions, NiceSelectedFiles } from "../models";
 import { FileSizePipe } from "../pipes/file-size.pipe";
 import { NiceDropzoneDeleteIcon } from "../icons/delete/delete-icon.component";

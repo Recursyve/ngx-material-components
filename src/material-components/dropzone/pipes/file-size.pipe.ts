@@ -2,7 +2,7 @@ import { inject, Pipe, PipeTransform } from "@angular/core";
 import { NiceTranslater, NICE_COMPONENTS_TRANSLATER } from "@recursyve/ngx-material-components/common";
 
 import { NICE_DROPZONE_TRANSLATION_KEYS } from "../constant";
-import { NiceDropzoneTranslationKeyConfig } from "../dropzone.config";
+import { NiceDropzoneTranslationKeyConfig } from "../config";
 
 @Pipe({
     name: "niceFileSize"
