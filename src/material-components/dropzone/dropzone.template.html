@@ -14,78 +14,74 @@
     >
         <div class="nice-dropzone-ripple"></div>
 
-        @if (!multiple() && !files().length) {
-            <div class="nice-dropzone-icon">
-                @if (mode() === "image") {
-                    <nice-dropzone-image-icon />
-                } @else {
-                    <nice-dropzone-file-icon />
-                }
-            </div>
-
-            <div class="nice-dropzone-content">
-                <span class="nice-dropzone-content-title">
+        @if (multiple() || (!multiple() && !files().length)) {
+            <div class="nice-dropzone-placeholder">
+                <div class="nice-dropzone-icon">
                     @if (mode() === "image") {
-                        @if (multiple()) {
-                            {{ _translationKeys.upload.images | niceTranslate }}
-                        } @else {
-                            {{ _translationKeys.upload.image | niceTranslate }}
-                        }
+                        <nice-dropzone-image-icon />
                     } @else {
-                        @if (multiple()) {
-                            {{ _translationKeys.upload.files | niceTranslate }}
+                        <nice-dropzone-file-icon />
+                    }
+                </div>
+
+                <div class="nice-dropzone-content">
+                    <span class="nice-dropzone-content-title">
+                        @if (mode() === "image") {
+                            @if (multiple()) {
+                                {{ _translationKeys.upload.images | niceTranslate }}
+                            } @else {
+                                {{ _translationKeys.upload.image | niceTranslate }}
+                            }
                         } @else {
-                            {{ _translationKeys.upload.file | niceTranslate }}
+                            @if (multiple()) {
+                                {{ _translationKeys.upload.files | niceTranslate }}
+                            } @else {
+                                {{ _translationKeys.upload.file | niceTranslate }}
+                            }
                         }
-                    }
-                </span>
-                
-                <div class="nice-dropzone-content-description">
-                    @if (accept()?.length) {
-                        <span>
-                            {{ _translationKeys.format.label | niceTranslate }}:&nbsp;
+                    </span>
 
+                    <div class="nice-dropzone-content-description">
+                        @if (accept()?.length) {
                             <span>
-                                {{ accept()?.join(", ") }}
+                                {{ _translationKeys.format.label | niceTranslate }}:&nbsp;
+
+                                <span>
+                                    {{ accept()?.join(", ") }}
+                                </span>
                             </span>
-                        </span>
-                    }
+                        }
 
-                    @if (mode() === "image" && config()?.recommendedSize; as recommendedSize) {
-                        <span>
-                            {{ _translationKeys.ratio.label | niceTranslate }}:&nbsp;
+                        @if (mode() === "image" && config()?.recommendedSize; as recommendedSize) {
+                            <span>
+                                {{ _translationKeys.ratio.label | niceTranslate }}:&nbsp;
 
-                            <span>{{ recommendedSize.width }}x{{ recommendedSize.height }} {{ _translationKeys.ratio.pixels | niceTranslate }}</span>
-                        </span>
-                    }
+                                <span>{{ recommendedSize.width }}x{{ recommendedSize.height }} {{ _translationKeys.ratio.pixels | niceTranslate }}</span>
+                            </span>
+                        }
 
-                    @if (maxFileSize(); as maxFileSize) {
-                        <span>
-                            {{ _translationKeys.size.label | niceTranslate }}:&nbsp;
+                        @if (maxFileSize(); as maxFileSize) {
+                            <span>
+                                {{ _translationKeys.size.label | niceTranslate }}:&nbsp;
 
-                            <span>{{ maxFileSize.size }} {{ _translationKeys.size.units[maxFileSize.unit] | niceTranslate }}</span>
-                        </span>
-                    }
+                                <span>{{ maxFileSize.size }} {{ _translationKeys.size.units[maxFileSize.unit] | niceTranslate }}</span>
+                            </span>
+                        }
+                    </div>
                 </div>
             </div>
         } @else {
-            <ng-container *ngTemplateOutlet="fileTemplate; context: { $implicit: files()[0] }"></ng-container>
+            <nice-dropzone-file-preview [file]="files()[0]" [mode]="mode()" (clickDelete)="onFileDelete(0)" />
         }
     </div>
 
     @if (multiple()) {
-        <div class="nice-dropzone-files">
+        <div class="nice-dropzone-multiple-files-preview">
             @for (file of files(); track file) {
-                <ng-container *ngTemplateOutlet="fileTemplate; context: { $implicit: file }"></ng-container>
+                <nice-dropzone-file-preview [file]="file" [mode]="mode()" (clickDelete)="onFileDelete($index)" />
             }
         </div>
     }
 </div>
 
 <input #fileInput style="display: none;" type="file" [accept]="accept()" [multiple]="multiple()" (change)="onFileChanged($event)" />
-
-<ng-template #fileTemplate let-file>
-    <div class="nice-dropzone-file">
-        <span>{{ file.name }}</span>
-    </div>
-</ng-template>

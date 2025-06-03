@@ -1,5 +1,4 @@
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
-import { NgTemplateOutlet } from "@angular/common";
 import {
     Component,
     effect,
@@ -17,11 +16,16 @@ import { MatRippleLoader } from "@angular/material/core";
 import { NiceTranslatePipe } from "@recursyve/ngx-material-components/common";
 
 import { NICE_DROPZONE_TRANSLATION_KEYS } from "./constant";
-import { NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig, NiceDropzoneTranslationKeyConfig } from "./dropzone.config";
+import {
+    NiceDropzoneFileSizeConfig,
+    NiceDropzoneImageConfig,
+    NiceDropzoneTranslationKeyConfig
+} from "./dropzone.config";
 import { NiceDropzoneDirective } from "./dropzone.directive";
 import { NiceDropzoneFileIcon } from "./icons/file/file-icon.component";
 import { NiceDropzoneImageIcon } from "./icons/image/image-icon.component";
-import { NiceSelectedFiles } from "./models";
+import { NiceFileDimensions, NiceSelectedFiles } from "./models";
+import { NiceDropzoneFilePreview } from "./preview/file-preview";
 
 export const niceDropzoneModes = ["image", "file", "all"] as const;
 export type NiceDropzoneModes = (typeof niceDropzoneModes)[number];
@@ -30,7 +34,13 @@ export type NiceDropzoneModes = (typeof niceDropzoneModes)[number];
     selector: "nice-dropzone",
     templateUrl: "dropzone.template.html",
     styleUrl: "dropzone.style.scss",
-    imports: [NiceDropzoneDirective, NiceDropzoneImageIcon, NiceDropzoneFileIcon, NiceTranslatePipe, NgTemplateOutlet],
+    imports: [
+        NiceDropzoneDirective,
+        NiceDropzoneImageIcon,
+        NiceDropzoneFileIcon,
+        NiceDropzoneFilePreview,
+        NiceTranslatePipe
+    ],
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     providers: [
@@ -42,25 +52,26 @@ export type NiceDropzoneModes = (typeof niceDropzoneModes)[number];
     ]
 })
 export class NiceDropzone implements OnDestroy, ControlValueAccessor {
-    public mode = input<NiceDropzoneModes>("all");
-    public multiple = input(false, { transform: coerceBooleanProperty });
-    public disabled = input(false, { transform: coerceBooleanProperty });
-    public accept = input<string[]>();
-    public config = input<NiceDropzoneImageConfig>();
-    public maxFileSize = input<NiceDropzoneFileSizeConfig>();
+    public readonly mode = input<NiceDropzoneModes>("all");
+    public readonly multiple = input(false, { transform: coerceBooleanProperty });
+    public readonly disabled = input(false, { transform: coerceBooleanProperty });
+    public readonly accept = input<string[]>();
+    public readonly config = input<NiceDropzoneImageConfig>();
+    public readonly maxFileSize = input<NiceDropzoneFileSizeConfig>();
 
-    protected _elementRef = viewChild("element", { read: ElementRef });
+    protected readonly _elementRef = viewChild("element", { read: ElementRef });
+    protected readonly _inputRef = viewChild<ElementRef<HTMLInputElement>>("fileInput");
 
     /**
      * Handles the lazy creation of the MatButton ripple.
      * Used to improve the initial load time of large applications.
      */
-    protected _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
-    protected _translationKeys = inject<NiceDropzoneTranslationKeyConfig>(NICE_DROPZONE_TRANSLATION_KEYS);
+    protected readonly _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
+    protected readonly _translationKeys = inject<NiceDropzoneTranslationKeyConfig>(NICE_DROPZONE_TRANSLATION_KEYS);
+
+    protected readonly files = signal<NiceSelectedFiles[]>([]);
 
     protected _disabled = false;
-
-    protected files = signal<NiceSelectedFiles[]>([]);
 
     private _onChange!: (value: NiceSelectedFiles | NiceSelectedFiles[]) => void;
     private _value: NiceSelectedFiles | NiceSelectedFiles[] | null = null;
@@ -112,7 +123,7 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
         this.onFilesDropped(files);
     }
 
-    public onFilesDropped(fileList: FileList): void {
+    public async onFilesDropped(fileList: FileList): Promise<void> {
         if (this.multiple() && !this._value) {
             this._value = [];
         }
@@ -123,10 +134,13 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
                 continue;
             }
 
+            const isImage = file.type.startsWith("image/");
             const value = {
                 file,
-                name: file.name
-            };
+                name: file.name,
+                size: file.size,
+                ...(isImage && { dimensions: await this.getImageDimension(file) })
+            } satisfies NiceSelectedFiles;
             if (this.multiple()) {
                 (this._value as NiceSelectedFiles[]).push(value);
             } else {
@@ -139,10 +153,54 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
         if (this._value) {
             this.propagateChanges(this._value);
         }
+
+        this.resetInput();
+    }
+
+    public onFileDelete(index: number): void {
+        const files = [...this.files()];
+        files.splice(index, 1);
+        this.propagateChanges(files);
+
+        if (!this.multiple()) {
+            this.resetInput();
+        }
     }
 
     protected propagateChanges(value: NiceSelectedFiles | NiceSelectedFiles[]): void {
         this.files.set(Array.isArray(value) ? value : [value]);
+
+        this._value = value;
         this._onChange(value);
+    }
+
+    protected getImageDimension(file: File): Promise<NiceFileDimensions> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                const image = new Image();
+                image.onload = () => {
+                    resolve({
+                        width: image.width,
+                        height: image.height,
+                        ratio: image.width / image.height
+                    });
+                };
+                image.onerror = reject;
+                image.src = reader.result as string;
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    protected resetInput(): void {
+        const input = this._inputRef();
+        if (!input) {
+            return;
+        }
+
+        input.nativeElement.value = "";
     }
 }

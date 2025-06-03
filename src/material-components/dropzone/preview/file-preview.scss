@@ -1,0 +1,67 @@
+.nice-dropzone-preview {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    gap: 32px;
+
+    height: 100px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+
+    border-style: solid;
+    border-radius: var(--nice-dropzone-shape, 8px);
+    border-width: var(--nice-dropzone-border-width, 1px);
+    border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
+
+    .nice-dropzone-preview-image {
+        max-height: 100%;
+
+        max-width: min(200px, 50%);
+
+        user-select: none;
+    }
+
+    .nice-dropzone-preview-file-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        max-width: min(400px, 40%);
+
+        user-select: none;
+    }
+
+    .nice-dropzone-preview-actions {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+
+        background-color: var(--mat-sys-on-primary);
+        border-radius: 50%;
+
+        top: -12px;
+        right: -12px;
+        opacity: 0;
+
+        transition: opacity 0.1s ease-in-out;
+
+        .nice-dropzone-preview-actions-delete {
+            background-color: transparent;
+            color: var(--mat-sys-primary);
+            
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+    }
+
+    &:hover,
+    &:focus {
+        .nice-dropzone-preview-actions {
+            opacity: 1;
+        }
+    }
+}

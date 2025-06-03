@@ -8,15 +8,22 @@
         display: flex;
         justify-content: center;
         place-items: center;
-        gap: 32px;
+
         cursor: pointer;
 
-        padding: var(--nice-dropzone-horizontal-padding, 32px) var(--nice-dropzone-vertical-padding, 32px);
+        min-height: 124px;
 
         border-style: dashed;
         border-radius: var(--nice-dropzone-shape, 8px);
         border-width: var(--nice-dropzone-border-width, 1px);
         border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
+
+        .nice-dropzone-placeholder {
+            display: flex;
+            justify-content: center;
+            place-items: center;
+            gap: 32px;
+        }
 
         .nice-dropzone-icon {
             color: var(--nice-dropzone-icon-color, var(--mat-sys-primary));
@@ -81,5 +88,13 @@
             pointer-events: none;
             opacity: 0.5;
         }
+    }
+
+    .nice-dropzone-multiple-files-preview {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+
+        padding-top: 16px;
     }
 }

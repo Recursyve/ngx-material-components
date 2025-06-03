@@ -1,12 +1,21 @@
+export type NiceFileDimensions = {
+    width: number;
+    height: number;
+    ratio: number;
+};
+
 export type NiceLocalFile = {
     file: File;
     name: string;
+    size?: number;
+    dimensions?: NiceFileDimensions;
 };
 
 export type NiceRemoteFile = {
     id: string | number;
     name: string;
     url: string;
+    size?: number;
 };
 
 export type NiceSelectedFiles = NiceLocalFile | NiceRemoteFile;
