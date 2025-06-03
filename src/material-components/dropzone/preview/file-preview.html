@@ -1,7 +1,11 @@
 <div class="nice-dropzone-preview">
     @if (isImage()) {
         <img class="nice-dropzone-preview-image" alt="" draggable="false" [src]="imageUrl()" />
-    } @else {}
+    } @else {
+        <div class="nice-dropzone-preview-file">
+            <nice-dropzone-file-icon />
+        </div>
+    }
 
     <div class="nice-dropzone-preview-file-info">
         <span class="mat-body-medium">{{ file().name }}</span>

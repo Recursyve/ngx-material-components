@@ -7,12 +7,13 @@ import { NiceDropzoneTranslationKeyConfig } from "../config";
 import { isLocalFile, NiceFileDimensions, NiceSelectedFiles } from "../models";
 import { FileSizePipe } from "../pipes/file-size.pipe";
 import { NiceDropzoneDeleteIcon } from "../icons/delete/delete-icon.component";
+import { NiceDropzoneFileIcon } from "../icons/file/file-icon.component";
 
 @Component({
     selector: "nice-dropzone-file-preview",
     templateUrl: "./file-preview.html",
     styleUrls: ["./file-preview.scss"],
-    imports: [NiceDropzoneDeleteIcon, NiceTranslatePipe, FileSizePipe],
+    imports: [NiceDropzoneDeleteIcon, NiceTranslatePipe, FileSizePipe, NiceDropzoneFileIcon],
     host: {
         style: "flex: 1 1 auto;"
     }

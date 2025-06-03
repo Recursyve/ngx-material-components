@@ -24,6 +24,10 @@
         user-select: none;
     }
 
+    .nice-dropzone-preview-file {
+        color: var(--mat-sys-primary);
+    }
+
     .nice-dropzone-preview-file-info {
         display: flex;
         flex-direction: column;
