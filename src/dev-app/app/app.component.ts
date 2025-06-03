@@ -30,9 +30,7 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
         NiceAsyncTypeahead,
         NiceLoadingDirective,
         NiceFormFieldErrorDirective,
-        MatInput,
-        NiceChipListDirective,
-        NiceChipListItems
+        MatInput
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
