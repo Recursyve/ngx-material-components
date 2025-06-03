@@ -1,9 +1,7 @@
 import { FactoryProvider } from "@angular/core";
-import { NiceTranslater } from "@recursyve/ngx-material-components/common";
-import { ErrorTransformers } from "./error-transformer";
+import { NiceTranslater } from "./translater";
 
-export type NiceFormFieldErrorsOptions = {
+export type NiceTranslaterOptions = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     translater: Omit<FactoryProvider, "provide" | "multi"> & { useFactory: (...args: any[]) => NiceTranslater };
-    errorTransformers?: ErrorTransformers;
 };

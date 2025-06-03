@@ -3,6 +3,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "npm start",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

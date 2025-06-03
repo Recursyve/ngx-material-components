@@ -40,7 +40,7 @@
             <nice-async-typeahead resource="colors" [optionTemplate]="colorTemplate">
                 <ng-template #colorTemplate let-item>
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <span style="width: 16px; height: 16px; background-color: {{ item.hex }}"></span>
+                        <span [style.width]="'16px'" [style.height]="'16px'" [style.background-color]="item.hex"></span>
                         <span>{{ item.name }}</span>
                     </div>
                 </ng-template>
@@ -83,13 +83,18 @@
         </mat-form-field>
     </div>
 
-    <div style="padding-top: 100px"></div>
+    <div style="width: 750px; padding-top: 64px;" [formGroup]="dropzoneFormGroup">
+        <nice-dropzone formControlName="dropzone" mode="file" [config]="dropzoneImageConfig" [maxFileSize]="dropzoneFileConfig" [multiple]="true" />
+    </div>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Async + chips</mat-label>
+    <div style="padding-top: 32px; display: flex; gap: 16px;">
+        <button mat-flat-button (click)="disableDropzone()">
+            Disable dropzone
+        </button>
 
-        <nice-async-typeahead resource="colors" niceChipList [withItemList]="itemsList"></nice-async-typeahead>
-    </mat-form-field>
-
-    <nice-chip-list-items #itemsList></nice-chip-list-items>
+        <div>
+            {{ dropzoneFormGroup.get("dropzone")?.value | json }}
+        </div>
+    </div>
 </div>
+

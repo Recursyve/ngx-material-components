@@ -1,0 +1,93 @@
+<div
+    class="nice-dropzone-container"
+>
+    <div
+        #element
+        role="none"
+        class="nice-dropzone"
+        [class.nice-dropzone-disabled]="_disabled"
+        [class.nice-dropzone-multiple]="multiple()"
+        [class.nice-dropzone-single]="!multiple()"
+        [class.nice-dropzone-image]="mode() === 'image'"
+        [class.nice-dropzone-file]="mode() === 'file'"
+        [class.nice-dropzone-all]="mode() === 'all'"
+        [class.nice-dropzone-selected]="files().length > 0"
+
+        niceDropzone
+        (filesDropped)="onFilesDropped($event)"
+        (click)="fileInput.click()"
+        (keyup.enter)="fileInput.click()"
+    >
+        <div class="nice-dropzone-ripple"></div>
+
+        @if (multiple() || (!multiple() && !files().length)) {
+            <div class="nice-dropzone-placeholder">
+                <div class="nice-dropzone-icon">
+                    @if (mode() === "image") {
+                        <nice-dropzone-image-icon />
+                    } @else {
+                        <nice-dropzone-file-icon />
+                    }
+                </div>
+
+                <div class="nice-dropzone-content">
+                    <span class="nice-dropzone-content-title">
+                        @if (mode() === "image") {
+                            @if (multiple()) {
+                                {{ _translationKeys.upload.images | niceTranslate }}
+                            } @else {
+                                {{ _translationKeys.upload.image | niceTranslate }}
+                            }
+                        } @else {
+                            @if (multiple()) {
+                                {{ _translationKeys.upload.files | niceTranslate }}
+                            } @else {
+                                {{ _translationKeys.upload.file | niceTranslate }}
+                            }
+                        }
+                    </span>
+
+                    <div class="nice-dropzone-content-description">
+                        @if (accept()?.length) {
+                            <span>
+                                {{ _translationKeys.format.label | niceTranslate }}:&nbsp;
+
+                                <span>
+                                    {{ accept()?.join(", ") }}
+                                </span>
+                            </span>
+                        }
+
+                        @if (mode() === "image" && config()?.recommendedSize; as recommendedSize) {
+                            <span>
+                                {{ _translationKeys.ratio.label | niceTranslate }}:&nbsp;
+
+                                <span>{{ recommendedSize.width }}x{{ recommendedSize.height }} {{ _translationKeys.ratio.pixels | niceTranslate }}</span>
+                            </span>
+                        }
+
+                        @if (maxFileSize(); as maxFileSize) {
+                            <span>
+                                {{ _translationKeys.size.label | niceTranslate }}:&nbsp;
+
+                                <span>{{ maxFileSize.size }} {{ _translationKeys.size.units[maxFileSize.unit] | niceTranslate }}</span>
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        } @else {
+            <nice-dropzone-file-preview [file]="files()[0]" [mode]="mode()" (clickDelete)="onFileDelete(0)" />
+        }
+    </div>
+
+    @if (multiple()) {
+        <div class="nice-dropzone-multiple-files-preview">
+            @for (file of files(); track file) {
+                <nice-dropzone-file-preview [file]="file" [mode]="mode()" (clickDelete)="onFileDelete($index)" />
+            }
+        </div>
+    }
+</div>
+
+<input #fileInput style="display: none;" type="file" [accept]="accept()" [multiple]="multiple()" (change)="onFileChanged($event)" />

@@ -5,7 +5,7 @@ import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
-import { NiceChipListDirective, NiceChipListItems } from "@recursyve/ngx-material-components/chip-list";
+import { NiceDropzone, NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig } from "@recursyve/ngx-material-components/dropzone";
 import { NiceFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
 import {
@@ -18,6 +18,7 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
 @Component({
     selector: "nice-root",
     imports: [
+        NiceDropzone,
         MatLabel,
         MatFormField,
         NiceTypeahead,
@@ -29,9 +30,7 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
         NiceAsyncTypeahead,
         NiceLoadingDirective,
         NiceFormFieldErrorDirective,
-        MatInput,
-        NiceChipListDirective,
-        NiceChipListItems
+        MatInput
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
@@ -67,15 +66,30 @@ export class AppComponent {
     ];
     public loading = false;
 
+    public dropzoneFileConfig: NiceDropzoneFileSizeConfig = {
+        size: 1024,
+        unit: "MB"
+    };
+    public dropzoneImageConfig: NiceDropzoneImageConfig = {
+        recommendedSize: {
+            width: 1024,
+            height: 1024
+        }
+    };
+
     public formGroup = this._fb.group({
         typeahead: this._fb.control(""),
         select: this._fb.control("", [Validators.required]),
-        asyncTypeahead: this._fb.control(""),
+        asyncTypeahead: this._fb.control("")
     });
 
     public formGroupWithErrors = this._fb.group({
         name: this._fb.control("", Validators.required),
         count: this._fb.control(0, [Validators.required, Validators.min(1)]),
+    });
+
+    public dropzoneFormGroup = this._fb.group({
+        dropzone: this._fb.control(null)
     });
 
     public typeaheadValue = signal({});
@@ -100,5 +114,9 @@ export class AppComponent {
     public forceRequired(): void {
         this.formGroup.get("typeahead")?.setValidators([Validators.required]);
         this.formGroup.get("typeahead")?.updateValueAndValidity();
+    }
+
+    public disableDropzone(): void {
+        this.dropzoneFormGroup.controls.dropzone.disable();
     }
 }

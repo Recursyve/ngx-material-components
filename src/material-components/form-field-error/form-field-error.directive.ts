@@ -10,10 +10,11 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControlDirective, NgControl } from "@angular/forms";
 import { MatFormField } from "@angular/material/form-field";
+import { NiceTranslater } from "@recursyve/ngx-material-components/common";
 import { combineLatest, startWith } from "rxjs";
+
 import { NiceFormErrorComponent } from "./form-field-error";
 import { ErrorTransformers } from "./error-transformer";
-import { ErrorTranslater } from "./error-translater";
 import { NICE_FORM_FIELD_ERROR_TRANSFORMERS, NICE_FORM_FIELD_ERROR_TRANSLATER } from "./constant";
 
 @Directive({ selector: "[niceFormFieldError]", standalone: true })
@@ -23,7 +24,7 @@ export class NiceFormFieldErrorDirective implements AfterViewInit {
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly formField = inject(MatFormField);
     private readonly transformers = inject<ErrorTransformers>(NICE_FORM_FIELD_ERROR_TRANSFORMERS);
-    private readonly translater = inject<ErrorTranslater>(NICE_FORM_FIELD_ERROR_TRANSLATER);
+    private readonly translater = inject<NiceTranslater>(NICE_FORM_FIELD_ERROR_TRANSLATER);
 
     private ref: ComponentRef<NiceFormErrorComponent> | null = null ;
     private control: NgControl | AbstractControlDirective | null = null;

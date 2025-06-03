@@ -1,0 +1,103 @@
+.nice-dropzone-container {
+    --nice-dropzone-ripple-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+
+    --mat-ripple-color: var(--nice-dropzone-ripple-color);
+
+    .nice-dropzone {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        place-items: center;
+
+        cursor: pointer;
+
+        min-height: 124px;
+        border-radius: var(--nice-dropzone-shape, 8px);
+
+        &.nice-dropzone-single:not(.nice-dropzone-selected),
+        &.nice-dropzone-multiple {
+            border-style: dashed;
+            border-width: var(--nice-dropzone-border-width, 1px);
+            border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
+        }
+
+        .nice-dropzone-placeholder {
+            display: flex;
+            justify-content: center;
+            place-items: center;
+            gap: 32px;
+        }
+
+        .nice-dropzone-icon {
+            color: var(--nice-dropzone-icon-color, var(--mat-sys-primary));
+        }
+
+        .nice-dropzone-content {
+            user-select: none;
+            color: var(--nice-dropzone-text-color, var(--mat-sys-primary));
+
+            .nice-dropzone-content-title {
+                font-size: var(--nice-dropzone-content-title-font-size, 18px);
+                font-weight: var(--nice-dropzone-content-title-font-weight, 600);
+                line-height: var(--nice-dropzone-content-title-line-height, 22px);
+            }
+
+            .nice-dropzone-content-description {
+                padding-top: 4px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                font-size: var(--nice-dropzone-content-description-font-size, 14px);
+                font-weight: var(--nice-dropzone-content-description-font-weight, 400);
+                line-height: var(--nice-dropzone-content-description-line-height, 16px);
+            }
+        }
+
+        .nice-dropzone-ripple,
+        .nice-dropzone-ripple::before {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+
+            // Disable pointer events for the ripple container and state overlay because the container
+            // will overlay the user content and we don't want to disable mouse events on the user content.
+            // Pointer events can be safely disabled because the ripple trigger element is the host element.
+            pointer-events: none;
+
+            // Inherit the border radius from the parent so that state overlay and ripples don't exceed the
+            // parent button boundaries. Note that an inherited border radius does not work properly if
+            // the actual button element does have a border because it causes the inner content to be
+            // smaller. We have special logic for stroked buttons to handle this scenario.
+            border-radius: inherit;
+        }
+
+        .nice-dropzone-ripple {
+            overflow: hidden;
+        }
+
+        .mat-ripple-element {
+            background-color: var(--nice-dropzone-ripple-color);
+        }
+
+        &:hover {
+            background-color: var(--nice-dropzone-hover-color, color-mix(in srgb, var(--mat-sys-primary) 20%, transparent));
+        }
+
+        &.nice-dropzone-disabled {
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    }
+
+    .nice-dropzone-multiple-files-preview {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+
+        padding-top: 16px;
+    }
+}
