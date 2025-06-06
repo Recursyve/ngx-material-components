@@ -1,4 +1,8 @@
 export type NiceDropzoneImageConfig = {
+    minSize?: {
+        width: number;
+        height: number;
+    };
     maxSize?: {
         width: number;
         height: number;

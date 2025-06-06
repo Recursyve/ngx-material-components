@@ -507,7 +507,7 @@ export class NiceTypeaheadBase<T>
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
-            if (this.ngControl) {
+            if (this.ngControl && this.ngControl.valueAccessor === this) {
                 this._value.set(this.ngControl.value);
             }
 

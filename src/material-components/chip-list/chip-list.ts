@@ -38,7 +38,8 @@ export class NiceChipListDirective<T> implements ControlValueAccessor, OnInit {
         }
 
         effect(() => {
-            untracked(() => this.updateTypeaheadSearchOptions(this.values()));
+            const values = this.values();
+            untracked(() => this.updateTypeaheadSearchOptions(values));
         });
     }
 
@@ -112,8 +113,8 @@ export class NiceChipListDirective<T> implements ControlValueAccessor, OnInit {
                     return;
                 }
 
-                this.asyncTypeahead?.removeActiveValue();
                 this.addValue(value);
+                this.asyncTypeahead?.removeActiveValue();
             });
     }
 

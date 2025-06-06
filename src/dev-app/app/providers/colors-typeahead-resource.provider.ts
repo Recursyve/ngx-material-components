@@ -68,7 +68,13 @@ export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceP
 
     public resource = "colors";
 
-    public override search(searchQuery: string, page: number): Observable<NiceAsyncTypeaheadSearchResult<NiceColors>> {
+    public override search(
+        searchQuery: string,
+        page: number,
+        options: object = {}
+    ): Observable<NiceAsyncTypeaheadSearchResult<NiceColors>> {
+        console.log(options);
+
         const pageSize = 10; // Number of results per page
         const lowerCaseSearchQuery = searchQuery.toLowerCase();
 

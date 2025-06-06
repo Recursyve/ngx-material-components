@@ -5,6 +5,7 @@ import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
+import { NiceChipListDirective } from "@recursyve/ngx-material-components/chip-list";
 import { NiceDropzone, NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig } from "@recursyve/ngx-material-components/dropzone";
 import { NiceFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
@@ -14,6 +15,7 @@ import {
     provideAsyncTypeaheadResources
 } from "@recursyve/ngx-material-components/typeahead";
 import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-resource.provider";
+import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
 
 @Component({
     selector: "nice-root",
@@ -30,7 +32,9 @@ import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-re
         NiceAsyncTypeahead,
         NiceLoadingDirective,
         NiceFormFieldErrorDirective,
-        MatInput
+        MatInput,
+        NiceChipListDirective,
+        NiceChipListItems
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
@@ -86,6 +90,10 @@ export class AppComponent {
     public formGroupWithErrors = this._fb.group({
         name: this._fb.control("", Validators.required),
         count: this._fb.control(0, [Validators.required, Validators.min(1)]),
+    });
+
+    public chipListFormGroup = this._fb.group({
+        chipList: this._fb.control(null)
     });
 
     public dropzoneFormGroup = this._fb.group({
