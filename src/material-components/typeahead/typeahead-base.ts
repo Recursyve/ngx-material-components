@@ -391,9 +391,7 @@ export class NiceTypeaheadBase<T>
         }
     }
 
-    public _handleScrollEnd(): void {
-        console.log("scroll end")
-    }
+    public _handleScrollEnd(): void {}
 
     protected _canOpen(): boolean {
         return !this._panelOpen && !this.disabled;

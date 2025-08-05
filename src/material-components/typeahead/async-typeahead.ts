@@ -10,7 +10,8 @@ import {
     input,
     OnInit,
     viewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    booleanAttribute
 } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
@@ -66,6 +67,7 @@ import { NiceTypeaheadBase } from "./typeahead-base";
 export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeaheadBase<T> implements OnInit {
     public readonly resource = input.required<string>();
     public readonly searchOptions = input<S | null>(null);
+    public readonly autoSelectFirstValue = input(false, { transform: booleanAttribute });
 
     public readonly filteredValues = computed(() => this.service.items());
 
@@ -106,12 +108,20 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
 
             container.nativeElement.addEventListener("scroll", this.onScroll.bind(this));
         });
+
+        effect(() => {
+            this.value = this.service.active();
+        });
     }
 
     public override ngOnInit(): void {
         super.ngOnInit();
 
-        this.service.init(this.resource());
+        const searchOptions = this.optionsContainer();
+        this.service.init(this.resource(), {
+            autoSelectFirstValue: this.autoSelectFirstValue(),
+            ...(searchOptions && { searchOptions: searchOptions })
+        });
     }
 
     public override onFocusChanged(isFocused: boolean): void {
@@ -130,6 +140,15 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         super.removeActiveValue();
 
         this.service.setActive(null);
+    }
+
+    protected override _onSelect(option: MatOption): void {
+        this.service.setActive(option.value);
+
+        this._setSelectionByValue(option.value);
+        this._selectOptionByValue(option.value);
+
+        this.stateChanges.next();
     }
 
     public setSearchOptions(options: S | null): void {

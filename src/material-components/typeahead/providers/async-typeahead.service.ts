@@ -13,6 +13,11 @@ export type FetchActiveRequest = {
     id: number | string;
 };
 
+export type NiceTypeaheadInitOptions = {
+    autoSelectFirstValue?: boolean;
+    searchOptions?: object;
+};
+
 @Injectable()
 export class NiceTypeaheadService<T extends object> {
     private readonly resources = inject<NiceAsyncTypeaheadResourceProvider<unknown>[]>(
@@ -29,6 +34,9 @@ export class NiceTypeaheadService<T extends object> {
     private readonly _searchOptions = signal<object | null>(null);
     private readonly _request = signal<AsyncTypeaheadRequests | null>(null);
     private readonly _nextRequest = signal<AsyncTypeaheadRequests | null>(null);
+
+    private readonly _preloaded = signal(false);
+    private readonly _autoSelectFirstValue = signal(false);
     private readonly _loading = signal(true);
 
     public readonly items = this._items.asReadonly();
@@ -36,17 +44,28 @@ export class NiceTypeaheadService<T extends object> {
     public readonly loading = this._loading.asReadonly();
     public readonly isLastPage = computed(() => !this._nextRequest());
 
-    public init(resource: string): void {
+    public init(resource: string, options?: NiceTypeaheadInitOptions): void {
         this.fetchResources$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(
             switchMap((request) => this.fetchResources(request))
         ).subscribe();
+
         this.fetchActive$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(
             switchMap((request) => this.fetchActive(request))
         ).subscribe();
 
         const provider = this.resources.find((resources) => resources.resource === resource);
-        if (provider) {
-            this.resourceProvider = provider as NiceAsyncTypeaheadResourceProvider<T>;
+        if (!provider) {
+            throw new Error("No provider found for resource " + resource);
+        }
+
+        this.resourceProvider = provider as NiceAsyncTypeaheadResourceProvider<T>;
+
+        if (options?.autoSelectFirstValue) {
+            this._autoSelectFirstValue.set(options.autoSelectFirstValue);
+        }
+
+        if (options?.searchOptions) {
+            this._searchOptions.set(options.searchOptions);
         }
     }
 
@@ -152,6 +171,11 @@ export class NiceTypeaheadService<T extends object> {
                     });
                 } else {
                     this._nextRequest.set(null);
+                }
+
+                if (this._autoSelectFirstValue() && !this._preloaded()) {
+                    this._preloaded.set(true);
+                    this._active.set(result.items[0]);
                 }
             }),
             catchError(() => EMPTY),
