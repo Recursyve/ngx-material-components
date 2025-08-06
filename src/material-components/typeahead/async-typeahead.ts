@@ -155,6 +155,14 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         this.service.setSearchOptions(options);
     }
 
+    public reload(): void {
+        this.service.reload();
+    }
+
+    public reloadActive(): void {
+        this.service.reloadActive();
+    }
+
     protected onScroll(event: Event): void {
         const target = event.target as HTMLElement;
         const threshold = (this.scrollThresholdPercent * 100 * target.scrollHeight) / 100;

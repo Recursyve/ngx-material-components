@@ -81,6 +81,10 @@ export class NiceTypeaheadService<T extends object> {
         this.fetchActive$.next({ id });
     }
 
+    public reload(): void {
+        this.fetchResources$.next({ page: 0, searchQuery: this._request()?.searchQuery ?? "" });
+    }
+
     public reloadActive(): void {
         const active = this._active();
         if (!active || !("id" in active)) {
