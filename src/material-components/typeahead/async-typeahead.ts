@@ -124,6 +124,12 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         });
     }
 
+    public override writeValue(value: T): void {
+        super.writeValue(value);
+
+        this.service.setActive(value);
+    }
+
     public override onFocusChanged(isFocused: boolean): void {
         super.onFocusChanged(isFocused);
 
