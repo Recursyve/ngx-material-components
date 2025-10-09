@@ -124,9 +124,13 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         });
     }
 
-    public override writeValue(value: T): void {
-        super.writeValue(value);
+    public override writeValue(value: T | string | number): void {
+        if (typeof value === "string" || typeof value === "number") {
+            this.service.setActiveFromId(value);
+            return;
+        }
 
+        super.writeValue(value);
         this.service.setActive(value);
     }
 
