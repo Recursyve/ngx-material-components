@@ -1,12 +1,13 @@
 import { computed, DestroyRef, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, defer, EMPTY, finalize, map, Observable, Subject, switchMap } from "rxjs";
+import { catchError, defer, EMPTY, finalize, map, Observable, Subject, switchMap, tap } from "rxjs";
 import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "../constants";
 import { NiceAsyncTypeaheadResourceProvider } from "./async-typeahead.provider";
 
 export type AsyncTypeaheadRequests = {
     page: number;
     searchQuery?: string;
+    onFinish: Subject<void> | null;
 };
 
 export type FetchActiveRequest = {
@@ -81,8 +82,14 @@ export class NiceTypeaheadService<T extends object> {
         this.fetchActive$.next({ id });
     }
 
-    public reload(): void {
-        this.fetchResources$.next({ page: 0, searchQuery: this._request()?.searchQuery ?? "" });
+    public reload(): Observable<void> {
+        const onFinish = new Subject<void>();
+        this.fetchResources$.next({
+            page: 0,
+            searchQuery: this._request()?.searchQuery ?? "",
+            onFinish
+        });
+        return onFinish.asObservable();
     }
 
     public reloadActive(): void {
@@ -102,20 +109,21 @@ export class NiceTypeaheadService<T extends object> {
         this._items.set(items);
     }
 
-    public search(searchQuery: string): void {
-        this.fetchResources$.next({
-            searchQuery,
-            page: 0
-        });
+    public search(searchQuery: string): Observable<void> {
+        const onFinish = new Subject<void>();
+        this.fetchResources$.next({ searchQuery, page: 0, onFinish });
+        return onFinish.asObservable();
     }
 
-    public loadMore(): void {
+    public loadMore(): Observable<void> {
         const nextRequest = this._nextRequest();
         if (!nextRequest || this._loading()) {
-            return;
+            return EMPTY;
         }
 
-        this.fetchResources$.next(nextRequest);
+        const onFinish = new Subject<void>();
+        this.fetchResources$.next({ ...nextRequest, onFinish });
+        return onFinish.asObservable();
     }
 
     public fetchActive(request: FetchActiveRequest): Observable<void> {
@@ -150,6 +158,12 @@ export class NiceTypeaheadService<T extends object> {
     public fetchResources(request: AsyncTypeaheadRequests): Observable<void> {
         return defer(() => {
             if (!this.resourceProvider) {
+                const error = new Error("Resource provider not initialized");
+                if (request.onFinish) {
+                    request.onFinish.error(error);
+                    request.onFinish.complete();
+                }
+
                 return EMPTY;
             }
 
@@ -180,6 +194,25 @@ export class NiceTypeaheadService<T extends object> {
                 if (this._autoSelectFirstValue() && !this._preloaded()) {
                     this._preloaded.set(true);
                     this._active.set(result.items[0]);
+                }
+            }),
+            tap({
+                next: () => {
+                    if (request.onFinish) {
+                        request.onFinish.next();
+                        request.onFinish.complete();
+                    }
+                },
+                error: (error) => {
+                    if (request.onFinish) {
+                        request.onFinish.error(error);
+                        request.onFinish.complete();
+                    }
+                },
+                finalize: () => {
+                    if (request.onFinish && !request.onFinish.closed) {
+                        request.onFinish.complete();
+                    }
                 }
             }),
             catchError(() => EMPTY),

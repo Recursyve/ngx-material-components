@@ -18,6 +18,7 @@ import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
 import { MatFormField, MatFormFieldControl, MatPrefix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
+import { Observable } from "rxjs";
 import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
 import { NiceTypeaheadService } from "./providers";
 import { NiceTypeaheadBase } from "./typeahead-base";
@@ -165,8 +166,8 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         this.service.setSearchOptions(options);
     }
 
-    public reload(): void {
-        this.service.reload();
+    public reload(): Observable<void> {
+        return this.service.reload();
     }
 
     public reloadActive(): void {
