@@ -624,7 +624,7 @@ export class NiceTypeaheadBase<T>
             // because the typing sequence can include the space key.
         } else if (
             !isTyping &&
-            (keyCode === ENTER || keyCode === SPACE) &&
+            keyCode === ENTER &&
             manager.activeItem &&
             !hasModifierKey(event)
         ) {
