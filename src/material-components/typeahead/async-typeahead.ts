@@ -1,6 +1,7 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -10,8 +11,7 @@ import {
     input,
     OnInit,
     viewChild,
-    ViewEncapsulation,
-    booleanAttribute
+    ViewEncapsulation
 } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
@@ -164,6 +164,10 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
 
     public setSearchOptions(options: S | null): void {
         this.service.setSearchOptions(options);
+    }
+
+    public patchSearchOptions(options: S | null): void {
+        this.service.patchSearchOptions(options);
     }
 
     public reload(): Observable<void> {

@@ -74,6 +74,11 @@ export class NiceTypeaheadService<T extends object> {
         this._searchOptions.set(options);
     }
 
+    public patchSearchOptions(options: object | null): void {
+        const currentOptions = this._searchOptions();
+        this._searchOptions.set({ ...currentOptions, ...options });
+    }
+
     public setActive(active: T | null): void {
         this._active.set(active);
     }
