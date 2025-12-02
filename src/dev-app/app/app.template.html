@@ -23,7 +23,7 @@
         <mat-form-field appearance="outline">
             <mat-label>My AsyncTypeahead</mat-label>
 
-            <nice-async-typeahead formControlName="asyncTypeahead" resource="colors" autoSelectFirstValue></nice-async-typeahead>
+            <nice-async-typeahead formControlName="asyncTypeahead" resource="colors" autoSelectFirstValue #typeahead></nice-async-typeahead>
         </mat-form-field>
     </div>
 
@@ -51,6 +51,10 @@
     <div>
         <button mat-flat-button (click)="displayResult()">
             View results
+        </button>
+
+        <button mat-flat-button (click)="patchSearchOptions()">
+            Patch search options
         </button>
 
         <button mat-flat-button (click)="disableAsyncTypeahead()">

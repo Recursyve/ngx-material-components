@@ -1,5 +1,5 @@
 import { JsonPipe } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { AfterViewInit, Component, inject, signal, viewChild } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
@@ -14,8 +14,8 @@ import {
     NiceTypeahead,
     provideAsyncTypeaheadResources
 } from "@recursyve/ngx-material-components/typeahead";
-import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-resource.provider";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
+import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
 
 @Component({
     selector: "nice-root",
@@ -42,8 +42,10 @@ import { NiceChipListItems } from "../../material-components/chip-list/items/chi
         provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])
     ]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
     private _fb = inject(FormBuilder);
+
+    private readonly typeahead = viewChild<NiceAsyncTypeahead<NiceColors, object>>("typeahead");
 
     public items = ["Apple", "Banana", "Orange", "Pear", "Strawberry"];
     public objectItems = [
@@ -101,6 +103,15 @@ export class AppComponent {
     });
 
     public typeaheadValue = signal({});
+
+
+    public ngAfterViewInit(): void {
+        this.typeahead()?.setSearchOptions({ asearchOption: 20 });
+    }
+
+    public patchSearchOptions(): void {
+       this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
+    }
 
     public displayResult(): void {
         this.typeaheadValue.set(this.formGroup.getRawValue());
