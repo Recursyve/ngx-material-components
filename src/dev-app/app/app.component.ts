@@ -106,11 +106,11 @@ export class AppComponent implements AfterViewInit {
 
 
     public ngAfterViewInit(): void {
-        this.typeahead()?.setSearchOptions({ pageSize: 20 });
+        this.typeahead()?.setSearchOptions({ asearchOption: 20 });
     }
 
     public patchSearchOptions(): void {
-       this.typeahead()?.patchSearchOptions({ searchQuery: "Apple" });
+       this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
     }
 
     public displayResult(): void {
