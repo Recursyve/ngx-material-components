@@ -8,6 +8,12 @@
             <nice-typeahead formControlName="typeahead" [values]="items"></nice-typeahead>
         </mat-form-field>
 
+        <mat-form-field appearance="outline" niceFormFieldError>
+            <mat-label>My Typeahead (space does not count as selection)</mat-label>
+        
+            <nice-typeahead formControlName="typeaheadSpaceDoesNotCountAsSelection" [values]="items" [spaceCountsAsSelection]="false"></nice-typeahead>
+        </mat-form-field>
+
         <mat-form-field appearance="outline">
             <mat-label>My Typeahead (with object)</mat-label>
 

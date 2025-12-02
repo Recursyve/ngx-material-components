@@ -14,8 +14,8 @@ import {
     NiceTypeahead,
     provideAsyncTypeaheadResources
 } from "@recursyve/ngx-material-components/typeahead";
-import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-resource.provider";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
+import { ColorsTypeaheadResourceProvider } from "./providers/colors-typeahead-resource.provider";
 
 @Component({
     selector: "nice-root",
@@ -83,6 +83,7 @@ export class AppComponent {
 
     public formGroup = this._fb.group({
         typeahead: this._fb.control(""),
+        typeaheadSpaceDoesNotCountAsSelection: this._fb.control(""),
         select: this._fb.control("", [Validators.required]),
         asyncTypeahead: this._fb.control("")
     });

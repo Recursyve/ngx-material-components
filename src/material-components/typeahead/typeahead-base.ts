@@ -65,6 +65,7 @@ export class NiceTypeaheadBase<T>
     public readonly optionTemplate = input<TemplateRef<{ $implicit: T }>>();
     public readonly panelClass = input<string | string[]>([]);
     public readonly canRemoveValue = input<boolean>(true);
+    public readonly spaceCountsAsSelection = input<boolean>(true);
 
     public readonly selected = output<T | null>();
 
@@ -86,6 +87,7 @@ export class NiceTypeaheadBase<T>
     protected readonly _empty = computed(() => !this._value());
     protected readonly _placeholder = signal("");
     protected readonly _searchValue = signal("");
+    protected readonly _selectionKeys = computed(() => this.spaceCountsAsSelection() ? [SPACE, ENTER] : [ENTER]);
 
     protected readonly _elementRef = inject(ElementRef);
     protected readonly _destroyRef = inject(DestroyRef);
@@ -597,7 +599,7 @@ export class NiceTypeaheadBase<T>
             keyCode === UP_ARROW ||
             keyCode === LEFT_ARROW ||
             keyCode === RIGHT_ARROW;
-        const isOpenKey = keyCode === ENTER || keyCode === SPACE;
+        const isOpenKey = this._selectionKeys().includes(keyCode);
         const manager = this._keyManager;
 
         // Open the select on ALT + arrow key to match the native <select>
@@ -624,7 +626,7 @@ export class NiceTypeaheadBase<T>
             // because the typing sequence can include the space key.
         } else if (
             !isTyping &&
-            (keyCode === ENTER || keyCode === SPACE) &&
+            this._selectionKeys().includes(keyCode) &&
             manager.activeItem &&
             !hasModifierKey(event)
         ) {
