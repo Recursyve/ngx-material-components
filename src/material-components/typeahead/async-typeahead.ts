@@ -166,6 +166,10 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         this.service.setSearchOptions(options);
     }
 
+    public setActive(active: T | null): void {
+        this.service.setActive(active);
+    }
+
     public patchSearchOptions(options: S | null): void {
         this.service.patchSearchOptions(options);
     }
