@@ -10,6 +10,8 @@ import {
     inject,
     input,
     OnInit,
+    signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from "@angular/core";
@@ -20,7 +22,7 @@ import { MatFormField, MatFormFieldControl, MatPrefix } from "@angular/material/
 import { MatInput } from "@angular/material/input";
 import { Observable } from "rxjs";
 import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
-import { NiceTypeaheadService } from "./providers";
+import { NiceTypeaheadAutoSelectMode, NiceTypeaheadService } from "./providers";
 import { NiceTypeaheadBase } from "./typeahead-base";
 
 @Component({
@@ -68,11 +70,18 @@ import { NiceTypeaheadBase } from "./typeahead-base";
 export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeaheadBase<T> implements OnInit {
     public readonly resource = input.required<string>();
     public readonly searchOptions = input<S | null>(null);
+    public readonly autoSelectMode = input<NiceTypeaheadAutoSelectMode>("none");
+
+    /**
+     * @deprecated Use autoSelectMode instead
+     */
     public readonly autoSelectFirstValue = input(false, { transform: booleanAttribute });
 
     public readonly filteredValues = computed(() => this.service.items());
 
     protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>("optionsContainer");
+
+    private readonly prefilled = signal<boolean>(false);
 
     private readonly service = inject(NiceTypeaheadService);
 
@@ -113,14 +122,24 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         effect(() => {
             this.value = this.service.active();
         });
+
+        effect(() => {
+            if (this.focused) {
+                return;
+            }
+
+            const items = this.service.items();
+            untracked(() => this.service.autoSelect(items));
+        });
     }
 
     public override ngOnInit(): void {
         super.ngOnInit();
 
+        const autoSelectMode = this.autoSelectMode() ?? (this.autoSelectFirstValue() ? "first_result" : "none");
         const searchOptions = this.optionsContainer();
         this.service.init(this.resource(), {
-            autoSelectFirstValue: this.autoSelectFirstValue(),
+            autoSelectMode: autoSelectMode,
             ...(searchOptions && { searchOptions: searchOptions })
         });
     }
@@ -138,9 +157,16 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
     public override onFocusChanged(isFocused: boolean): void {
         super.onFocusChanged(isFocused);
 
-        if (isFocused) {
-            this._searchControl.patchValue("");
+        if (!isFocused) {
+            return;
         }
+
+        if (this.prefilled()) {
+            this.prefilled.set(false);
+            return;
+        }
+
+        this._searchControl.patchValue("");
     }
 
     public override formatLabel(item: T): string {
@@ -160,6 +186,15 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
         this._selectOptionByValue(option.value);
 
         this.stateChanges.next();
+    }
+
+    public prefill(searchQuery: string): void {
+        this.prefilled.set(true);
+        this._searchControl.patchValue(searchQuery);
+    }
+
+    public search(searchQuery: string): void {
+        this.service.search(searchQuery);
     }
 
     public setSearchOptions(options: S | null): void {
