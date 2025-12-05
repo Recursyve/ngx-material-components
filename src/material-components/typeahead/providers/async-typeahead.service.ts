@@ -4,6 +4,8 @@ import { catchError, defer, EMPTY, finalize, map, Observable, Subject, switchMap
 import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "../constants";
 import { NiceAsyncTypeaheadResourceProvider } from "./async-typeahead.provider";
 
+export type NiceTypeaheadAutoSelectMode = "first_result" | "single_result" | "none";
+
 export type AsyncTypeaheadRequests = {
     page: number;
     searchQuery?: string;
@@ -15,7 +17,7 @@ export type FetchActiveRequest = {
 };
 
 export type NiceTypeaheadInitOptions = {
-    autoSelectFirstValue?: boolean;
+    autoSelectMode?: NiceTypeaheadAutoSelectMode;
     searchOptions?: object;
 };
 
@@ -37,7 +39,7 @@ export class NiceTypeaheadService<T extends object> {
     private readonly _nextRequest = signal<AsyncTypeaheadRequests | null>(null);
 
     private readonly _preloaded = signal(false);
-    private readonly _autoSelectFirstValue = signal(false);
+    private readonly _autoSelectMode = signal<NiceTypeaheadAutoSelectMode>("none");
     private readonly _loading = signal(true);
 
     public readonly items = this._items.asReadonly();
@@ -61,12 +63,24 @@ export class NiceTypeaheadService<T extends object> {
 
         this.resourceProvider = provider as NiceAsyncTypeaheadResourceProvider<T>;
 
-        if (options?.autoSelectFirstValue) {
-            this._autoSelectFirstValue.set(options.autoSelectFirstValue);
+        if (options?.autoSelectMode) {
+            this._autoSelectMode.set(options.autoSelectMode);
         }
 
         if (options?.searchOptions) {
             this._searchOptions.set(options.searchOptions);
+        }
+    }
+
+    public autoSelect(items: T[]): void {
+        if (this._autoSelectMode() === "first_result" && !this._preloaded()) {
+            this._preloaded.set(true);
+            this._active.set(items[0]);
+        }
+        
+        if (this._autoSelectMode() === "single_result" && items.length === 1) {
+            this._preloaded.set(true);
+            this._active.set(items[0]);
         }
     }
 
@@ -194,11 +208,6 @@ export class NiceTypeaheadService<T extends object> {
                     });
                 } else {
                     this._nextRequest.set(null);
-                }
-
-                if (this._autoSelectFirstValue() && !this._preloaded()) {
-                    this._preloaded.set(true);
-                    this._active.set(result.items[0]);
                 }
             }),
             tap({
