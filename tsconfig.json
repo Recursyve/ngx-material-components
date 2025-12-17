@@ -1,6 +1,8 @@
 {
     "extends": "./src/material-components/tsconfig.lib.json",
     "compilerOptions": {
+        "esModuleInterop": true,
+        "moduleResolution": "bundler",
         "paths": {
             "@recursyve/ngx-material-components/*": ["./src/material-components/*"]
         }

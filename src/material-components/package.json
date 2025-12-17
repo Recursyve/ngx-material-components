@@ -2,8 +2,8 @@
     "name": "@recursyve/ngx-material-components",
     "version": "0.0.0-PLACEHOLDER",
     "peerDependencies": {
-        "@angular/common": "^20.2.0",
-        "@angular/core": "^20.2.0"
+        "@angular/common": "^21.0.5",
+        "@angular/core": "^21.0.5"
     },
     "dependencies": {
         "tslib": "^2.3.0"
