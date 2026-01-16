@@ -161,7 +161,7 @@ export class NiceTypeaheadService<T extends object> {
                 return EMPTY;
             }
 
-            return this.resourceProvider.getById(request.id)
+            return this.resourceProvider.getById(request.id, this._searchOptions() ?? {});
         }).pipe(
             map((item) => {
                 this._items.set([item]);
