@@ -1,21 +1,34 @@
 import { JsonPipe } from "@angular/common";
-import { AfterViewInit, Component, inject, signal, viewChild } from "@angular/core";
+import {
+    AfterViewInit,
+    Component,
+    inject,
+    signal,
+    viewChild,
+} from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NiceChipListDirective } from "@recursyve/ngx-material-components/chip-list";
-import { NiceDropzone, NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig } from "@recursyve/ngx-material-components/dropzone";
+import {
+    NiceDropzone,
+    NiceDropzoneFileSizeConfig,
+    NiceDropzoneImageConfig,
+} from "@recursyve/ngx-material-components/dropzone";
 import { NiceFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
 import {
     NiceAsyncTypeahead,
     NiceTypeahead,
-    provideAsyncTypeaheadResources
+    provideAsyncTypeaheadResources,
 } from "@recursyve/ngx-material-components/typeahead";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
-import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
+import {
+    ColorsTypeaheadResourceProvider,
+    NiceColors,
+} from "./providers/colors-typeahead-resource.provider";
 
 @Component({
     selector: "nice-root",
@@ -34,59 +47,60 @@ import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-
         NiceFormFieldErrorDirective,
         MatInput,
         NiceChipListDirective,
-        NiceChipListItems
+        NiceChipListItems,
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
     providers: [
-        provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])
-    ]
+        provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider]),
+    ],
 })
 export class AppComponent implements AfterViewInit {
     private _fb = inject(FormBuilder);
 
-    private readonly typeahead = viewChild<NiceAsyncTypeahead<NiceColors, object>>("typeahead");
+    private readonly typeahead =
+        viewChild<NiceAsyncTypeahead<NiceColors, object>>("typeahead");
 
     public items = ["Apple", "Banana", "Orange", "Pear", "Strawberry"];
     public objectItems = [
         {
             id: 1,
-            value: "Apple"
+            value: "Apple",
         },
         {
             id: 2,
-            value: "Banana"
+            value: "Banana",
         },
         {
             id: 3,
-            value: "Orange"
+            value: "Orange",
         },
         {
             id: 4,
-            value: "Pear"
+            value: "Pear",
         },
         {
             id: 5,
-            value: "Strawberry"
-        }
+            value: "Strawberry",
+        },
     ];
     public loading = false;
 
     public dropzoneFileConfig: NiceDropzoneFileSizeConfig = {
         size: 1024,
-        unit: "MB"
+        unit: "MB",
     };
     public dropzoneImageConfig: NiceDropzoneImageConfig = {
         recommendedSize: {
             width: 1024,
-            height: 1024
-        }
+            height: 1024,
+        },
     };
 
     public formGroup = this._fb.group({
         typeahead: this._fb.control(""),
         select: this._fb.control("", [Validators.required]),
-        asyncTypeahead: this._fb.control("")
+        asyncTypeahead: this._fb.control(""),
     });
 
     public formGroupWithErrors = this._fb.group({
@@ -95,26 +109,31 @@ export class AppComponent implements AfterViewInit {
     });
 
     public chipListFormGroup = this._fb.group({
-        chipList: this._fb.control(null)
+        chipList: this._fb.control(null),
     });
 
     public dropzoneFormGroup = this._fb.group({
-        dropzone: this._fb.control(null)
+        dropzone: this._fb.control(null),
     });
 
     public typeaheadValue = signal({});
-
 
     public ngAfterViewInit(): void {
         this.typeahead()?.setSearchOptions({ asearchOption: 20 });
     }
 
     public patchSearchOptions(): void {
-       this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
+        this.typeahead()?.patchSearchOptions({
+            anotherSearchOption: "Fuchsia",
+        });
     }
 
     public selectFirstValue(): void {
         this.typeahead()?.setActive(this.typeahead()?.filteredValues()[0]);
+    }
+
+    public prefill(): void {
+        this.typeahead()?.prefill("Yellow");
     }
 
     public displayResult(): void {

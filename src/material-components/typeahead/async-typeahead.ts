@@ -176,6 +176,7 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
     public override removeActiveValue() {
         super.removeActiveValue();
         this.prefilled.set(false);
+        this._searchControl.patchValue("");
         this.service.setActive(null);
     }
 
