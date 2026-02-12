@@ -117,6 +117,10 @@ export class AppComponent implements AfterViewInit {
         this.typeahead()?.setActive(this.typeahead()?.filteredValues()[0]);
     }
 
+    public prefill(): void {
+        this.typeahead()?.prefill("Yellow");
+    }
+
     public displayResult(): void {
         this.typeaheadValue.set(this.formGroup.getRawValue());
 

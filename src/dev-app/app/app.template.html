@@ -1,11 +1,17 @@
-<div style="padding: 16px;" [niceLoadingOverlay]="loading">
+<div style="padding: 16px" [niceLoadingOverlay]="loading">
     <h3>MyComponents</h3>
 
-    <div style="display: flex; align-items: center; gap: 16px;" [formGroup]="formGroup">
+    <div
+        style="display: flex; align-items: center; gap: 16px"
+        [formGroup]="formGroup"
+    >
         <mat-form-field appearance="outline" niceFormFieldError>
             <mat-label>My Typeahead</mat-label>
 
-            <nice-typeahead formControlName="typeahead" [values]="items"></nice-typeahead>
+            <nice-typeahead
+                formControlName="typeahead"
+                [values]="items"
+            ></nice-typeahead>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -13,7 +19,7 @@
 
             <mat-select formControlName="select">
                 @for (item of items; track item) {
-                    <mat-option [value]="item">{{ item }}</mat-option>
+                <mat-option [value]="item">{{ item }}</mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -23,24 +29,39 @@
         <mat-form-field appearance="outline">
             <mat-label>My AsyncTypeahead</mat-label>
 
-            <nice-async-typeahead formControlName="asyncTypeahead" resource="colors" autoSelectFirstValue #typeahead></nice-async-typeahead>
+            <nice-async-typeahead
+                formControlName="asyncTypeahead"
+                resource="colors"
+                autoSelectFirstValue
+                #typeahead
+            ></nice-async-typeahead>
         </mat-form-field>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 16px;">
-        <mat-form-field appearance="outline" style="width: 300px;">
+    <div style="display: flex; align-items: center; gap: 16px">
+        <mat-form-field appearance="outline" style="width: 300px">
             <mat-label>My Typeahead (with object)</mat-label>
 
-            <nice-typeahead [values]="objectItems" labelProperty="value"></nice-typeahead>
+            <nice-typeahead
+                [values]="objectItems"
+                labelProperty="value"
+            ></nice-typeahead>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 300px;">
+        <mat-form-field appearance="outline" style="width: 300px">
             <mat-label>My Typeahead (with custom template)</mat-label>
 
-            <nice-async-typeahead resource="colors" [optionTemplate]="colorTemplate">
+            <nice-async-typeahead
+                resource="colors"
+                [optionTemplate]="colorTemplate"
+            >
                 <ng-template #colorTemplate let-item>
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span [style.width]="'16px'" [style.height]="'16px'" [style.background-color]="item.hex"></span>
+                    <div style="display: flex; align-items: center; gap: 4px">
+                        <span
+                            [style.width]="'16px'"
+                            [style.height]="'16px'"
+                            [style.background-color]="item.hex"
+                        ></span>
                         <span>{{ item.name }}</span>
                     </div>
                 </ng-template>
@@ -49,14 +70,15 @@
     </div>
 
     <div>
+        <button mat-flat-button (click)="prefill()">
+            Prefill with "Yellow"
+        </button>
 
         <button mat-flat-button (click)="selectFirstValue()">
             Select first value
         </button>
 
-        <button mat-flat-button (click)="displayResult()">
-            View results
-        </button>
+        <button mat-flat-button (click)="displayResult()">View results</button>
 
         <button mat-flat-button (click)="patchSearchOptions()">
             Patch search options
@@ -71,49 +93,68 @@
         </button>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 4px; padding-top: 16px;">
+    <div
+        style="display: flex; align-items: center; gap: 4px; padding-top: 16px"
+    >
         <span>Value:</span>
         <span>{{ typeaheadValue() | json }}</span>
     </div>
 
     <div style="padding-top: 100px"></div>
 
-    <div style="display: flex; align-items: center; gap: 16px;" [formGroup]="formGroupWithErrors">
+    <div
+        style="display: flex; align-items: center; gap: 16px"
+        [formGroup]="formGroupWithErrors"
+    >
         <mat-form-field appearance="outline" niceFormFieldError>
             <mat-label>Name</mat-label>
 
-            <input matInput formControlName="name">
+            <input matInput formControlName="name" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" niceFormFieldError>
             <mat-label>Count</mat-label>
 
-            <input type="number" matInput formControlName="count">
+            <input type="number" matInput formControlName="count" />
         </mat-form-field>
     </div>
 
-    <div style="width: 750px; padding-top: 64px;" [formGroup]="chipListFormGroup">
+    <div
+        style="width: 750px; padding-top: 64px"
+        [formGroup]="chipListFormGroup"
+    >
         <mat-form-field appearance="outline">
             <mat-label>My Typeahead</mat-label>
 
-            <nice-async-typeahead formControlName="chipList" resource="colors" niceChipList [withItemList]="listItems" />
+            <nice-async-typeahead
+                formControlName="chipList"
+                resource="colors"
+                niceChipList
+                [withItemList]="listItems"
+            />
         </mat-form-field>
 
         <nice-chip-list-items #listItems />
     </div>
 
-    <div style="width: 750px; padding-top: 64px;" [formGroup]="dropzoneFormGroup">
-        <nice-dropzone formControlName="dropzone" mode="file" [config]="dropzoneImageConfig" [maxFileSize]="dropzoneFileConfig" [multiple]="true" />
+    <div
+        style="width: 750px; padding-top: 64px"
+        [formGroup]="dropzoneFormGroup"
+    >
+        <nice-dropzone
+            formControlName="dropzone"
+            mode="file"
+            [config]="dropzoneImageConfig"
+            [maxFileSize]="dropzoneFileConfig"
+            [multiple]="true"
+        />
     </div>
 
-    <div style="padding-top: 32px; display: flex; gap: 16px;">
+    <div style="padding-top: 32px; display: flex; gap: 16px">
         <button mat-flat-button (click)="disableDropzone()">
             Disable dropzone
         </button>
 
-        <div>
-            {{ dropzoneFormGroup.get("dropzone")?.value | json }}
-        </div>
+        <div>{{ dropzoneFormGroup.get("dropzone")?.value | json }}</div>
     </div>
 </div>
-
