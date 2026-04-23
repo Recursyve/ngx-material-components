@@ -67,7 +67,8 @@ import { NiceTypeaheadBase } from "./typeahead-base";
         "(blur)": "onFocusChanged(false)"
     }
 })
-export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeaheadBase<T> implements OnInit {
+// eslint-disable-next-line max-len
+export class NiceAsyncTypeahead<T extends object, S extends object = object> extends NiceTypeaheadBase<T> implements OnInit {
     public readonly resource = input.required<string>();
     public readonly searchOptions = input<S | null>(null);
     public readonly autoSelectMode = input<NiceTypeaheadAutoSelectMode>("none");
@@ -78,12 +79,13 @@ export class NiceAsyncTypeahead<T, S extends object = object> extends NiceTypeah
     public readonly autoSelectFirstValue = input(false, { transform: booleanAttribute });
 
     public readonly filteredValues = computed(() => this.service.items());
+    public readonly activeValue = computed(() => this.service.active());
 
     protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>("optionsContainer");
 
     private readonly prefilled = signal<boolean>(false);
 
-    private readonly service = inject(NiceTypeaheadService);
+    private readonly service = inject<NiceTypeaheadService<T>>(NiceTypeaheadService);
 
     protected override _compareWith = (o1: T, o2: T) => {
         if (!(typeof o1 === "object" && o1 && typeof o2 === "object" && o2)) {

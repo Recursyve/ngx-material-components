@@ -1,5 +1,5 @@
 import { JsonPipe } from "@angular/common";
-import { AfterViewInit, Component, inject, signal, viewChild } from "@angular/core";
+import { AfterViewInit, Component, effect, inject, signal, viewChild } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
@@ -104,6 +104,12 @@ export class AppComponent implements AfterViewInit {
 
     public typeaheadValue = signal({});
 
+    constructor() {
+        effect(() => {
+            console.log(this.typeahead()?.activeValue());
+        });
+    }
+
 
     public ngAfterViewInit(): void {
         this.typeahead()?.setSearchOptions({ asearchOption: 20 });
@@ -114,7 +120,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     public selectFirstValue(): void {
-        this.typeahead()?.setActive(this.typeahead()?.filteredValues()[0]);
+        this.typeahead()?.setActive(this.typeahead()?.filteredValues()[0] ?? null);
     }
 
     public prefill(): void {

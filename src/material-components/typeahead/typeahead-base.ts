@@ -17,6 +17,7 @@ import {
     QueryList,
     signal,
     TemplateRef,
+    untracked,
     viewChild,
     ViewChildren
 } from "@angular/core";
@@ -125,7 +126,7 @@ export class NiceTypeaheadBase<T>
     public _onTouched?: () => void;
 
     public get placeholder(): string {
-        return this._placeholder();
+        return untracked(() => this._placeholder());
     }
 
     public set placeholder(placeholder) {
@@ -161,7 +162,7 @@ export class NiceTypeaheadBase<T>
     }
 
     public get value(): T | null {
-        return this._value();
+        return untracked(() => this._value());
     }
 
     public set value(value: T | null) {
@@ -174,7 +175,7 @@ export class NiceTypeaheadBase<T>
     }
 
     public get empty(): boolean {
-        return !this._value();
+        return untracked(() => !this._value());
     }
 
     public get shouldLabelFloat(): boolean {

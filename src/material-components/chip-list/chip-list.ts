@@ -18,7 +18,7 @@ import { NiceChipListItems } from "./items/chip-list-items";
 @Directive({
     selector: "input[niceChipList], nice-async-typeahead[niceChipList]"
 })
-export class NiceChipListDirective<T> implements ControlValueAccessor, OnInit {
+export class NiceChipListDirective<T extends object> implements ControlValueAccessor, OnInit {
     public readonly withItemList = input.required<NiceChipListItems<T>>();
     public readonly reloadOnSelected = input<boolean>(true);
     public readonly separatorKeyboardCodes = input<string[]>(["Enter"]);
