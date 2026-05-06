@@ -4,7 +4,7 @@ import { catchError, defer, EMPTY, finalize, map, Observable, Subject, switchMap
 import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "../constants";
 import { NiceAsyncTypeaheadResourceProvider } from "./async-typeahead.provider";
 
-export type NiceTypeaheadAutoSelectMode = "first_result" | "single_result" | "none";
+export type NiceTypeaheadAutoSelectMode = "first_result" | "single_result" | "exact_result" | "none";
 
 export type AsyncTypeaheadRequests = {
     page: number;
@@ -17,15 +17,16 @@ export type FetchActiveRequest = {
 };
 
 export type NiceTypeaheadInitOptions = {
-    autoSelectMode?: NiceTypeaheadAutoSelectMode;
+    autoSelectModes?: NiceTypeaheadAutoSelectMode[];
     searchOptions?: object;
 };
 
 @Injectable()
 export class NiceTypeaheadService<T extends object> {
-    private readonly resources = inject<NiceAsyncTypeaheadResourceProvider<unknown>[]>(
-        NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER, { optional: true }
-    ) ?? [];
+    private readonly resources =
+        inject<NiceAsyncTypeaheadResourceProvider<unknown>[]>(NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER, {
+            optional: true,
+        }) ?? [];
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly fetchResources$ = new Subject<AsyncTypeaheadRequests>();
@@ -39,7 +40,7 @@ export class NiceTypeaheadService<T extends object> {
     private readonly _nextRequest = signal<AsyncTypeaheadRequests | null>(null);
 
     private readonly _preloaded = signal(false);
-    private readonly _autoSelectMode = signal<NiceTypeaheadAutoSelectMode>("none");
+    private readonly _autoSelectModes = signal<NiceTypeaheadAutoSelectMode[]>(["none"]);
     private readonly _loading = signal(true);
 
     public readonly items = this._items.asReadonly();
@@ -48,13 +49,15 @@ export class NiceTypeaheadService<T extends object> {
     public readonly isLastPage = computed(() => !this._nextRequest());
 
     public init(resource: string, options?: NiceTypeaheadInitOptions): void {
-        this.fetchResources$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(
-            switchMap((request) => this.fetchResources(request))
-        ).subscribe();
+        this.fetchResources$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(switchMap((request) => this.fetchResources(request)))
+            .subscribe();
 
-        this.fetchActive$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(
-            switchMap((request) => this.fetchActive(request))
-        ).subscribe();
+        this.fetchActive$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(switchMap((request) => this.fetchActive(request)))
+            .subscribe();
 
         const provider = this.resources.find((resources) => resources.resource === resource);
         if (!provider) {
@@ -63,8 +66,8 @@ export class NiceTypeaheadService<T extends object> {
 
         this.resourceProvider = provider as NiceAsyncTypeaheadResourceProvider<T>;
 
-        if (options?.autoSelectMode) {
-            this._autoSelectMode.set(options.autoSelectMode);
+        if (options?.autoSelectModes) {
+            this._autoSelectModes.set(options.autoSelectModes);
         }
 
         if (options?.searchOptions) {
@@ -73,15 +76,24 @@ export class NiceTypeaheadService<T extends object> {
     }
 
     public autoSelect(items: T[]): void {
-        if (this._autoSelectMode() === "first_result" && !this._preloaded()) {
-            this._preloaded.set(true);
-            this._active.set(items[0]);
+        for (const autoSelectMode of this._autoSelectModes()) {
+            if (autoSelectMode === "first_result" && !this._preloaded()) {
+                this._active.set(items[0]);
+            }
+
+            if (autoSelectMode === "single_result" && items.length === 1) {
+                this._active.set(items[0]);
+            }
+
+            if (autoSelectMode === "exact_result") {
+                const exactMatch = items.find((item) => this.formatLabel(item) === this._request()?.searchQuery);
+                if (exactMatch) {
+                    this._active.set(exactMatch);
+                }
+            }
         }
-        
-        if (this._autoSelectMode() === "single_result" && items.length === 1) {
-            this._preloaded.set(true);
-            this._active.set(items[0]);
-        }
+
+        this._preloaded.set(true);
     }
 
     public setSearchOptions(options: object | null): void {
@@ -106,7 +118,7 @@ export class NiceTypeaheadService<T extends object> {
         this.fetchResources$.next({
             page: 0,
             searchQuery: this._request()?.searchQuery ?? "",
-            onFinish
+            onFinish,
         });
         return onFinish.asObservable();
     }
@@ -122,10 +134,6 @@ export class NiceTypeaheadService<T extends object> {
         }
 
         this.setActiveFromId(active.id);
-    }
-
-    public setItems(items: T[]): void {
-        this._items.set(items);
     }
 
     public search(searchQuery: string): Observable<void> {
@@ -170,7 +178,7 @@ export class NiceTypeaheadService<T extends object> {
             catchError(() => EMPTY),
             finalize(() => {
                 this._loading.set(false);
-            })
+            }),
         );
     }
 
@@ -195,16 +203,13 @@ export class NiceTypeaheadService<T extends object> {
                 if (request.page === 0) {
                     this._items.set(result.items as T[]);
                 } else {
-                    this._items.set([
-                        ...this._items(),
-                        ...(result.items as T[])
-                    ]);
+                    this._items.set([...this._items(), ...(result.items as T[])]);
                 }
 
                 if (result.nextPage) {
                     this._nextRequest.set({
                         ...request,
-                        page: result.nextPage
+                        page: result.nextPage,
                     });
                 } else {
                     this._nextRequest.set(null);

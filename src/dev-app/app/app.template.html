@@ -32,7 +32,7 @@
             <nice-async-typeahead
                 formControlName="asyncTypeahead"
                 resource="colors"
-                autoSelectFirstValue
+                [autoSelectModes]="['exact_result', 'single_result']"
                 #typeahead
             ></nice-async-typeahead>
         </mat-form-field>
@@ -71,11 +71,7 @@
 
     <div>
         <button mat-flat-button (click)="prefill()">
-            Prefill with "Yellow"
-        </button>
-
-        <button mat-flat-button (click)="selectFirstValue()">
-            Select first value
+            Prefill with "Red"
         </button>
 
         <button mat-flat-button (click)="displayResult()">View results</button>

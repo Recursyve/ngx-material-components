@@ -14,6 +14,7 @@ export type NiceColors = {
 @Injectable()
 export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceProvider<NiceColors> {
     private readonly colors: NiceColors[] = [
+        { id: 0, name: "Red Ish", hex: "#ff0001" },
         { id: 1, name: "Red", hex: "#ff0000" },
         { id: 2, name: "Green", hex: "#00ff00" },
         { id: 3, name: "Blue", hex: "#0000ff" },
@@ -63,7 +64,7 @@ export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceP
         { id: 47, name: "Thistle", hex: "#d8bfd8" },
         { id: 48, name: "Wheat", hex: "#f5deb3" },
         { id: 49, name: "Terracotta", hex: "#e2725b" },
-        { id: 50, name: "Cherry", hex: "#de3163" }
+        { id: 50, name: "Cherry", hex: "#de3163" },
     ];
 
     public resource = "colors";
@@ -73,7 +74,6 @@ export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceP
         page: number,
         options: object = {}
     ): Observable<NiceAsyncTypeaheadSearchResult<NiceColors>> {
-        console.log(options);
 
         const pageSize = 10; // Number of results per page
         const lowerCaseSearchQuery = searchQuery.toLowerCase();
@@ -107,6 +107,6 @@ export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceP
     }
 
     public override format(item: NiceColors): string {
-        return `${item.name} (${item.hex.toUpperCase()})`;
+        return `${item.name}`;
     }
 }

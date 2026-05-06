@@ -119,12 +119,8 @@ export class AppComponent implements AfterViewInit {
        this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
     }
 
-    public selectFirstValue(): void {
-        this.typeahead()?.setActive(this.typeahead()?.filteredValues()[0] ?? null);
-    }
-
     public prefill(): void {
-        this.typeahead()?.prefill("Yellow");
+        this.typeahead()?.prefill("Red");
     }
 
     public displayResult(): void {
