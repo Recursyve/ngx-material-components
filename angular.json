@@ -3,7 +3,8 @@
     "version": 1,
     "newProjectRoot": "projects",
     "cli": {
-        "packageManager": "npm"
+        "packageManager": "npm",
+        "analytics": "5a74f7af-6b48-4143-b5f4-c2a536f9200e"
     },
     "projects": {
         "ngx-material-components": {

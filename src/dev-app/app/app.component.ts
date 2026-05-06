@@ -124,7 +124,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     public prefill(): void {
-        this.typeahead()?.prefill("Yellow");
+        this.typeahead()?.prefill("Red");
     }
 
     public displayResult(): void {

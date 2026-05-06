@@ -63,7 +63,8 @@ export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceP
         { id: 47, name: "Thistle", hex: "#d8bfd8" },
         { id: 48, name: "Wheat", hex: "#f5deb3" },
         { id: 49, name: "Terracotta", hex: "#e2725b" },
-        { id: 50, name: "Cherry", hex: "#de3163" }
+        { id: 50, name: "Cherry", hex: "#de3163" },
+        { id: 51, name: "Red Ish", hex: "#ff0001" },
     ];
 
     public resource = "colors";
@@ -107,6 +108,6 @@ export class ColorsTypeaheadResourceProvider extends NiceAsyncTypeaheadResourceP
     }
 
     public override format(item: NiceColors): string {
-        return `${item.name} (${item.hex.toUpperCase()})`;
+        return `${item.name}`;
     }
 }

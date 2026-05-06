@@ -18,7 +18,11 @@ import {
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
-import { MatFormField, MatFormFieldControl, MatPrefix } from "@angular/material/form-field";
+import {
+    MatFormField,
+    MatFormFieldControl,
+    MatPrefix
+} from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { Observable } from "rxjs";
 import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
@@ -49,11 +53,11 @@ import { NiceTypeaheadBase } from "./typeahead-base";
         NiceTypeaheadService
     ],
     host: {
-        "role": "combobox",
+        role: "combobox",
         "aria-haspopup": "listbox",
-        "class": "nice-typeahead",
+        class: "nice-typeahead",
         "[attr.id]": "id",
-        "[attr.aria-controls]": "panelOpen ? id + \"-panel\" : null",
+        "[attr.aria-controls]": 'panelOpen ? id + "-panel" : null',
         "[attr.aria-expanded]": "panelOpen",
         "[attr.aria-required]": "required.toString()",
         "[attr.aria-disabled]": "disabled.toString()",
@@ -68,24 +72,31 @@ import { NiceTypeaheadBase } from "./typeahead-base";
     }
 })
 // eslint-disable-next-line max-len
-export class NiceAsyncTypeahead<T extends object, S extends object = object> extends NiceTypeaheadBase<T> implements OnInit {
+export class NiceAsyncTypeahead<T extends object, S extends object = object>
+    extends NiceTypeaheadBase<T>
+    implements OnInit
+{
     public readonly resource = input.required<string>();
     public readonly searchOptions = input<S | null>(null);
-    public readonly autoSelectMode = input<NiceTypeaheadAutoSelectMode>("none");
+    public readonly autoSelectModes = input<NiceTypeaheadAutoSelectMode[]>(["none"]);
 
     /**
      * @deprecated Use autoSelectMode instead
      */
-    public readonly autoSelectFirstValue = input(false, { transform: booleanAttribute });
+    public readonly autoSelectFirstValue = input(false, {
+        transform: booleanAttribute
+    });
 
     public readonly filteredValues = computed(() => this.service.items());
     public readonly activeValue = computed(() => this.service.active());
 
-    protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>("optionsContainer");
+    protected readonly optionsContainer =
+        viewChild<ElementRef<HTMLElement>>("optionsContainer");
 
     private readonly prefilled = signal<boolean>(false);
 
-    private readonly service = inject<NiceTypeaheadService<T>>(NiceTypeaheadService);
+    private readonly service =
+        inject<NiceTypeaheadService<T>>(NiceTypeaheadService);
 
     protected override _compareWith = (o1: T, o2: T) => {
         if (!(typeof o1 === "object" && o1 && typeof o2 === "object" && o2)) {
@@ -118,7 +129,10 @@ export class NiceAsyncTypeahead<T extends object, S extends object = object> ext
                 return;
             }
 
-            container.nativeElement.addEventListener("scroll", this.onScroll.bind(this));
+            container.nativeElement.addEventListener(
+                "scroll",
+                this.onScroll.bind(this)
+            );
         });
 
         effect(() => {
@@ -138,11 +152,13 @@ export class NiceAsyncTypeahead<T extends object, S extends object = object> ext
     public override ngOnInit(): void {
         super.ngOnInit();
 
-        const autoSelectMode = this.autoSelectMode() ?? (this.autoSelectFirstValue() ? "first_result" : "none");
+        const autoSelectMode =
+            this.autoSelectModes() ??
+            (this.autoSelectFirstValue() ? ["first_result"] : ["none"]);
         const searchOptions = this.optionsContainer();
         this.service.init(this.resource(), {
-            autoSelectMode: autoSelectMode,
-            ...(searchOptions && { searchOptions: searchOptions })
+            autoSelectModes: autoSelectMode,
+            ...(searchOptions && { searchOptions: searchOptions }),
         });
     }
 
@@ -222,14 +238,18 @@ export class NiceAsyncTypeahead<T extends object, S extends object = object> ext
 
     protected onScroll(event: Event): void {
         const target = event.target as HTMLElement;
-        const threshold = (this.scrollThresholdPercent * 100 * target.scrollHeight) / 100;
+        const threshold =
+            (this.scrollThresholdPercent * 100 * target.scrollHeight) / 100;
         const current = target.scrollTop + target.clientHeight;
 
         if (this.lastScrollHeight > target.scrollHeight) {
             this.lastScrollHeight = 0;
         }
 
-        if (current > threshold && this.lastScrollHeight < target.scrollHeight) {
+        if (
+            current > threshold &&
+            this.lastScrollHeight < target.scrollHeight
+        ) {
             this.service.loadMore();
             this.lastScrollHeight = target.scrollHeight;
         }
