@@ -78,6 +78,10 @@ export class NiceAsyncTypeahead<T extends object, S extends object = object>
 {
     public readonly resource = input.required<string>();
     public readonly searchOptions = input<S | null>(null);
+
+    /**
+        * @description Priority is base on the order of the array. The first item has the highest priority.
+     */
     public readonly autoSelectModes = input<NiceTypeaheadAutoSelectMode[]>(["none"]);
 
     /**

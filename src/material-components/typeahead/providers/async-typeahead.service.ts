@@ -76,24 +76,24 @@ export class NiceTypeaheadService<T extends object> {
     }
 
     public autoSelect(items: T[]): void {
-        if (this._autoSelectModes().includes("first_result") && !this._preloaded()) {
-            this._preloaded.set(true);
-            this._active.set(items[0]);
-        }
+        for (const autoSelectMode of this._autoSelectModes()) {
+            if (autoSelectMode === "first_result" && !this._preloaded()) {
+                this._active.set(items[0]);
+            }
 
-        if (this._autoSelectModes().includes("single_result") && items.length === 1) {
-            this._preloaded.set(true);
-            this._active.set(items[0]);
-        }
+            if (autoSelectMode === "single_result" && items.length === 1) {
+                this._active.set(items[0]);
+            }
 
-        if (this._autoSelectModes().includes("exact_result")) {
-            this._preloaded.set(true);
-
-            const exactMatch = items.find((item) => this.formatLabel(item) === this._request()?.searchQuery);
-            if (exactMatch) {
-                this._active.set(exactMatch);
+            if (autoSelectMode === "exact_result") {
+                const exactMatch = items.find((item) => this.formatLabel(item) === this._request()?.searchQuery);
+                if (exactMatch) {
+                    this._active.set(exactMatch);
+                }
             }
         }
+
+        this._preloaded.set(true);
     }
 
     public setSearchOptions(options: object | null): void {
@@ -134,10 +134,6 @@ export class NiceTypeaheadService<T extends object> {
         }
 
         this.setActiveFromId(active.id);
-    }
-
-    public setItems(items: T[]): void {
-        this._items.set(items);
     }
 
     public search(searchQuery: string): Observable<void> {
