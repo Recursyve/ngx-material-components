@@ -1,5 +1,5 @@
 import { JsonPipe } from "@angular/common";
-import { AfterViewInit, Component, effect, inject, signal, viewChild } from "@angular/core";
+import { AfterViewInit, Component, effect, inject, signal, viewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
@@ -38,6 +38,7 @@ import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])
     ]

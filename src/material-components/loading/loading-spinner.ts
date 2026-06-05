@@ -1,10 +1,11 @@
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { MatProgressSpinner, ProgressSpinnerMode } from "@angular/material/progress-spinner";
 
 @Component({
     selector: "nice-loading-spinner",
     templateUrl: "loading-spinner.html",
     styleUrls: ["./loading-spinner.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatProgressSpinner]
 })
 export class NiceLoadingSpinner {

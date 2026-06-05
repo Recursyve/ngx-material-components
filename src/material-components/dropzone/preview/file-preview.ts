@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from "@angular/core";
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { NiceTranslatePipe } from "@recursyve/ngx-material-components/common";
 
 import { NICE_DROPZONE_TRANSLATION_KEYS } from "../constant";
@@ -14,6 +14,7 @@ import { NiceDropzoneFileIcon } from "../icons/file/file-icon.component";
     templateUrl: "./file-preview.html",
     styleUrls: ["./file-preview.scss"],
     imports: [NiceDropzoneDeleteIcon, NiceTranslatePipe, FileSizePipe, NiceDropzoneFileIcon],
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         style: "flex: 1 1 auto;"
     }

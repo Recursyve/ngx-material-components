@@ -151,6 +151,6 @@
             Disable dropzone
         </button>
 
-        <div>{{ dropzoneFormGroup.get("dropzone")?.value | json }}</div>
+        <div>{{ $safeNavigationMigration(dropzoneFormGroup.get("dropzone")?.value) | json }}</div>
     </div>
 </div>
