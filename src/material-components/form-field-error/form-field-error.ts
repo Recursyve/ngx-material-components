@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from "@angular/animations";
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { MatError } from "@angular/material/form-field";
 
 @Component({
@@ -23,6 +23,7 @@ import { MatError } from "@angular/material/form-field";
         ])
     ],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatError
     ]

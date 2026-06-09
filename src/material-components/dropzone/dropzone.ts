@@ -1,5 +1,6 @@
 import { coerceBooleanProperty } from "@angular/cdk/coercion";
 import {
+    ChangeDetectionStrategy,
     Component,
     effect,
     ElementRef,
@@ -42,6 +43,7 @@ export type NiceDropzoneModes = (typeof niceDropzoneModes)[number];
         NiceTranslatePipe
     ],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

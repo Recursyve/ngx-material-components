@@ -7,7 +7,7 @@
     "bracketSpacing": true,
     "endOfLine": "lf",
     "arrowParens": "always",
-    "plugins": ["prettier-plugin-css-order", "prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
+    "plugins": ["prettier-plugin-organize-imports"],
     "printWidth": 120,
     "semi": true,
     "useTabs": false,
