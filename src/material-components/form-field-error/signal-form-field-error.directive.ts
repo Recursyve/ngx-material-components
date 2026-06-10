@@ -1,12 +1,4 @@
-import {
-    contentChild,
-    Directive,
-    effect,
-    ElementRef,
-    inject,
-    input,
-    ViewContainerRef
-} from "@angular/core";
+import { contentChild, Directive, effect, ElementRef, inject, input, ViewContainerRef } from "@angular/core";
 import { Field, FormField } from "@angular/forms/signals";
 import { MatFormField } from "@angular/material/form-field";
 import { NiceTranslater } from "@recursyve/ngx-material-components/common";
@@ -19,10 +11,10 @@ import { resolveSignalFormError, SignalDefaultErrorTransformers } from "./signal
 @Directive({ selector: "[niceSignalFormFieldError]", standalone: true })
 export class NiceSignalFormFieldErrorDirective {
     private readonly elementRef = inject(ElementRef<HTMLElement>);
-    private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly formField = inject(MatFormField);
     private readonly transformers = inject<ErrorTransformers>(NICE_FORM_FIELD_ERROR_TRANSFORMERS);
     private readonly translater = inject<NiceTranslater>(NICE_FORM_FIELD_ERROR_TRANSLATER);
+    private readonly viewContainerRef = inject(ViewContainerRef);
 
     /**
      * The signal form field to watch. When omitted, the directive resolves the `[formField]`
@@ -39,33 +31,27 @@ export class NiceSignalFormFieldErrorDirective {
 
     constructor() {
         effect(() => {
-            this.onChange();
-        });
-    }
-
-    private onChange(): void {
-        const state = this.resolveFieldState();
-        if (state === null || state.pending()) {
-            return;
-        }
-
-        if (state.valid() || !state.touched()) {
-            this.display.setError("", {});
-            return;
-        }
-
-        const errors = this.resolveErrors(state.errors());
-
-        for (const error of errors) {
-            const resolved = resolveSignalFormError(error, this.signalTransformers);
-
-            if (resolved.direct) {
-                this.display.setErrorText(resolved.text);
-                continue;
+            const state = this.resolveFieldState();
+            if (state === null || state.pending()) {
+                return;
             }
 
-            this.display.setError(resolved.text, resolved.params);
-        }
+            if (state.valid() || !state.touched()) {
+                this.display.setError("", {});
+                return;
+            }
+
+            for (const error of this.resolveErrors(state.errors())) {
+                const resolved = resolveSignalFormError(error, this.signalTransformers);
+
+                if (resolved.direct) {
+                    this.display.setErrorText(resolved.text);
+                    continue;
+                }
+
+                this.display.setError(resolved.text, resolved.params);
+            }
+        });
     }
 
     private resolveFieldState() {
@@ -89,7 +75,6 @@ export class NiceSignalFormFieldErrorDirective {
 
     private resolveErrors(stateErrors: ReturnType<ReturnType<Field<unknown>>["errors"]>) {
         const formFieldDirective = this.formFieldDirective();
-
         if (formFieldDirective) {
             return formFieldDirective.errors();
         }
