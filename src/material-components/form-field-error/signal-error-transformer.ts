@@ -38,10 +38,20 @@ export function resolveSignalFormError(
     }
 
     const reactiveKey = SIGNAL_TO_REACTIVE_ERROR_KEY[error.kind] ?? error.kind;
-    const details = signalErrorToValidationErrors(error);
-    const transformer = transformers[error.kind] ?? transformers[reactiveKey];
+    const hasCustomTransformer = Object.hasOwn(transformers, error.kind);
+    const transformer = hasCustomTransformer
+        ? transformers[error.kind]
+        : transformers[reactiveKey];
 
-    if (typeof details !== "object" || !transformer) {
+    if (!transformer) {
+        return { text: `errors.${reactiveKey}`, params: {} };
+    }
+
+    const details = hasCustomTransformer
+        ? (error as ValidationErrors)
+        : signalErrorToValidationErrors(error);
+
+    if (typeof details !== "object") {
         return { text: `errors.${reactiveKey}`, params: {} };
     }
 

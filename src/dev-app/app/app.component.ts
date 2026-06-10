@@ -16,7 +16,7 @@ import {
 } from "@recursyve/ngx-material-components/typeahead";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
 import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
-import { FormField, form, required, maxLength, minLength, email, submit } from "@angular/forms/signals";
+import { email, FormField, form, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 
 @Component({
     selector: "nice-root",
@@ -102,6 +102,13 @@ export class AppComponent implements AfterViewInit {
     public readonly signalForm = form(this.signalFormModel, (schemaPath) => {
         required(schemaPath.name);
         maxLength(schemaPath.name, 10);
+        validate(schemaPath.name, ({ value }) => {
+            if (value() === "admin") {
+                return { kind: "reserved", reservedValue: value() };
+            }
+
+            return undefined;
+        });
         required(schemaPath.email);
         minLength(schemaPath.email, 5);
         email(schemaPath.email);

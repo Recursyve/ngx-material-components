@@ -20,6 +20,12 @@ export const appConfig: ApplicationConfig = {
         provideFormFieldError({
             translater: {
                 useFactory: () => (key) => key
+            },
+            signalErrorTransformers: {
+                reserved: (_, details) => ({
+                    key: "reserved",
+                    params: { value: String(details["reservedValue"] ?? "") }
+                })
             }
         }),
         provideDropzone()
