@@ -7,7 +7,7 @@ import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NiceChipListDirective } from "@recursyve/ngx-material-components/chip-list";
 import { NiceDropzone, NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig } from "@recursyve/ngx-material-components/dropzone";
-import { NiceFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
+import { NiceFormFieldErrorDirective, NiceSignalFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
 import {
     NiceAsyncTypeahead,
@@ -16,6 +16,7 @@ import {
 } from "@recursyve/ngx-material-components/typeahead";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
 import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
+import { email, FormField, form, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 
 @Component({
     selector: "nice-root",
@@ -32,6 +33,8 @@ import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-
         NiceAsyncTypeahead,
         NiceLoadingDirective,
         NiceFormFieldErrorDirective,
+        NiceSignalFormFieldErrorDirective,
+        FormField,
         MatInput,
         NiceChipListDirective,
         NiceChipListItems
@@ -95,6 +98,22 @@ export class AppComponent implements AfterViewInit {
         count: this._fb.control(0, [Validators.required, Validators.min(1)]),
     });
 
+    public readonly signalFormModel = signal({ name: "", email: "" });
+    public readonly signalForm = form(this.signalFormModel, (schemaPath) => {
+        required(schemaPath.name);
+        maxLength(schemaPath.name, 10);
+        validate(schemaPath.name, ({ value }) => {
+            if (value() === "admin") {
+                return { kind: "reserved", reservedValue: value() };
+            }
+
+            return undefined;
+        });
+        required(schemaPath.email);
+        minLength(schemaPath.email, 5);
+        email(schemaPath.email);
+    });
+
     public chipListFormGroup = this._fb.group({
         chipList: this._fb.control(null)
     });
@@ -148,5 +167,11 @@ export class AppComponent implements AfterViewInit {
 
     public disableDropzone(): void {
         this.dropzoneFormGroup.controls.dropzone.disable();
+    }
+
+    public submitSignalForm(): void {
+        submit(this.signalForm, async () => {
+            console.log("Signal form submitted:", this.signalFormModel());
+        });
     }
 }

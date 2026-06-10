@@ -7,6 +7,24 @@ import { provideFormFieldError } from "@recursyve/ngx-material-components/form-f
 
 import { routes } from "./app.routes";
 
+const demoErrorMessages: Record<string, string> = {
+    "errors.required": "This field is required.",
+    "errors.min": "Value must be at least {{min}}.",
+    "errors.minlength": "Minimum length is {{value}} characters.",
+    "errors.maxlength": "Maximum length is {{value}} characters.",
+    "errors.email": "Invalid email address.",
+    "errors.reserved": "The username \"{{value}}\" is reserved."
+};
+
+function demoTranslater(key: string, params?: Record<string, string>): string {
+    const template = demoErrorMessages[key] ?? key;
+
+    return Object.entries(params ?? {}).reduce(
+        (message, [name, value]) => message.replaceAll(`{{${name}}}`, value),
+        template
+    );
+}
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
@@ -19,7 +37,13 @@ export const appConfig: ApplicationConfig = {
         }),
         provideFormFieldError({
             translater: {
-                useFactory: () => (key) => key
+                useFactory: () => demoTranslater
+            },
+            signalErrorTransformers: {
+                reserved: (_, details) => ({
+                    key: "reserved",
+                    params: { value: String(details["reservedValue"] ?? "") }
+                })
             }
         }),
         provideDropzone()

@@ -115,6 +115,22 @@
         </mat-form-field>
     </div>
 
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: fit-content;">
+        <h4 style="padding-top: 48px">Signal forms — niceSignalFormFieldError</h4>
+
+        <mat-form-field appearance="outline" niceSignalFormFieldError>
+            <mat-label>Name</mat-label>
+            <input matInput [formField]="signalForm.name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" niceSignalFormFieldError>
+            <mat-label>Email</mat-label>
+            <input matInput [formField]="signalForm.email" />
+        </mat-form-field>
+
+        <button mat-flat-button (click)="submitSignalForm()">Submit signal form</button>
+    </div>
+
     <div
         style="width: 750px; padding-top: 64px"
         [formGroup]="chipListFormGroup"

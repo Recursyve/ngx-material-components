@@ -9,7 +9,8 @@ export function provideFormFieldError(options: NiceFormFieldErrorsOptions): Prov
             provide: NICE_FORM_FIELD_ERROR_TRANSFORMERS,
             useValue: {
                 ...DefaultErrorTransformers,
-                ...options.errorTransformers
+                ...options.errorTransformers,
+                ...options.signalErrorTransformers
             }
         },
         {
