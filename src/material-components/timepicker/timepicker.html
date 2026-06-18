@@ -1,0 +1,34 @@
+<mat-form-field class="nice-timepicker-field" [appearance]="resolvedAppearance()">
+    <mat-label>{{ label() }}</mat-label>
+
+    <!-- $any: ngx-mat-timepicker exposes a `value` input (`string | DateTime`) on this element;
+         strict template checking clashes with [formField]. CVA interop still works at runtime. -->
+    <input matInput [formField]="$any(resolvedField())" [ngxMatTimepicker]="timepicker" />
+
+    <ngx-mat-timepicker-toggle matIconSuffix [disabled]="resolvedField()().disabled()" [for]="timepicker">
+        @if (toggleIcon) {
+            <mat-icon matDatepickerToggleIcon [svgIcon]="toggleIcon" />
+        } @else {
+            <mat-icon matDatepickerToggleIcon>schedule</mat-icon>
+        }
+    </ngx-mat-timepicker-toggle>
+
+    <ngx-mat-timepicker
+        #timepicker
+        [cancelBtnTmpl]="cancelButton"
+        [confirmBtnTmpl]="confirmButton"
+        [editableHintTmpl]="panelTitle"
+    />
+</mat-form-field>
+
+<ng-template #cancelButton>
+    <button mat-button type="button">{{ translationKeys.cancel | niceTranslate }}</button>
+</ng-template>
+
+<ng-template #confirmButton>
+    <button mat-flat-button type="button">{{ translationKeys.confirm | niceTranslate }}</button>
+</ng-template>
+
+<ng-template #panelTitle>
+    <p class="nice-timepicker-dialog-title">{{ translationKeys.title | niceTranslate }}</p>
+</ng-template>

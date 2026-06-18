@@ -1,0 +1,28 @@
+@use "sass:map";
+@use "../common/styles/override-utils" as utils;
+
+$_field-tokens: utils.field-suffix-token-vars(timepicker);
+
+$_layout-tokens: (
+    dialog-actions-gap: --nice-timepicker-dialog-actions-gap,
+    dialog-actions-padding-block-end: --nice-timepicker-dialog-actions-padding-block-end,
+    dialog-actions-padding-inline: --nice-timepicker-dialog-actions-padding-inline,
+    dialog-border-radius: --nice-timepicker-dialog-border-radius,
+    dialog-control-height: --nice-timepicker-dialog-control-height,
+    dialog-control-radius: --nice-timepicker-dialog-control-radius,
+    dialog-control-width: --nice-timepicker-dialog-control-width,
+    dialog-dial-padding-block-end: --nice-timepicker-dialog-dial-padding-block-end,
+    dialog-padding-inline: --nice-timepicker-dialog-padding-inline,
+    dialog-period-btn-height: --nice-timepicker-dialog-period-btn-height,
+    dialog-period-btn-width: --nice-timepicker-dialog-period-btn-width,
+    dialog-title-gap: --nice-timepicker-dialog-title-gap
+);
+
+$_tokens: map.merge($_field-tokens, $_layout-tokens);
+
+@mixin overrides($tokens: ()) {
+    nice-timepicker,
+    body div.ngx-mat-timepicker-dialog {
+        @include utils.emit-token-overrides($tokens, $_tokens);
+    }
+}
