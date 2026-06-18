@@ -9,5 +9,13 @@
     "dependencies": {
         "tslib": "^2.3.0"
     },
+    "exports": {
+        "./colorpicker": {
+            "sass": "./colorpicker/_index.scss"
+        },
+        "./timepicker": {
+            "sass": "./timepicker/_index.scss"
+        }
+    },
     "sideEffects": false
 }

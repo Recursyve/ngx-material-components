@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../common/styles/override-utils" as utils;
+@use "../_sass/override-utils" as utils;
 
 $_field-tokens: utils.field-suffix-token-vars(timepicker);
 
