@@ -4,6 +4,12 @@
 /// @param {Map} $overrides - Token name to value map passed by the consumer
 /// @param {Map} $token-vars - Token name to CSS custom property name map
 @mixin emit-token-overrides($overrides, $token-vars) {
+    @each $token, $value in $overrides {
+        @if not map.has-key($token-vars, $token) {
+            @error "Unknown token `#{$token}`. Expected one of: #{map.keys($token-vars)}.";
+        }
+    }
+
     @each $token, $css-var in $token-vars {
         @if map.has-key($overrides, $token) {
             #{$css-var}: #{map.get($overrides, $token)};
