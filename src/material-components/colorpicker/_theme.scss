@@ -4,7 +4,10 @@
 $_tokens: map.merge(
     utils.field-suffix-token-vars(colorpicker),
     (
-        input-cursor: --nice-colorpicker-input-cursor
+        input-cursor: --nice-colorpicker-input-cursor,
+        prefix-padding-inline-start: --nice-colorpicker-prefix-padding-inline-start,
+        swatch-border-color: --nice-colorpicker-swatch-border-color,
+        swatch-size: --nice-colorpicker-swatch-size
     )
 );
 
