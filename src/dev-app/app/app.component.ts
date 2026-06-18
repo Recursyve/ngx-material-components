@@ -15,6 +15,8 @@ import {
     provideAsyncTypeaheadResources
 } from "@recursyve/ngx-material-components/typeahead";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
+import { NiceColorpicker } from "@recursyve/ngx-material-components/colorpicker";
+import { NiceTimepicker } from "@recursyve/ngx-material-components/timepicker";
 import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
 import { email, FormField, form, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 
@@ -37,7 +39,9 @@ import { email, FormField, form, maxLength, minLength, required, submit, validat
         FormField,
         MatInput,
         NiceChipListDirective,
-        NiceChipListItems
+        NiceChipListItems,
+        NiceColorpicker,
+        NiceTimepicker
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
@@ -98,7 +102,7 @@ export class AppComponent implements AfterViewInit {
         count: this._fb.control(0, [Validators.required, Validators.min(1)]),
     });
 
-    public readonly signalFormModel = signal({ name: "", email: "" });
+    public readonly signalFormModel = signal({ name: "", email: "", color: "", time: "" });
     public readonly signalForm = form(this.signalFormModel, (schemaPath) => {
         required(schemaPath.name);
         maxLength(schemaPath.name, 10);
