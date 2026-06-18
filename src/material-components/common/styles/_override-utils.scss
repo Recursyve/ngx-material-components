@@ -1,0 +1,25 @@
+@use "sass:map";
+
+/// Emits CSS custom properties from a typed token map.
+/// @param {Map} $overrides - Token name to value map passed by the consumer
+/// @param {Map} $token-vars - Token name to CSS custom property name map
+@mixin emit-token-overrides($overrides, $token-vars) {
+    @each $token, $css-var in $token-vars {
+        @if map.has-key($overrides, $token) {
+            #{$css-var}: #{map.get($overrides, $token)};
+        }
+    }
+}
+
+/// Shared suffix tokens for field-like components (colorpicker, timepicker).
+@function field-suffix-token-vars($component) {
+    @return (
+        disabled-icon-color: --nice-#{$component}-disabled-icon-color,
+        icon-color: --nice-#{$component}-icon-color,
+        icon-size: --nice-#{$component}-icon-size,
+        invalid-icon-color: --nice-#{$component}-invalid-icon-color,
+        suffix-padding-inline-end: --nice-#{$component}-suffix-padding-inline-end,
+        toggle-size: --nice-#{$component}-toggle-size,
+        width: --nice-#{$component}-width
+    );
+}
