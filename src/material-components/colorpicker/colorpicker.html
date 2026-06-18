@@ -1,0 +1,35 @@
+<mat-form-field class="nice-colorpicker-field" [appearance]="resolvedAppearance()">
+    <mat-label>{{ label() }}</mat-label>
+
+    <input
+        #textInput
+        matInput
+        [formField]="resolvedField()"
+        (click)="openColorPicker(colorInput)"
+        (keydown)="$event.preventDefault()"
+        (paste)="$event.preventDefault()"
+    />
+
+    <button
+        mat-icon-button
+        matIconSuffix
+        class="nice-colorpicker__toggle"
+        type="button"
+        [disabled]="isDisabled()"
+        (click)="openColorPicker(colorInput)"
+    >
+        @if (paletteIcon) {
+            <mat-icon [svgIcon]="paletteIcon" />
+        } @else {
+            <mat-icon>palette</mat-icon>
+        }
+    </button>
+
+    <input
+        #colorInput
+        class="nice-colorpicker__native-input"
+        type="color"
+        [value]="pickerColor()"
+        (input)="onColorChange($event)"
+    />
+</mat-form-field>

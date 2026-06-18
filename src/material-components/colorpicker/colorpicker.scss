@@ -1,0 +1,57 @@
+nice-colorpicker {
+    --nice-field-suffix-icon-size: var(--nice-colorpicker-icon-size, 1.5rem);
+    --nice-field-suffix-padding-inline-end: var(--nice-colorpicker-suffix-padding-inline-end, 0.375rem);
+    --nice-field-suffix-toggle-size: var(--nice-colorpicker-toggle-size, 2rem);
+
+    display: block;
+    width: var(--nice-colorpicker-width, 100%);
+
+    .nice-colorpicker-field {
+        width: 100%;
+
+        &.mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+            padding-right: var(--nice-field-suffix-padding-inline-end);
+        }
+
+        .nice-colorpicker__toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--nice-field-suffix-toggle-size);
+            height: var(--nice-field-suffix-toggle-size);
+            padding: 0;
+            --mat-icon-button-state-layer-size: var(--nice-field-suffix-toggle-size);
+            background: transparent;
+            box-shadow: none;
+            color: inherit;
+
+            mat-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: var(--nice-field-suffix-icon-size);
+                height: var(--nice-field-suffix-icon-size);
+                font-size: var(--nice-field-suffix-icon-size);
+
+                svg {
+                    width: var(--nice-field-suffix-icon-size);
+                    height: var(--nice-field-suffix-icon-size);
+                }
+            }
+        }
+    }
+}
+
+.nice-colorpicker__text-input {
+    cursor: var(--nice-colorpicker-input-cursor, pointer);
+}
+
+.nice-colorpicker__native-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}

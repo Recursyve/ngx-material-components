@@ -1,0 +1,15 @@
+@use "sass:map";
+@use "../common/styles/override-utils" as utils;
+
+$_tokens: map.merge(
+    utils.field-suffix-token-vars(colorpicker),
+    (
+        input-cursor: --nice-colorpicker-input-cursor
+    )
+);
+
+@mixin overrides($tokens: ()) {
+    nice-colorpicker {
+        @include utils.emit-token-overrides($tokens, $_tokens);
+    }
+}
