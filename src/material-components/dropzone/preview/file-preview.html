@@ -22,7 +22,11 @@
     </div>
 
     <div class="nice-dropzone-preview-actions">
-        <button class="nice-dropzone-preview-actions-delete" (click)="$event.stopPropagation(); clickDelete.emit()">
+        <button
+            class="nice-dropzone-preview-actions-delete"
+            type="button"
+            (click)="$event.stopPropagation(); clickDelete.emit()"
+        >
             <nice-dropzone-delete-icon />
         </button>
     </div>
