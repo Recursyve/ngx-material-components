@@ -12,6 +12,7 @@
         [class.nice-dropzone-file]="mode() === 'file'"
         [class.nice-dropzone-all]="mode() === 'all'"
         [class.nice-dropzone-selected]="files().length > 0"
+        [class.nice-dropzone-uploading]="isUploading()"
 
         niceDropzone
         (filesDropped)="onFilesDropped($event)"
@@ -20,7 +21,45 @@
     >
         <div class="nice-dropzone-ripple"></div>
 
-        @if (multiple() || (!multiple() && !files().length)) {
+        @if (isUploading()) {
+            <div class="nice-dropzone-uploading-content">
+                <div class="nice-dropzone-icon">
+                    @if (mode() === "image") {
+                        <nice-dropzone-image-icon />
+                    } @else {
+                        <nice-dropzone-file-icon />
+                    }
+                </div>
+
+                <div class="nice-dropzone-content">
+                    <span class="nice-dropzone-content-title">
+                        @if (mode() === "image") {
+                            @if (multiple()) {
+                                {{ _translationKeys.upload.uploadingImages | niceTranslate }}
+                            } @else {
+                                {{ _translationKeys.upload.uploadingImage | niceTranslate }}
+                            }
+                        } @else {
+                            @if (multiple()) {
+                                {{ _translationKeys.upload.uploadingFiles | niceTranslate }}
+                            } @else {
+                                {{ _translationKeys.upload.uploadingFile | niceTranslate }}
+                            }
+                        }
+                    </span>
+
+                    <div
+                        class="nice-dropzone-progress"
+                        role="progressbar"
+                        [attr.aria-valuenow]="normalizedUploadProgress()"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    >
+                        <div class="nice-dropzone-progress-fill" [style.width.%]="normalizedUploadProgress()"></div>
+                    </div>
+                </div>
+            </div>
+        } @else if (multiple() || (!multiple() && !files().length)) {
             <div class="nice-dropzone-placeholder">
                 <div class="nice-dropzone-icon">
                     @if (mode() === "image") {

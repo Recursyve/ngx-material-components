@@ -24,6 +24,10 @@ export type NiceDropzoneTranslationKeyConfig = {
         files: string;
         image: string;
         images: string;
+        uploadingFile: string;
+        uploadingFiles: string;
+        uploadingImage: string;
+        uploadingImages: string;
     };
     format: {
         label: string;
