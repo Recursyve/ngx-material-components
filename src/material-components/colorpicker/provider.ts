@@ -3,9 +3,7 @@ import { NiceColorpickerConfig } from "./config";
 import { NICE_COLORPICKER_CONFIG } from "./constant";
 import { NiceColorpickerOptions } from "./options";
 
-const defaultConfig: NiceColorpickerConfig = {
-    appearance: "outline"
-};
+const defaultConfig: NiceColorpickerConfig = {};
 
 export { defaultConfig as defaultColorpickerConfig };
 

@@ -5,21 +5,23 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    effect,
     inject,
     input,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from "@angular/core";
 import type { FieldTree } from "@angular/forms/signals";
-import { form, FormField } from "@angular/forms/signals";
+import { FormField } from "@angular/forms/signals";
 import { MatIconButton } from "@angular/material/button";
-import { MatFormField, MatFormFieldAppearance, MatLabel, MatPrefix, MatSuffix } from "@angular/material/form-field";
+import { MatFormFieldControl } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
-import { MatInput } from "@angular/material/input";
 import { TinyColor } from "@ctrl/tinycolor";
 import type { ColorEvent } from "ngx-color";
 import { ColorChromeModule } from "ngx-color/chrome";
+import { Subject } from "rxjs";
 import { NICE_COLORPICKER_CONFIG } from "./constant";
 
 @Component({
@@ -29,30 +31,36 @@ import { NICE_COLORPICKER_CONFIG } from "./constant";
         CdkOverlayOrigin,
         ColorChromeModule,
         FormField,
-        MatFormField,
         MatIcon,
-        MatIconButton,
-        MatInput,
-        MatLabel,
-        MatPrefix,
-        MatSuffix
+        MatIconButton
     ],
     templateUrl: "./colorpicker.html",
     styleUrl: "./colorpicker.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: MatFormFieldControl, useExisting: NiceColorpicker }],
+    host: {
+        class: "nice-colorpicker",
+        "[class.nice-colorpicker--focused]": "focused",
+        "[class.nice-colorpicker--empty]": "empty",
+        "[id]": "id"
+    }
 })
-export class NiceColorpicker {
+export class NiceColorpicker implements MatFormFieldControl<string> {
+    private static nextId = 0;
+
     private readonly config = inject(NICE_COLORPICKER_CONFIG);
 
-    public readonly appearance = input<MatFormFieldAppearance>();
-    public readonly field = input<FieldTree<string>>();
-    public readonly label = input.required<string>();
+    public readonly field = input.required<FieldTree<string>>();
+
+    public readonly id = `nice-colorpicker-${NiceColorpicker.nextId++}`;
+    public readonly controlType = "nice-colorpicker";
+    public readonly stateChanges = new Subject<void>();
+    public readonly ngControl = null;
+    public readonly placeholder = "";
+    public readonly required = false;
 
     private readonly textInput = viewChild<ElementRef<HTMLInputElement>>("textInput");
-
-    private readonly fallbackModel = signal("");
-    private readonly fallbackForm = form(this.fallbackModel);
 
     protected readonly isInputFocused = signal(false);
     protected readonly isPickerOpen = signal(false);
@@ -76,20 +84,15 @@ export class NiceColorpicker {
 
     protected readonly paletteIcon = this.config.paletteIcon;
 
-    protected readonly isDisabled = computed(() => {
-        const field = this.resolvedField();
-        return field().disabled();
-    });
+    protected readonly isDisabled = computed(() => this.field()().disabled());
 
     protected readonly pickerColor = computed(() => {
-        const field = this.resolvedField();
-        const value = field().value();
+        const value = this.field()().value();
         return value || "#000000";
     });
 
     protected readonly swatchColor = computed(() => {
-        const field = this.resolvedField();
-        const value = field().value()?.trim();
+        const value = this.field()().value()?.trim();
         if (!value) {
             return null;
         }
@@ -103,20 +106,76 @@ export class NiceColorpicker {
     });
 
     protected readonly showSwatch = computed(() => {
-        const field = this.resolvedField();
-        const hasValue = !!field().value()?.trim();
+        const hasValue = !!this.field()().value()?.trim();
         return hasValue || this.isInputFocused();
     });
 
-    protected readonly resolvedAppearance = computed(() => this.appearance() ?? this.config.appearance);
-    protected readonly resolvedField = computed(() => this.field() ?? this.fallbackForm);
+    public get value(): string | null {
+        return this.field()().value() || null;
+    }
+
+    public get focused(): boolean {
+        return this.isInputFocused();
+    }
+
+    public get empty(): boolean {
+        return !this.field()().value()?.trim();
+    }
+
+    public get shouldLabelFloat(): boolean {
+        return this.focused || !this.empty;
+    }
+
+    public get disabled(): boolean {
+        return this.field()().disabled();
+    }
+
+    public get errorState(): boolean {
+        const state = this.field()();
+        return state.invalid() && state.touched();
+    }
+
+    constructor() {
+        effect(() => {
+            const state = this.field()();
+            state.value();
+            state.disabled();
+            state.invalid();
+            state.touched();
+            this.isInputFocused();
+            this.isPickerOpen();
+
+            untracked(() => this.stateChanges.next());
+        });
+    }
+
+    public setDescribedByIds(ids: string[]): void {
+        const input = this.textInput()?.nativeElement;
+        if (!input) {
+            return;
+        }
+
+        if (ids.length) {
+            input.setAttribute("aria-describedby", ids.join(" "));
+        } else {
+            input.removeAttribute("aria-describedby");
+        }
+    }
+
+    public onContainerClick(): void {
+        if (this.disabled) {
+            return;
+        }
+
+        this.textInput()?.nativeElement.focus();
+    }
 
     protected closePicker(): void {
         this.isPickerOpen.set(false);
     }
 
     protected onPickerChange(event: ColorEvent): void {
-        this.updateFieldValue(event.color.hex);
+        this.field()().value.set(event.color.hex);
     }
 
     protected togglePicker(event: MouseEvent): void {
@@ -127,15 +186,5 @@ export class NiceColorpicker {
         }
 
         this.isPickerOpen.update((open) => !open);
-    }
-
-    private updateFieldValue(hex: string): void {
-        const textInput = this.textInput()?.nativeElement;
-        if (!textInput) {
-            return;
-        }
-
-        textInput.value = hex;
-        textInput.dispatchEvent(new Event("input", { bubbles: true }));
     }
 }
