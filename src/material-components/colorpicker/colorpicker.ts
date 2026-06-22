@@ -26,14 +26,7 @@ import { NICE_COLORPICKER_CONFIG } from "./constant";
 
 @Component({
     selector: "nice-colorpicker",
-    imports: [
-        CdkConnectedOverlay,
-        CdkOverlayOrigin,
-        ColorChromeModule,
-        FormField,
-        MatIcon,
-        MatIconButton
-    ],
+    imports: [CdkConnectedOverlay, CdkOverlayOrigin, ColorChromeModule, FormField, MatIcon, MatIconButton],
     templateUrl: "./colorpicker.html",
     styleUrl: "./colorpicker.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
