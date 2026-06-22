@@ -10,7 +10,6 @@ const defaultTranslationKeys: NiceTimepickerConfig["translationKeys"] = {
 };
 
 const defaultConfig: NiceTimepickerConfig = {
-    appearance: "outline",
     translationKeys: defaultTranslationKeys
 };
 

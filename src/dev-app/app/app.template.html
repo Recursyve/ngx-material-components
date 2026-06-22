@@ -99,12 +99,15 @@
             <input matInput [formField]="signalForm.email" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" niceSignalFormFieldError [field]="signalForm.color">
+        <mat-form-field appearance="outline" niceSignalFormFieldError>
             <mat-label>Color</mat-label>
             <nice-colorpicker [field]="signalForm.color" />
         </mat-form-field>
 
-        <nice-timepicker label="Time" [field]="signalForm.time" />
+        <mat-form-field appearance="outline" niceSignalFormFieldError>
+            <mat-label>Time</mat-label>
+            <nice-timepicker [field]="signalForm.time" />
+        </mat-form-field>
 
         <button mat-flat-button (click)="submitSignalForm()">Submit signal form</button>
     </div>

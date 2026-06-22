@@ -21,8 +21,11 @@ $_layout-tokens: (
 $_tokens: map.merge($_field-tokens, $_layout-tokens);
 
 @mixin overrides($tokens: ()) {
-    nice-timepicker,
+    .mat-mdc-form-field:has(nice-timepicker) {
+        @include utils.emit-token-overrides($tokens, $_field-tokens);
+    }
+
     body div.ngx-mat-timepicker-dialog {
-        @include utils.emit-token-overrides($tokens, $_tokens);
+        @include utils.emit-token-overrides($tokens, $_layout-tokens);
     }
 }

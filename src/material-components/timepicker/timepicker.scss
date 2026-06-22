@@ -1,44 +1,67 @@
 nice-timepicker {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0.5rem;
+    position: relative;
+
+    ngx-mat-timepicker {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+}
+
+.mat-mdc-form-field:has(nice-timepicker) {
     --nice-field-suffix-padding-inline-end: var(--nice-timepicker-suffix-padding-inline-end, 0.375rem);
     --nice-field-suffix-toggle-size: var(--nice-timepicker-toggle-size, 2rem);
     --nice-field-suffix-icon-size: var(--nice-timepicker-icon-size, 1.5rem);
 
-    display: block;
     width: var(--nice-timepicker-width, 100%);
 
-    .nice-timepicker-field {
-        width: 100%;
+    .nice-timepicker__text-input {
+        flex: 1;
+        min-width: 0;
+        padding: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+    }
 
-        &.mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
-            padding-right: var(--nice-field-suffix-padding-inline-end);
-        }
+    .nice-timepicker__toggle {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+    }
 
-        ngx-mat-timepicker-toggle {
-            display: inline-flex;
-            align-items: center;
-        }
+    ngx-mat-timepicker-toggle .ngx-mat-timepicker-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--nice-field-suffix-toggle-size);
+        height: var(--nice-field-suffix-toggle-size);
+        padding: 0;
+        --mat-icon-button-state-layer-size: var(--nice-field-suffix-toggle-size);
+        background: transparent;
+        box-shadow: none;
+        color: inherit;
+    }
 
-        ngx-mat-timepicker-toggle .ngx-mat-timepicker-toggle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: var(--nice-field-suffix-toggle-size);
-            height: var(--nice-field-suffix-toggle-size);
-            padding: 0;
-        }
+    ngx-mat-timepicker-toggle mat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--nice-field-suffix-icon-size);
+        height: var(--nice-field-suffix-icon-size);
+        font-size: var(--nice-field-suffix-icon-size);
 
-        ngx-mat-timepicker-toggle mat-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        svg {
             width: var(--nice-field-suffix-icon-size);
             height: var(--nice-field-suffix-icon-size);
-            font-size: var(--nice-field-suffix-icon-size);
-
-            svg {
-                width: var(--nice-field-suffix-icon-size);
-                height: var(--nice-field-suffix-icon-size);
-            }
         }
     }
 }
