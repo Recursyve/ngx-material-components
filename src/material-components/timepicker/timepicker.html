@@ -1,37 +1,21 @@
-<!-- $any: ngx-mat-timepicker exposes a `value` input (`string | DateTime`) on this element;
-     strict template checking clashes with [formField]. CVA interop still works at runtime. -->
 <input
     #textInput
     class="nice-timepicker__text-input"
-    [formField]="$any(field())"
-    [ngxMatTimepicker]="timepicker"
+    [formField]="field()"
     (blur)="isInputFocused.set(false)"
     (focus)="isInputFocused.set(true)"
 />
 
-<ngx-mat-timepicker-toggle class="nice-timepicker__toggle" [disabled]="field()().disabled()" [for]="timepicker">
+<button
+    mat-icon-button
+    class="nice-timepicker__toggle"
+    type="button"
+    [disabled]="isDisabled()"
+    (click)="openPicker($event)"
+>
     @if (toggleIcon) {
-        <mat-icon matDatepickerToggleIcon [svgIcon]="toggleIcon" />
+        <mat-icon [svgIcon]="toggleIcon" />
     } @else {
-        <mat-icon matDatepickerToggleIcon>schedule</mat-icon>
+        <mat-icon>schedule</mat-icon>
     }
-</ngx-mat-timepicker-toggle>
-
-<ngx-mat-timepicker
-    #timepicker
-    [cancelBtnTmpl]="cancelButton"
-    [confirmBtnTmpl]="confirmButton"
-    [editableHintTmpl]="panelTitle"
-/>
-
-<ng-template #cancelButton>
-    <button mat-button type="button">{{ translationKeys.cancel | niceTranslate }}</button>
-</ng-template>
-
-<ng-template #confirmButton>
-    <button mat-flat-button type="button">{{ translationKeys.confirm | niceTranslate }}</button>
-</ng-template>
-
-<ng-template #panelTitle>
-    <p class="nice-timepicker-dialog-title">{{ translationKeys.title | niceTranslate }}</p>
-</ng-template>
+</button>

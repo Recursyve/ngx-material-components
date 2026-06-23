@@ -5,8 +5,7 @@
         "@angular/common": "^22.0.0",
         "@angular/core": "^22.0.0",
         "@ctrl/tinycolor": "^4.1.0",
-        "ngx-color": "^10.0.0",
-        "ngx-mat-timepicker": "^21.0.0"
+        "ngx-color": "^10.0.0"
     },
     "dependencies": {
         "tslib": "^2.3.0"

@@ -5,6 +5,8 @@ export type NiceTimepickerTranslationKeyConfig = {
 };
 
 export type NiceTimepickerConfig = {
+    dottedMinutesInGap?: boolean;
+    minutesGap?: number;
     toggleIcon?: string;
     translationKeys: NiceTimepickerTranslationKeyConfig;
 };

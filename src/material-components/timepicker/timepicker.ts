@@ -2,6 +2,8 @@ import type { ElementRef } from "@angular/core";
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
+    DestroyRef,
     effect,
     inject,
     input,
@@ -10,33 +12,20 @@ import {
     viewChild,
     ViewEncapsulation
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import type { FieldTree } from "@angular/forms/signals";
 import { FormField } from "@angular/forms/signals";
-import { MatButton } from "@angular/material/button";
-import { MatDatepickerToggleIcon } from "@angular/material/datepicker";
+import { MatIconButton } from "@angular/material/button";
+import { MatDialog } from "@angular/material/dialog";
 import { MatFormFieldControl } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
-import { NiceTranslatePipe } from "@recursyve/ngx-material-components/common";
-import {
-    NgxMatTimepickerComponent,
-    NgxMatTimepickerDirective,
-    NgxMatTimepickerToggleComponent
-} from "ngx-mat-timepicker";
 import { Subject } from "rxjs";
 import { NICE_TIMEPICKER_CONFIG } from "./constant";
+import { NiceTimepickerDialog } from "./timepicker-dialog";
 
 @Component({
     selector: "nice-timepicker",
-    imports: [
-        NiceTranslatePipe,
-        NgxMatTimepickerToggleComponent,
-        NgxMatTimepickerDirective,
-        NgxMatTimepickerComponent,
-        MatIcon,
-        MatDatepickerToggleIcon,
-        MatButton,
-        FormField
-    ],
+    imports: [FormField, MatIcon, MatIconButton],
     templateUrl: "./timepicker.html",
     styleUrl: "./timepicker.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +42,8 @@ export class NiceTimepicker implements MatFormFieldControl<string> {
     private static nextId = 0;
 
     private readonly config = inject(NICE_TIMEPICKER_CONFIG);
+    private readonly dialog = inject(MatDialog);
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly field = input.required<FieldTree<string>>();
 
@@ -68,6 +59,8 @@ export class NiceTimepicker implements MatFormFieldControl<string> {
     protected readonly isInputFocused = signal(false);
     protected readonly toggleIcon = this.config.toggleIcon;
     protected readonly translationKeys = this.config.translationKeys;
+
+    protected readonly isDisabled = computed(() => this.field()().disabled());
 
     public get value(): string | null {
         return this.field()().value() || null;
@@ -126,5 +119,34 @@ export class NiceTimepicker implements MatFormFieldControl<string> {
         }
 
         this.textInput()?.nativeElement.focus();
+    }
+
+    protected openPicker(event: MouseEvent): void {
+        event.stopPropagation();
+
+        if (this.isDisabled()) {
+            return;
+        }
+
+        const dialogRef = this.dialog.open(NiceTimepickerDialog, {
+            panelClass: "nice-timepicker-dialog",
+            data: {
+                time: this.field()().value() || "",
+                titleKey: this.translationKeys.title,
+                cancelKey: this.translationKeys.cancel,
+                confirmKey: this.translationKeys.confirm,
+                minutesGap: this.config.minutesGap ?? 5,
+                dottedMinutesInGap: this.config.dottedMinutesInGap ?? true
+            }
+        });
+
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((time) => {
+                if (time !== undefined) {
+                    this.field()().value.set(time);
+                }
+            });
     }
 }

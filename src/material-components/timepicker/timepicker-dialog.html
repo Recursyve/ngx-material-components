@@ -1,0 +1,77 @@
+<div mat-dialog-content>
+    <div class="timepicker">
+        <mat-toolbar class="timepicker-header">
+            <div class="timepicker-dial">
+                <p class="nice-timepicker-dialog-title">{{ data.titleKey | niceTranslate }}</p>
+
+                <div class="timepicker-dial__container">
+                    <div class="timepicker-dial__time">
+                        <button
+                            type="button"
+                            class="timepicker-dial__control"
+                            [class.active]="activeUnit() === 'hour'"
+                            (click)="setActiveUnit('hour')"
+                        >
+                            {{ selectedHour() }}
+                        </button>
+
+                        <span>:</span>
+
+                        <button
+                            type="button"
+                            class="timepicker-dial__control"
+                            [class.active]="activeUnit() === 'minute'"
+                            (click)="setActiveUnit('minute')"
+                        >
+                            {{ selectedMinute() }}
+                        </button>
+                    </div>
+
+                    <div class="timepicker-dial__period">
+                        <button
+                            type="button"
+                            class="timepicker-period__btn"
+                            [class.active]="selectedPeriod() === 'AM'"
+                            (click)="setPeriod('AM')"
+                        >
+                            AM
+                        </button>
+
+                        <button
+                            type="button"
+                            class="timepicker-period__btn"
+                            [class.active]="selectedPeriod() === 'PM'"
+                            (click)="setPeriod('PM')"
+                        >
+                            PM
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </mat-toolbar>
+
+        <div class="timepicker__main-content">
+            <div class="timepicker__body">
+                <nice-timepicker-face
+                    [dottedMinutesInGap]="data.dottedMinutesInGap"
+                    [faceTime]="faceOptions()"
+                    [minutesGap]="data.minutesGap"
+                    [selectedValue]="activeUnit() === 'hour' ? hour() : minute()"
+                    [unit]="activeUnit()"
+                    (timeChange)="onFaceTimeChange($event)"
+                    (timeSelected)="onFaceTimeSelected($event)"
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button type="button" (click)="cancel()">
+        {{ data.cancelKey | niceTranslate }}
+    </button>
+
+    <button mat-flat-button type="button" (click)="confirm()">
+        {{ data.confirmKey | niceTranslate }}
+    </button>
+</div>

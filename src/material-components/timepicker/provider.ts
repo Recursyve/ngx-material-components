@@ -2,6 +2,7 @@ import { Provider } from "@angular/core";
 import { NiceTimepickerConfig } from "./config";
 import { NICE_TIMEPICKER_CONFIG } from "./constant";
 import { NiceTimepickerOptions } from "./options";
+import { DEFAULT_MINUTES_GAP } from "./time-utils";
 
 const defaultTranslationKeys: NiceTimepickerConfig["translationKeys"] = {
     cancel: "components.timepicker.cancel",
@@ -10,6 +11,8 @@ const defaultTranslationKeys: NiceTimepickerConfig["translationKeys"] = {
 };
 
 const defaultConfig: NiceTimepickerConfig = {
+    dottedMinutesInGap: true,
+    minutesGap: DEFAULT_MINUTES_GAP,
     translationKeys: defaultTranslationKeys
 };
 
