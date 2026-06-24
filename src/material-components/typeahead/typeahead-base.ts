@@ -8,7 +8,6 @@ import {
     computed,
     DestroyRef,
     Directive, DoCheck,
-    effect,
     ElementRef,
     inject,
     input,
@@ -199,8 +198,6 @@ export class NiceTypeaheadBase<T>
     }
 
     constructor() {
-        effect(() => this._input()?.nativeElement.focus());
-
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -278,6 +275,7 @@ export class NiceTypeaheadBase<T>
 
         if (isFocused) {
             this.open();
+            this._focusSearchInput();
         }
     }
 
@@ -402,6 +400,17 @@ export class NiceTypeaheadBase<T>
         this._overlayDir()?.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this._positioningSettled();
+            this._focusSearchInput();
+        });
+    }
+
+    protected _focusSearchInput(): void {
+        queueMicrotask(() => {
+            const input = this._input()?.nativeElement;
+
+            if (this.panelOpen && input) {
+                input.focus({ preventScroll: true });
+            }
         });
     }
 
