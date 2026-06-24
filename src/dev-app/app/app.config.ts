@@ -1,4 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
+import { provideNativeDateAdapter } from "@angular/material/core";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter } from "@angular/router";
 import { provideColorpicker } from "@recursyve/ngx-material-components/colorpicker";
@@ -33,6 +34,7 @@ function demoTranslater(key: string, params?: Record<string, string>): string {
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
+        provideNativeDateAdapter(),
         provideRouter(routes),
         provideAnimationsAsync(),
         provideNiceComponents({

@@ -111,6 +111,13 @@
             <nice-timepicker-toggle [field]="signalForm.time" matIconSuffix />
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [formField]="signalForm.date" [matDatepicker]="datePicker" />
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker" />
+            <mat-datepicker #datePicker />
+        </mat-form-field>
+
         <button mat-flat-button (click)="submitSignalForm()">Submit signal form</button>
     </div>
 

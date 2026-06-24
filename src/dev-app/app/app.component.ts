@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, sign
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { email, form, FormField, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 import { MatButton } from "@angular/material/button";
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
 import { MatFormField, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
@@ -51,7 +52,10 @@ import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-
         NiceColorpickerToggle,
         NiceTimepicker,
         NiceTimepickerToggle,
-        MatSuffix
+        MatSuffix,
+        MatDatepicker,
+        MatDatepickerInput,
+        MatDatepickerToggle
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
@@ -110,7 +114,7 @@ export class AppComponent implements AfterViewInit {
         count: this._fb.control(0, [Validators.required, Validators.min(1)])
     });
 
-    public readonly signalFormModel = signal({ name: "", email: "", color: "", time: "" });
+    public readonly signalFormModel = signal({ name: "", email: "", color: "", time: "", date: new Date() });
     public readonly signalForm = form(this.signalFormModel, (schemaPath) => {
         required(schemaPath.name);
         maxLength(schemaPath.name, 10);
