@@ -12,7 +12,8 @@ $_tokens: map.merge(
 );
 
 @mixin overrides($tokens: ()) {
-    .mat-mdc-form-field:has(nice-colorpicker) {
+    .mat-mdc-form-field:has(nice-colorpicker),
+    .mat-mdc-form-field:has(nice-colorpicker-toggle) {
         @include utils.emit-token-overrides($tokens, $_tokens);
     }
 }

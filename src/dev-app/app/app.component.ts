@@ -1,24 +1,31 @@
 import { JsonPipe } from "@angular/common";
-import { AfterViewInit, Component, effect, inject, signal, viewChild, ChangeDetectionStrategy } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, signal, viewChild } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { email, form, FormField, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 import { MatButton } from "@angular/material/button";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatFormField, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NiceChipListDirective } from "@recursyve/ngx-material-components/chip-list";
-import { NiceDropzone, NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig } from "@recursyve/ngx-material-components/dropzone";
-import { NiceFormFieldErrorDirective, NiceSignalFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
+import { NiceColorpicker, NiceColorpickerToggle } from "@recursyve/ngx-material-components/colorpicker";
+import {
+    NiceDropzone,
+    NiceDropzoneFileSizeConfig,
+    NiceDropzoneImageConfig
+} from "@recursyve/ngx-material-components/dropzone";
+import {
+    NiceFormFieldErrorDirective,
+    NiceSignalFormFieldErrorDirective
+} from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
+import { NiceTimepicker, NiceTimepickerToggle } from "@recursyve/ngx-material-components/timepicker";
 import {
     NiceAsyncTypeahead,
     NiceTypeahead,
     provideAsyncTypeaheadResources
 } from "@recursyve/ngx-material-components/typeahead";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
-import { NiceColorpicker } from "@recursyve/ngx-material-components/colorpicker";
-import { NiceTimepicker } from "@recursyve/ngx-material-components/timepicker";
 import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
-import { email, FormField, form, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 
 @Component({
     selector: "nice-root",
@@ -41,14 +48,15 @@ import { email, FormField, form, maxLength, minLength, required, submit, validat
         NiceChipListDirective,
         NiceChipListItems,
         NiceColorpicker,
-        NiceTimepicker
+        NiceColorpickerToggle,
+        NiceTimepicker,
+        NiceTimepickerToggle,
+        MatSuffix
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
     changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [
-        provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])
-    ]
+    providers: [provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])]
 })
 export class AppComponent implements AfterViewInit {
     private _fb = inject(FormBuilder);
@@ -99,7 +107,7 @@ export class AppComponent implements AfterViewInit {
 
     public formGroupWithErrors = this._fb.group({
         name: this._fb.control("", Validators.required),
-        count: this._fb.control(0, [Validators.required, Validators.min(1)]),
+        count: this._fb.control(0, [Validators.required, Validators.min(1)])
     });
 
     public readonly signalFormModel = signal({ name: "", email: "", color: "", time: "" });
@@ -134,13 +142,12 @@ export class AppComponent implements AfterViewInit {
         });
     }
 
-
     public ngAfterViewInit(): void {
         this.typeahead()?.setSearchOptions({ asearchOption: 20 });
     }
 
     public patchSearchOptions(): void {
-       this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
+        this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
     }
 
     public prefill(): void {

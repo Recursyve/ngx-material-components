@@ -1,0 +1,13 @@
+<button
+    mat-icon-button
+    type="button"
+    [attr.aria-label]="'Open time picker'"
+    [disabled]="isDisabled()"
+    (click)="openPicker($event)"
+>
+    @if (toggleIcon) {
+        <mat-icon [svgIcon]="toggleIcon" />
+    } @else {
+        <mat-icon>schedule</mat-icon>
+    }
+</button>

@@ -30,7 +30,8 @@ $_layout-tokens: (
 $_tokens: map.merge($_field-tokens, $_layout-tokens);
 
 @mixin overrides($tokens: ()) {
-    .mat-mdc-form-field:has(nice-timepicker) {
+    .mat-mdc-form-field:has(nice-timepicker),
+    .mat-mdc-form-field:has(nice-timepicker-toggle) {
         @include utils.emit-token-overrides($tokens, $_field-tokens);
     }
 

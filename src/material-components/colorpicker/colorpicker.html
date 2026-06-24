@@ -14,35 +14,3 @@
     (blur)="isInputFocused.set(false)"
     (focus)="isInputFocused.set(true)"
 />
-
-<button
-    #overlayOrigin="cdkOverlayOrigin"
-    cdkOverlayOrigin
-    mat-icon-button
-    class="nice-colorpicker__toggle"
-    type="button"
-    [disabled]="isDisabled()"
-    (click)="togglePicker($event)"
->
-    @if (paletteIcon) {
-        <mat-icon [svgIcon]="paletteIcon" />
-    } @else {
-        <mat-icon>palette</mat-icon>
-    }
-</button>
-
-<ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayHasBackdrop]="true"
-    [cdkConnectedOverlayOpen]="isPickerOpen()"
-    [cdkConnectedOverlayOrigin]="overlayOrigin"
-    [cdkConnectedOverlayPanelClass]="'nice-colorpicker__overlay-panel'"
-    [cdkConnectedOverlayPositions]="overlayPositions"
-    [cdkConnectedOverlayPush]="true"
-    (backdropClick)="closePicker()"
-    (detach)="closePicker()"
->
-    <div class="nice-colorpicker__panel">
-        <color-chrome [color]="pickerColor()" [disableAlpha]="true" (onChange)="onPickerChange($event)" />
-    </div>
-</ng-template>

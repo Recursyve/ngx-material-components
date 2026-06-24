@@ -5,17 +5,3 @@
     (blur)="isInputFocused.set(false)"
     (focus)="isInputFocused.set(true)"
 />
-
-<button
-    mat-icon-button
-    class="nice-timepicker__toggle"
-    type="button"
-    [disabled]="isDisabled()"
-    (click)="openPicker($event)"
->
-    @if (toggleIcon) {
-        <mat-icon [svgIcon]="toggleIcon" />
-    } @else {
-        <mat-icon>schedule</mat-icon>
-    }
-</button>
