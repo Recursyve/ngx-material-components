@@ -3,8 +3,9 @@ import { Component, computed, effect, input, signal, untracked, viewChild, ViewE
 import type { FieldTree } from "@angular/forms/signals";
 import { FormField } from "@angular/forms/signals";
 import { MatFormFieldControl } from "@angular/material/form-field";
-import { TinyColor } from "@ctrl/tinycolor";
 import { Subject } from "rxjs";
+import { normalizeNiceColor } from "./color-validation";
+import { niceColorFieldErrorState } from "./field-error-state";
 
 @Component({
     selector: "nice-colorpicker",
@@ -17,6 +18,8 @@ import { Subject } from "rxjs";
         class: "nice-colorpicker",
         "[class.nice-colorpicker--focused]": "focused",
         "[class.nice-colorpicker--empty]": "empty",
+        "[class.nice-colorpicker--invalid]": "errorState",
+        "[attr.aria-invalid]": "errorState",
         "[id]": "id"
     }
 })
@@ -42,12 +45,7 @@ export class NiceColorpicker implements MatFormFieldControl<string> {
             return null;
         }
 
-        const color = new TinyColor(value);
-        if (!color.isValid) {
-            return null;
-        }
-
-        return color.toHexString();
+        return normalizeNiceColor(value);
     });
 
     protected readonly showSwatch = computed(() => {
@@ -76,8 +74,7 @@ export class NiceColorpicker implements MatFormFieldControl<string> {
     }
 
     public get errorState(): boolean {
-        const state = this.field()();
-        return state.invalid() && state.touched();
+        return niceColorFieldErrorState(this.field()());
     }
 
     constructor() {
@@ -87,6 +84,7 @@ export class NiceColorpicker implements MatFormFieldControl<string> {
             state.disabled();
             state.invalid();
             state.touched();
+            state.dirty();
             this.isInputFocused();
 
             untracked(() => this.stateChanges.next());
@@ -112,5 +110,16 @@ export class NiceColorpicker implements MatFormFieldControl<string> {
         }
 
         this.textInput()?.nativeElement.focus();
+    }
+
+    protected onInputBlur(): void {
+        this.isInputFocused.set(false);
+
+        const state = this.field()();
+        const normalized = normalizeNiceColor(state.value() ?? "");
+
+        if (normalized) {
+            state.value.set(normalized);
+        }
     }
 }

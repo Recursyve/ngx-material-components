@@ -36,7 +36,7 @@ export class NiceSignalFormFieldErrorDirective {
                 return;
             }
 
-            if (state.valid() || !state.touched()) {
+            if (state.valid() || (!state.touched() && !state.dirty())) {
                 this.display.setError("", {});
                 return;
             }

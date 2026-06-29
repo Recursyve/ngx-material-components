@@ -13,6 +13,7 @@ const defaultTranslationKeys: NiceTimepickerConfig["translationKeys"] = {
 const defaultConfig: NiceTimepickerConfig = {
     dottedMinutesInGap: true,
     minutesGap: DEFAULT_MINUTES_GAP,
+    invalidFormatKey: "errors.timepicker.invalidFormat",
     translationKeys: defaultTranslationKeys
 };
 

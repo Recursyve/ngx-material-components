@@ -2,6 +2,6 @@
     #textInput
     class="nice-timepicker__text-input"
     [formField]="field()"
-    (blur)="isInputFocused.set(false)"
+    (blur)="onInputBlur()"
     (focus)="isInputFocused.set(true)"
 />

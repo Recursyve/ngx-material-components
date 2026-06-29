@@ -1,4 +1,11 @@
-<div class="clock-face" #clockFace>
+<div
+    class="clock-face"
+    #clockFace
+    (mousedown)="onClockFaceMouseDown($event)"
+    (mouseup)="onClockFaceMouseUp($event)"
+    (mousemove)="onClockFaceMouseMove($event)"
+    (click)="onClockFaceClick($event)"
+>
     <div class="clock-face__container">
         @if (unit() === "hour") {
             @for (option of faceTime(); track option.value) {
@@ -14,6 +21,8 @@
                         [color]="isFaceOptionHighlighted(option) ? 'primary' : undefined"
                         [style.transform]="'rotateZ(-' + option.angle + 'deg)'"
                         (click)="selectOption(option, $event)"
+                        (mousedown)="stopButtonEvent($event)"
+                        (mouseup)="stopButtonEvent($event)"
                     >
                         {{ formatOption(option) }}
                     </button>
@@ -34,6 +43,8 @@
                         [color]="isFaceOptionHighlighted(option) ? 'primary' : undefined"
                         [style.transform]="'rotateZ(-' + option.angle + 'deg)'"
                         (click)="selectOption(option, $event)"
+                        (mousedown)="stopButtonEvent($event)"
+                        (mouseup)="stopButtonEvent($event)"
                     >
                         @if (formatOption(option); as label) {
                             {{ label }}

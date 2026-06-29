@@ -295,8 +295,13 @@ body div.nice-timepicker-dialog {
             line-height: 22px;
             transition: none;
 
+            &:not(&--invisible) {
+                position: relative;
+                z-index: 3;
+            }
+
             &--invisible {
-                pointer-events: auto;
+                pointer-events: none;
             }
         }
 

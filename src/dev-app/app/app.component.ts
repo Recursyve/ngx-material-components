@@ -8,7 +8,8 @@ import { MatFormField, MatLabel, MatSuffix } from "@angular/material/form-field"
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NiceChipListDirective } from "@recursyve/ngx-material-components/chip-list";
-import { NiceColorpicker, NiceColorpickerToggle } from "@recursyve/ngx-material-components/colorpicker";
+import { niceColorFormat, NiceColorpicker, NiceColorpickerToggle } from "@recursyve/ngx-material-components/colorpicker";
+import { NICE_COMPONENTS_TRANSLATER, NiceTranslater } from "@recursyve/ngx-material-components/common";
 import {
     NiceDropzone,
     NiceDropzoneFileSizeConfig,
@@ -19,7 +20,7 @@ import {
     NiceSignalFormFieldErrorDirective
 } from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
-import { NiceTimepicker, NiceTimepickerToggle } from "@recursyve/ngx-material-components/timepicker";
+import { NiceTimepicker, NiceTimepickerToggle, niceTimeFormat } from "@recursyve/ngx-material-components/timepicker";
 import {
     NiceAsyncTypeahead,
     NiceTypeahead,
@@ -64,6 +65,7 @@ import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-
 })
 export class AppComponent implements AfterViewInit {
     private _fb = inject(FormBuilder);
+    private readonly translater = inject<NiceTranslater>(NICE_COMPONENTS_TRANSLATER);
 
     private readonly typeahead = viewChild<NiceAsyncTypeahead<NiceColors, object>>("typeahead");
 
@@ -128,6 +130,8 @@ export class AppComponent implements AfterViewInit {
         required(schemaPath.email);
         minLength(schemaPath.email, 5);
         email(schemaPath.email);
+        niceColorFormat(schemaPath.color, this.translater("errors.colorpicker.invalidFormat"));
+        niceTimeFormat(schemaPath.time, this.translater("errors.timepicker.invalidFormat"));
     });
 
     public chipListFormGroup = this._fb.group({

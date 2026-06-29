@@ -19,7 +19,9 @@ const demoMessages: Record<string, string> = {
     "errors.minlength": "Minimum length is {{value}} characters.",
     "errors.maxlength": "Maximum length is {{value}} characters.",
     "errors.email": "Invalid email address.",
-    "errors.reserved": "The username \"{{value}}\" is reserved."
+    "errors.reserved": "The username \"{{value}}\" is reserved.",
+    "errors.colorpicker.invalidFormat": "Enter a valid color (e.g. #ff0000 or red).",
+    "errors.timepicker.invalidFormat": "Enter a valid time (e.g. 2:30 PM or 14:30)."
 };
 
 function demoTranslater(key: string, params?: Record<string, string>): string {

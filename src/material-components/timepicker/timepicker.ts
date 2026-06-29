@@ -4,6 +4,8 @@ import type { FieldTree } from "@angular/forms/signals";
 import { FormField } from "@angular/forms/signals";
 import { MatFormFieldControl } from "@angular/material/form-field";
 import { Subject } from "rxjs";
+import { niceTimeFieldErrorState } from "./field-error-state";
+import { normalizeNiceTime } from "./time-format-validation";
 
 @Component({
     selector: "nice-timepicker",
@@ -16,6 +18,8 @@ import { Subject } from "rxjs";
         class: "nice-timepicker",
         "[class.nice-timepicker--focused]": "focused",
         "[class.nice-timepicker--empty]": "empty",
+        "[class.nice-timepicker--invalid]": "errorState",
+        "[attr.aria-invalid]": "errorState",
         "[id]": "id"
     }
 })
@@ -56,8 +60,7 @@ export class NiceTimepicker implements MatFormFieldControl<string> {
     }
 
     public get errorState(): boolean {
-        const state = this.field()();
-        return state.invalid() && state.touched();
+        return niceTimeFieldErrorState(this.field()());
     }
 
     constructor() {
@@ -67,6 +70,7 @@ export class NiceTimepicker implements MatFormFieldControl<string> {
             state.disabled();
             state.invalid();
             state.touched();
+            state.dirty();
             this.isInputFocused();
 
             untracked(() => this.stateChanges.next());
@@ -92,5 +96,16 @@ export class NiceTimepicker implements MatFormFieldControl<string> {
         }
 
         this.textInput()?.nativeElement.focus();
+    }
+
+    protected onInputBlur(): void {
+        this.isInputFocused.set(false);
+
+        const state = this.field()();
+        const normalized = normalizeNiceTime(state.value() ?? "");
+
+        if (normalized) {
+            state.value.set(normalized);
+        }
     }
 }

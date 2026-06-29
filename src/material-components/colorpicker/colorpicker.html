@@ -11,6 +11,6 @@
     #textInput
     class="nice-colorpicker__text-input"
     [formField]="field()"
-    (blur)="isInputFocused.set(false)"
+    (blur)="onInputBlur()"
     (focus)="isInputFocused.set(true)"
 />
