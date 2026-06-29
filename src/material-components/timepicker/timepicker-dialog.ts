@@ -46,7 +46,7 @@ export class NiceTimepickerDialog {
             return getHourFaceOptions();
         }
 
-        return getMinuteFaceOptions();
+        return getMinuteFaceOptions(this.data.minutesGap);
     });
 
     protected cancel(): void {

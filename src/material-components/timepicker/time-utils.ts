@@ -11,7 +11,8 @@ export type ClockFaceOption = {
     value: number;
 };
 
-export const DEFAULT_MINUTES_GAP = 5;
+export const DEFAULT_MINUTES_GAP = 1;
+export const DEFAULT_MINUTE_LABEL_GAP = 5;
 
 const TWELVE_HOUR_PATTERN = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i;
 const TWENTY_FOUR_HOUR_PATTERN = /^(\d{1,2}):(\d{2})$/;
@@ -84,11 +85,16 @@ export function getHourFaceOptions(): ClockFaceOption[] {
     });
 }
 
-export function getMinuteFaceOptions(): ClockFaceOption[] {
+export function getMinuteFaceOptions(minutesGap = DEFAULT_MINUTES_GAP): ClockFaceOption[] {
     const options: ClockFaceOption[] = [];
+    const angleStep = 360 / 60;
 
     for (let minute = 0; minute < 60; minute++) {
-        const angle = 6 * minute;
+        if (minute % minutesGap !== 0) {
+            continue;
+        }
+
+        const angle = angleStep * minute;
 
         options.push({
             value: minute,
@@ -101,6 +107,14 @@ export function getMinuteFaceOptions(): ClockFaceOption[] {
 
 export function isMinuteLabelVisible(minute: number, minutesGap = DEFAULT_MINUTES_GAP): boolean {
     return minute % minutesGap === 0;
+}
+
+export function getMinuteLabelGap(minutesGap: number, dottedMinutesInGap: boolean): number {
+    if (minutesGap > 1) {
+        return minutesGap;
+    }
+
+    return dottedMinutesInGap ? DEFAULT_MINUTE_LABEL_GAP : 1;
 }
 
 function isValidTwelveHourTime(hour: number, minute: number): boolean {

@@ -43,7 +43,7 @@ export class NiceTimepickerToggle {
                 titleKey: this.translationKeys.title,
                 cancelKey: this.translationKeys.cancel,
                 confirmKey: this.translationKeys.confirm,
-                minutesGap: this.config.minutesGap ?? 5,
+                minutesGap: this.config.minutesGap ?? 1,
                 dottedMinutesInGap: this.config.dottedMinutesInGap ?? true
             }
         });

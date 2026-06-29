@@ -1,11 +1,12 @@
-<div
-    class="clock-face"
-    #clockFace
-    (mousedown)="onClockFaceMouseDown($event)"
-    (mouseup)="onClockFaceMouseUp($event)"
-    (mousemove)="onClockFaceMouseMove($event)"
-    (click)="onClockFaceClick($event)"
->
+<div class="clock-face" #clockFace>
+    <mat-toolbar
+        class="clock-face__clock-hand"
+        [class.clock-face__clock-hand_minute]="unit() === 'minute'"
+        [style.transform]="'rotate(' + selectedTime().angle + 'deg)'"
+    ></mat-toolbar>
+
+    <mat-toolbar class="clock-face__center" color="primary"></mat-toolbar>
+
     <div class="clock-face__container">
         @if (unit() === "hour") {
             @for (option of faceTime(); track option.value) {
@@ -17,12 +18,10 @@
                         mat-mini-fab
                         disableRipple
                         type="button"
+                        tabindex="-1"
                         class="mat-elevation-z0 nice-timepicker-face__button"
                         [color]="isFaceOptionHighlighted(option) ? 'primary' : undefined"
                         [style.transform]="'rotateZ(-' + option.angle + 'deg)'"
-                        (click)="selectOption(option, $event)"
-                        (mousedown)="stopButtonEvent($event)"
-                        (mouseup)="stopButtonEvent($event)"
                     >
                         {{ formatOption(option) }}
                     </button>
@@ -30,48 +29,43 @@
             }
         } @else {
             @for (option of faceTime(); track option.value) {
-                <div
-                    class="clock-face__number clock-face__number--outer"
-                    [style.transform]="'rotateZ(' + option.angle + 'deg)'"
-                >
-                    <button
-                        mat-mini-fab
-                        disableRipple
-                        type="button"
-                        class="mat-elevation-z0 nice-timepicker-face__button"
-                        [class.nice-timepicker-face__button--invisible]="isInvisibleMinuteOption(option)"
-                        [color]="isFaceOptionHighlighted(option) ? 'primary' : undefined"
-                        [style.transform]="'rotateZ(-' + option.angle + 'deg)'"
-                        (click)="selectOption(option, $event)"
-                        (mousedown)="stopButtonEvent($event)"
-                        (mouseup)="stopButtonEvent($event)"
+                @if (formatOption(option); as label) {
+                    <div
+                        class="clock-face__number clock-face__number--outer clock-face__number--labeled"
+                        [style.transform]="'rotateZ(' + option.angle + 'deg)'"
                     >
-                        @if (formatOption(option); as label) {
+                        <button
+                            mat-mini-fab
+                            disableRipple
+                            type="button"
+                            tabindex="-1"
+                            class="mat-elevation-z0 nice-timepicker-face__button"
+                            [color]="isFaceOptionHighlighted(option) ? 'primary' : undefined"
+                            [style.transform]="'rotateZ(-' + option.angle + 'deg)'"
+                        >
                             {{ label }}
-                        }
-                    </button>
-                </div>
+                        </button>
+                    </div>
+                }
             }
         }
     </div>
 
-    <mat-toolbar
-        class="clock-face__clock-hand"
-        [class.clock-face__clock-hand_minute]="unit() === 'minute'"
-        [style.transform]="'rotate(' + selectedTime().angle + 'deg)'"
-    >
-        @if (unit() === "minute") {
+    @if (unit() === "minute" && showSelectionFab()) {
+        <div
+            class="clock-face__hand-fab-arm"
+            [style.transform]="'rotate(' + selectedTime().angle + 'deg)'"
+        >
             <button
                 mat-mini-fab
                 disableRipple
                 color="primary"
                 type="button"
+                tabindex="-1"
                 class="mat-elevation-z0 clock-face__clock-hand_minute-fab"
             >
                 <span class="clock-face__clock-hand_minute_dot"></span>
             </button>
-        }
-    </mat-toolbar>
-
-    <mat-toolbar class="clock-face__center" color="primary"></mat-toolbar>
+        </div>
+    }
 </div>

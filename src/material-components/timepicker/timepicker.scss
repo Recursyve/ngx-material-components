@@ -267,15 +267,12 @@ body div.nice-timepicker-dialog {
         }
 
         .clock-face__container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            margin-left: -2px;
+            display: contents;
         }
 
         .clock-face__number {
             position: absolute;
-            z-index: 2;
+            z-index: 3;
             top: calc(50% - var(--nice-timepicker-dialog-face-arm-length));
             left: calc(50% - var(--nice-timepicker-dialog-face-button-size) / 2);
             width: var(--nice-timepicker-dialog-face-button-size);
@@ -294,15 +291,7 @@ body div.nice-timepicker-dialog {
             font-size: 18px;
             line-height: 22px;
             transition: none;
-
-            &:not(&--invisible) {
-                position: relative;
-                z-index: 3;
-            }
-
-            &--invisible {
-                pointer-events: none;
-            }
+            pointer-events: none;
         }
 
         .clock-face__clock-hand {
@@ -329,7 +318,7 @@ body div.nice-timepicker-dialog {
             position: absolute;
             top: 50%;
             left: 50%;
-            z-index: 3;
+            z-index: 1;
             width: 8px;
             min-height: 0;
             height: 8px;
@@ -344,7 +333,17 @@ body div.nice-timepicker-dialog {
             }
         }
 
-        .clock-face__clock-hand_minute > button,
+        .clock-face__hand-fab-arm {
+            position: absolute;
+            top: calc(50% - var(--nice-timepicker-dialog-face-hand-length));
+            left: calc(50% - 1px);
+            z-index: 2;
+            width: 2px;
+            height: var(--nice-timepicker-dialog-face-hand-length);
+            transform-origin: 1px 100%;
+            pointer-events: none;
+        }
+
         .clock-face__clock-hand_minute-fab {
             position: absolute;
             top: var(--nice-timepicker-dialog-face-hand-fab-offset);

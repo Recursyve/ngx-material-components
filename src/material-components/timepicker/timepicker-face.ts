@@ -4,6 +4,7 @@ import {
     Component,
     computed,
     ElementRef,
+    HostListener,
     input,
     output,
     viewChild,
@@ -12,7 +13,7 @@ import {
 import { MatMiniFabButton } from "@angular/material/button";
 import { MatToolbar } from "@angular/material/toolbar";
 
-import { ClockFaceOption, DEFAULT_MINUTES_GAP, isMinuteLabelVisible } from "./time-utils";
+import { ClockFaceOption, DEFAULT_MINUTES_GAP, getMinuteLabelGap, isMinuteLabelVisible } from "./time-utils";
 
 type TimepickerFaceUnit = "hour" | "minute";
 
@@ -56,7 +57,6 @@ export class NiceTimepickerFace implements AfterViewInit {
     private readonly clockFace = viewChild.required<ElementRef<HTMLElement>>("clockFace");
 
     private isDragging = false;
-    private pointerSelectionSuppressed = false;
     private touchEndHandler?: (event: Event) => void;
     private touchStartHandler?: (event: Event) => void;
 
@@ -75,47 +75,63 @@ export class NiceTimepickerFace implements AfterViewInit {
         };
     });
 
+    protected readonly showSelectionFab = computed(() => {
+        if (this.unit() !== "minute") {
+            return false;
+        }
+
+        const labelGap = getMinuteLabelGap(this.minutesGap(), this.dottedMinutesInGap());
+
+        return !isMinuteLabelVisible(this.selectedValue(), labelGap);
+    });
+
     public ngAfterViewInit(): void {
         this.addTouchEvents();
     }
 
-    protected onClockFaceMouseDown(event: MouseEvent): void {
-        if (this.isFaceInteractiveTarget(event)) {
-            return;
-        }
-
+    @HostListener("mousedown", ["$event"])
+    protected onMouseDown(event: MouseEvent): void {
         event.preventDefault();
         this.isDragging = true;
     }
 
-    protected onClockFaceMouseUp(event: MouseEvent): void {
-        if (!this.isDragging || this.isFaceInteractiveTarget(event)) {
-            return;
-        }
-
+    @HostListener("mouseup", ["$event"])
+    protected onMouseUp(event: MouseEvent): void {
         event.preventDefault();
         this.isDragging = false;
     }
 
-    protected onClockFaceMouseMove(event: MouseEvent): void {
-        if (!this.isDragging || this.isFaceInteractiveTarget(event)) {
+    @HostListener("click", ["$event"])
+    @HostListener("mousemove", ["$event"])
+    protected onMousePointer(event: MouseEvent): void {
+        if (!this.isDragging && event.type !== "click") {
             return;
         }
 
-        this.selectTimeFromPointer(event, false);
+        this.selectTime(event.clientX, event.clientY, !this.isDragging);
     }
 
-    protected onClockFaceClick(event: MouseEvent): void {
-        if (this.isFaceInteractiveTarget(event) || this.pointerSelectionSuppressed) {
+    @HostListener("touchmove", ["$event"])
+    @HostListener("touchend", ["$event"])
+    protected onTouchPointer(event: TouchEvent): void {
+        const touch = event.changedTouches[0];
+
+        if (!touch) {
             return;
         }
 
-        this.selectTimeFromPointer(event, true);
+        if (!this.isDragging && event.type !== "touchend") {
+            return;
+        }
+
+        this.selectTime(touch.clientX, touch.clientY, !this.isDragging);
     }
 
     protected formatOption(option: ClockFaceOption): string | null {
         if (this.unit() === "minute") {
-            if (!isMinuteLabelVisible(option.value, this.minutesGap())) {
+            const labelGap = getMinuteLabelGap(this.minutesGap(), this.dottedMinutesInGap());
+
+            if (!isMinuteLabelVisible(option.value, labelGap)) {
                 return null;
             }
 
@@ -125,59 +141,29 @@ export class NiceTimepickerFace implements AfterViewInit {
         return option.value.toString();
     }
 
-    protected isInvisibleMinuteOption(option: ClockFaceOption): boolean {
-        return (
-            this.unit() === "minute" &&
-            this.dottedMinutesInGap() &&
-            !isMinuteLabelVisible(option.value, this.minutesGap())
-        );
-    }
-
     protected isFaceOptionHighlighted(option: ClockFaceOption): boolean {
+        if (option.value !== this.selectedValue()) {
+            return false;
+        }
+
         if (this.unit() === "minute") {
-            return option.value === this.selectedValue() && isMinuteLabelVisible(option.value, this.minutesGap());
+            const labelGap = getMinuteLabelGap(this.minutesGap(), this.dottedMinutesInGap());
+
+            return isMinuteLabelVisible(option.value, labelGap);
         }
 
-        return option.value === this.selectedValue();
+        return true;
     }
 
-    protected selectOption(option: ClockFaceOption, event: MouseEvent): void {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        this.isDragging = false;
-        this.pointerSelectionSuppressed = true;
-
-        const value =
-            this.unit() === "minute" && !isMinuteLabelVisible(option.value, this.minutesGap())
-                ? this.snapMinuteToGap(option.value)
-                : option.value;
-
-        this.timeChange.emit(value);
-        this.timeSelected.emit(value);
-        queueMicrotask(() => {
-            this.pointerSelectionSuppressed = false;
-        });
-    }
-
-    protected stopButtonEvent(event: Event): void {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-    }
-
-    private selectTimeFromPointer(event: MouseEvent | TouchEvent, finalizeSelection: boolean): void {
-        const pointer = this.getPointerFromEvent(event);
-
-        if (!pointer) {
-            return;
-        }
+    private selectTime(clientX: number, clientY: number, finalizeSelection: boolean): void {
         const clockFaceBounds = this.clockFace().nativeElement.getBoundingClientRect();
         const centerX = clockFaceBounds.left + clockFaceBounds.width / 2;
         const centerY = clockFaceBounds.top + clockFaceBounds.height / 2;
         const arctangent =
-            (Math.atan(Math.abs(pointer.clientX - centerX) / Math.abs(pointer.clientY - centerY)) * 180) / Math.PI;
-        const circleAngle = countAngleByCords(centerX, centerY, pointer.clientX, pointer.clientY, arctangent);
-        const angleStep = this.unit() === "minute" ? 6 : 30;
+            (Math.atan(Math.abs(clientX - centerX) / Math.abs(clientY - centerY)) * 180) / Math.PI;
+        const circleAngle = countAngleByCords(centerX, centerY, clientX, clientY, arctangent);
+        const angleStep =
+            this.unit() === "minute" ? 6 * (this.minutesGap() || 1) : 30;
         const roundedAngle = roundAngle(circleAngle, angleStep);
         const angle = roundedAngle || 360;
         const selectedTime = this.faceTime().find((time) => time.angle === angle);
@@ -186,94 +172,19 @@ export class NiceTimepickerFace implements AfterViewInit {
             return;
         }
 
-        const value =
-            this.unit() === "minute"
-                ? this.snapMinuteToGap(selectedTime.value)
-                : selectedTime.value;
-
-        this.timeChange.emit(value);
+        this.timeChange.emit(selectedTime.value);
 
         if (finalizeSelection) {
-            this.timeSelected.emit(value);
+            this.timeSelected.emit(selectedTime.value);
         }
-    }
-
-    private snapMinuteToGap(minute: number): number {
-        const gap = this.minutesGap();
-
-        if (gap <= 1) {
-            return minute;
-        }
-
-        return Math.round(minute / gap) * gap % 60;
-    }
-
-    private getPointerFromEvent(event: MouseEvent | TouchEvent): PointerPosition | null {
-        if (event instanceof MouseEvent) {
-            return { clientX: event.clientX, clientY: event.clientY };
-        }
-
-        const touch = event.changedTouches[0];
-
-        if (!touch) {
-            return null;
-        }
-
-        return { clientX: touch.clientX, clientY: touch.clientY };
-    }
-
-    private isFaceInteractiveTarget(event: Event): boolean {
-        const target = event.target;
-
-        if (!(target instanceof Element)) {
-            return false;
-        }
-
-        return (
-            target.closest(".nice-timepicker-face__button") !== null ||
-            target.closest(".clock-face__clock-hand") !== null ||
-            target.closest(".clock-face__center") !== null
-        );
     }
 
     private addTouchEvents(): void {
         const element = this.clockFace().nativeElement;
-        this.touchStartHandler = (event: Event) => {
-            if (!(event instanceof TouchEvent) || this.isFaceInteractiveTarget(event)) {
-                return;
-            }
+        this.touchStartHandler = (event: Event) => this.onMouseDown(event as MouseEvent);
+        this.touchEndHandler = (event: Event) => this.onMouseUp(event as MouseEvent);
 
-            this.isDragging = true;
-        };
-        this.touchEndHandler = (event: Event) => {
-            if (!(event instanceof TouchEvent) || this.isFaceInteractiveTarget(event)) {
-                return;
-            }
-
-            this.isDragging = false;
-
-            if (this.pointerSelectionSuppressed) {
-                return;
-            }
-
-            this.selectTimeFromPointer(event, true);
-        };
-
-        element.addEventListener("touchstart", this.touchStartHandler, { passive: true });
-        element.addEventListener("touchmove", this.onTouchMove, { passive: true });
+        element.addEventListener("touchstart", this.touchStartHandler, { passive: false });
         element.addEventListener("touchend", this.touchEndHandler);
     }
-
-    private readonly onTouchMove = (event: TouchEvent): void => {
-        if (!this.isDragging || this.isFaceInteractiveTarget(event)) {
-            return;
-        }
-
-        this.selectTimeFromPointer(event, false);
-    };
 }
-
-type PointerPosition = {
-    clientX: number;
-    clientY: number;
-};
