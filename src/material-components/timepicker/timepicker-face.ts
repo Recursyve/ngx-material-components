@@ -90,7 +90,6 @@ export class NiceTimepickerFace implements AfterViewInit {
     protected readonly optionsUnderFab = computed(() => {
         const result = new Set<number>();
 
-        console.log("TTTT");
         if (!this.showSelectionFab()) {
             return result;
         }

@@ -4,5 +4,6 @@
     "assets": [{ "glob": "**/_*.scss", "input": ".", "output": "." }],
     "lib": {
         "entryFile": "index.ts"
-    }
+    },
+    "allowedNonPeerDependencies": ["@ctrl/tinycolor", "ngx-color"]
 }
