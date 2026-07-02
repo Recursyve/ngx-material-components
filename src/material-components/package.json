@@ -6,7 +6,17 @@
         "@angular/core": "^22.0.0"
     },
     "dependencies": {
+        "@ctrl/tinycolor": "^4.1.0",
+        "ngx-color": "^10.0.0",
         "tslib": "^2.3.0"
+    },
+    "exports": {
+        "./colorpicker": {
+            "sass": "./colorpicker/_index.scss"
+        },
+        "./timepicker": {
+            "sass": "./timepicker/_index.scss"
+        }
     },
     "sideEffects": false
 }

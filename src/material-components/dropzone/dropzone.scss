@@ -21,11 +21,54 @@
             border-color: var(--nice-dropzone-border-color, var(--mat-sys-primary));
         }
 
-        .nice-dropzone-placeholder {
+        &.nice-dropzone-uploading {
+            border-style: solid;
+            border-width: var(--nice-dropzone-border-width, 1px);
+            border-color: var(
+                --nice-dropzone-uploading-border-color,
+                color-mix(in srgb, var(--mat-sys-primary) 50%, transparent)
+            );
+            cursor: default;
+            pointer-events: none;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+
+        .nice-dropzone-placeholder,
+        .nice-dropzone-uploading-content {
             display: flex;
             justify-content: center;
             place-items: center;
             gap: 32px;
+        }
+
+        .nice-dropzone-uploading-content .nice-dropzone-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+            min-width: min(100%, 370px);
+        }
+
+        .nice-dropzone-progress {
+            position: relative;
+            width: 100%;
+            height: var(--nice-dropzone-progress-height, 20px);
+            overflow: hidden;
+            border-radius: var(--nice-dropzone-shape, 8px);
+            background: var(
+                --nice-dropzone-progress-track-color,
+                color-mix(in srgb, var(--mat-sys-primary) 50%, transparent)
+            );
+        }
+
+        .nice-dropzone-progress-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: var(--nice-dropzone-progress-fill-color, var(--mat-sys-primary));
+            transition: width 0.2s ease;
         }
 
         .nice-dropzone-icon {
@@ -83,7 +126,10 @@
         }
 
         &:hover {
-            background-color: var(--nice-dropzone-hover-color, color-mix(in srgb, var(--mat-sys-primary) 20%, transparent));
+            background-color: var(
+                --nice-dropzone-hover-color,
+                color-mix(in srgb, var(--mat-sys-primary) 20%, transparent)
+            );
         }
 
         &.nice-dropzone-disabled {

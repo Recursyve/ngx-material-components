@@ -2,6 +2,7 @@ import { coerceBooleanProperty } from "@angular/cdk/coercion";
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     effect,
     ElementRef,
     forwardRef,
@@ -59,6 +60,7 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
     public readonly accept = input<string[]>();
     public readonly config = input<NiceDropzoneImageConfig>();
     public readonly maxFileSize = input<NiceDropzoneFileSizeConfig>();
+    public readonly uploadProgress = input<number | null>(null);
 
     protected readonly _elementRef = viewChild("element", { read: ElementRef });
     protected readonly _inputRef = viewChild<ElementRef<HTMLInputElement>>("fileInput");
@@ -71,6 +73,17 @@ export class NiceDropzone implements OnDestroy, ControlValueAccessor {
     protected readonly _translationKeys = inject<NiceDropzoneTranslationKeyConfig>(NICE_DROPZONE_TRANSLATION_KEYS);
 
     protected readonly files = signal<NiceSelectedFiles[]>([]);
+
+    protected readonly isUploading = computed(() => this.uploadProgress() !== null);
+
+    protected readonly normalizedUploadProgress = computed(() => {
+        const progress = this.uploadProgress();
+        if (progress === null) {
+            return 0;
+        }
+
+        return Math.min(100, Math.max(0, progress));
+    });
 
     protected _disabled = false;
 

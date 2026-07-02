@@ -1,0 +1,16 @@
+@if (showSwatch()) {
+    <span
+        class="nice-colorpicker__swatch"
+        aria-hidden="true"
+        [class.nice-colorpicker__swatch--empty]="!swatchColor()"
+        [style.--nice-colorpicker-swatch-color]="swatchColor()"
+    ></span>
+}
+
+<input
+    #textInput
+    class="nice-colorpicker__text-input"
+    [formField]="field()"
+    (blur)="onInputBlur()"
+    (focus)="isInputFocused.set(true)"
+/>

@@ -1,0 +1,387 @@
+nice-timepicker {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+.mat-mdc-form-field:has(nice-timepicker) {
+    width: var(--nice-timepicker-width, 100%);
+
+    .nice-timepicker__text-input {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        padding: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+    }
+}
+
+.mat-mdc-form-field:has(nice-timepicker-toggle) {
+    --nice-field-suffix-icon-size: var(--nice-timepicker-icon-size, 1.5rem);
+
+    .nice-timepicker-toggle {
+        color: var(--nice-timepicker-icon-color, inherit);
+
+        &[disabled] {
+            color: var(--nice-timepicker-disabled-icon-color, inherit);
+        }
+    }
+
+    &.mat-form-field-invalid .nice-timepicker-toggle {
+        color: var(--nice-timepicker-invalid-icon-color, inherit);
+    }
+}
+
+body div.nice-timepicker-dialog {
+    --nice-timepicker-dialog-actions-gap: 8px;
+    --nice-timepicker-dialog-actions-padding-block-end: 20px;
+    --nice-timepicker-dialog-actions-padding-inline: 24px;
+    --nice-timepicker-dialog-border-radius: 8px;
+    --nice-timepicker-dialog-content-gap: 36px;
+    --nice-timepicker-dialog-control-height: 80px;
+    --nice-timepicker-dialog-control-radius: 8px;
+    --nice-timepicker-dialog-control-surface: color-mix(in srgb, var(--mat-sys-primary, #6750a4) 5%, transparent);
+    --nice-timepicker-dialog-control-width: 96px;
+    --nice-timepicker-dialog-colon-width: 24px;
+    --nice-timepicker-dialog-dial-font-size: 48px;
+    --nice-timepicker-dialog-dial-line-height: 60px;
+    --nice-timepicker-dialog-dial-padding-block-end: 0;
+    --nice-timepicker-dialog-face-size: 290px;
+    --nice-timepicker-dialog-face-button-size: 48px;
+    --nice-timepicker-dialog-face-edge-offset: 26px;
+    --nice-timepicker-dialog-face-arm-length: calc(
+        var(--nice-timepicker-dialog-face-size) / 2 - var(--nice-timepicker-dialog-face-edge-offset)
+    );
+    --nice-timepicker-dialog-face-hand-length: calc(var(--nice-timepicker-dialog-face-arm-length) - 22px);
+    --nice-timepicker-dialog-face-hand-fab-offset: -22px;
+    --nice-timepicker-dialog-min-width: 328px;
+    --nice-timepicker-dialog-padding-inline: 24px;
+    --nice-timepicker-dialog-period-btn-height: 40px;
+    --nice-timepicker-dialog-period-btn-width: 52px;
+    --nice-timepicker-dialog-period-font-size: 18px;
+    --nice-timepicker-dialog-period-line-height: 22px;
+    --nice-timepicker-dialog-period-inactive-surface: color-mix(
+        in srgb,
+        var(--mat-sys-tertiary, #7d5260) 5%,
+        transparent
+    );
+    --nice-timepicker-dialog-title-gap: 12px;
+
+    mat-dialog-container,
+    .mat-mdc-dialog-surface {
+        min-width: var(--nice-timepicker-dialog-min-width);
+    }
+
+    mat-dialog-container {
+        padding-top: 0;
+        border-radius: var(--nice-timepicker-dialog-border-radius);
+    }
+
+    [mat-dialog-content] {
+        padding: 0;
+        max-height: none !important;
+        overflow: visible;
+    }
+
+    .timepicker {
+        display: flex;
+        flex-direction: column;
+    }
+
+    mat-toolbar.timepicker-header {
+        display: block;
+        width: 100%;
+        min-height: unset;
+        height: auto !important;
+        padding: 0;
+        box-shadow: none;
+        --mat-toolbar-container-background-color: transparent;
+        background: transparent;
+        color: inherit;
+
+        .timepicker-dial {
+            width: 100%;
+        }
+    }
+
+    .timepicker-dial {
+        display: flex;
+        flex-direction: column;
+        gap: var(--nice-timepicker-dialog-title-gap);
+        padding-bottom: var(--nice-timepicker-dialog-dial-padding-block-end);
+    }
+
+    .timepicker-dial__container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-inline: var(--nice-timepicker-dialog-padding-inline);
+    }
+
+    .nice-timepicker-dialog-title {
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+        padding: var(--nice-timepicker-dialog-padding-inline) var(--nice-timepicker-dialog-padding-inline) 0;
+        text-align: start;
+        font-size: 18px;
+        line-height: 22px;
+        font-weight: 400;
+    }
+
+    .timepicker-dial__time {
+        display: flex;
+        align-items: center;
+        gap: 0;
+
+        > span {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            width: var(--nice-timepicker-dialog-colon-width);
+            font-size: var(--nice-timepicker-dialog-dial-font-size);
+            line-height: var(--nice-timepicker-dialog-dial-line-height);
+        }
+    }
+
+    .timepicker-dial__control {
+        box-sizing: border-box;
+        width: var(--nice-timepicker-dialog-control-width);
+        height: var(--nice-timepicker-dialog-control-height);
+        border: 0;
+        background-color: var(--nice-timepicker-dialog-control-surface);
+        border-radius: var(--nice-timepicker-dialog-control-radius);
+        color: inherit;
+        font-size: var(--nice-timepicker-dialog-dial-font-size);
+        line-height: var(--nice-timepicker-dialog-dial-line-height);
+        cursor: pointer;
+
+        &:focus {
+            background-color: var(--nice-timepicker-dialog-control-surface);
+            outline: none;
+        }
+
+        &.active {
+            color: var(--mat-sys-primary, #6750a4);
+        }
+    }
+
+    .timepicker-dial__period {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        width: var(--nice-timepicker-dialog-period-btn-width);
+        height: var(--nice-timepicker-dialog-control-height);
+        border-radius: var(--nice-timepicker-dialog-control-radius);
+        overflow: hidden;
+        background-color: var(--nice-timepicker-dialog-period-inactive-surface);
+    }
+
+    .timepicker-period__btn {
+        box-sizing: border-box;
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        height: auto;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        opacity: 1;
+        font-size: var(--nice-timepicker-dialog-period-font-size);
+        font-weight: 400;
+        line-height: var(--nice-timepicker-dialog-period-line-height);
+        cursor: pointer;
+
+        &.active {
+            color: var(--mat-sys-primary, #6750a4);
+            background-color: var(--nice-timepicker-dialog-control-surface);
+        }
+
+        &:not(.active) {
+            color: inherit;
+            background-color: var(--nice-timepicker-dialog-period-inactive-surface);
+        }
+    }
+
+    .timepicker__main-content {
+        padding-inline: var(--nice-timepicker-dialog-padding-inline);
+        margin-top: var(--nice-timepicker-dialog-content-gap);
+    }
+
+    .timepicker__body {
+        display: flex;
+        justify-content: center;
+        padding-inline: 0;
+        padding-block: 16px;
+    }
+
+    nice-timepicker-face {
+        [mat-mini-fab] {
+            --mat-fab-small-container-color: transparent;
+            --mat-fab-small-container-shape: 50%;
+            --mat-fab-small-disabled-state-container-color: transparent;
+            --mat-fab-small-container-elevation-shadow: none;
+            --mat-fab-small-focus-container-elevation-shadow: none;
+            --mat-fab-small-hover-container-elevation-shadow: none;
+            --mat-fab-small-pressed-container-elevation-shadow: none;
+            --mat-fab-hover-state-layer-opacity: 0;
+            --mat-fab-focus-state-layer-opacity: 0;
+            --mat-fab-pressed-state-layer-opacity: 0;
+            border-radius: 50%;
+            box-shadow: none !important;
+
+            &.mat-mdc-mini-fab {
+                border-radius: 50%;
+            }
+
+            .mat-mdc-button-persistent-ripple {
+                display: none;
+            }
+
+            &.mat-mdc-mini-fab.mat-unthemed {
+                --mat-fab-small-foreground-color: inherit;
+                color: inherit;
+            }
+
+            &.mat-mdc-mini-fab.mat-primary {
+                --mat-fab-small-container-color: var(--mat-sys-primary, #6750a4);
+                --mat-fab-small-foreground-color: var(--mat-sys-on-primary, #fff);
+                box-shadow: none !important;
+            }
+        }
+
+        .clock-face {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+            width: var(--nice-timepicker-dialog-face-size, 256px);
+            height: var(--nice-timepicker-dialog-face-size, 256px);
+            border-radius: 50%;
+            background-color: var(--nice-timepicker-dialog-control-surface);
+        }
+
+        .clock-face__container {
+            display: contents;
+        }
+
+        .clock-face__number {
+            position: absolute;
+            z-index: 3;
+            top: calc(50% - var(--nice-timepicker-dialog-face-arm-length));
+            left: calc(50% - var(--nice-timepicker-dialog-face-button-size) / 2);
+            width: var(--nice-timepicker-dialog-face-button-size);
+            text-align: center;
+            transform-origin: calc(var(--nice-timepicker-dialog-face-button-size) / 2) 100%;
+            transition: none;
+
+            &--outer {
+                height: var(--nice-timepicker-dialog-face-arm-length);
+            }
+        }
+
+        .nice-timepicker-face__button {
+            width: var(--nice-timepicker-dialog-face-button-size);
+            height: var(--nice-timepicker-dialog-face-button-size);
+            font-size: 18px;
+            line-height: 22px;
+            transition: none;
+            pointer-events: none;
+            cursor: pointer;
+
+            &--under-fab {
+                color: var(--mat-sys-on-primary, #fff) !important;
+            }
+        }
+
+        .clock-face__clock-hand {
+            position: absolute;
+            top: calc(50% - var(--nice-timepicker-dialog-face-hand-length));
+            left: calc(50% - 1px);
+            z-index: 1;
+            width: 2px;
+            min-height: 0;
+            height: var(--nice-timepicker-dialog-face-hand-length);
+            padding: 0;
+            transform-origin: 1px 100%;
+            transition: none;
+            --mat-toolbar-container-background-color: var(--mat-sys-primary, #6750a4);
+            color: var(--mat-sys-on-primary, #fff);
+
+            &.mat-toolbar,
+            &.mat-mdc-toolbar {
+                min-height: 0;
+            }
+        }
+
+        .clock-face__center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 1;
+            width: 8px;
+            min-height: 0;
+            height: 8px;
+            margin: -4px;
+            padding: 0;
+            border-radius: 50%;
+            --mat-toolbar-container-background-color: var(--mat-sys-primary, #6750a4);
+
+            &.mat-toolbar,
+            &.mat-mdc-toolbar {
+                min-height: 0;
+            }
+        }
+
+        .clock-face__hand-fab-arm {
+            position: absolute;
+            top: calc(50% - var(--nice-timepicker-dialog-face-hand-length));
+            left: calc(50% - 1px);
+            z-index: 2;
+            width: 2px;
+            height: var(--nice-timepicker-dialog-face-hand-length);
+            transform-origin: 1px 100%;
+            pointer-events: none;
+        }
+
+        .clock-face__clock-hand_minute-fab {
+            position: absolute;
+            top: var(--nice-timepicker-dialog-face-hand-fab-offset);
+            left: calc(50% - var(--nice-timepicker-dialog-face-button-size) / 2);
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--nice-timepicker-dialog-face-button-size);
+            height: var(--nice-timepicker-dialog-face-button-size);
+            border-radius: 50%;
+            box-shadow: none !important;
+
+            .clock-face__clock-hand_minute_dot {
+                display: block;
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: var(--mat-sys-on-primary, #fff);
+            }
+        }
+    }
+
+    [mat-dialog-actions] {
+        display: flex;
+        padding: 0 var(--nice-timepicker-dialog-actions-padding-inline)
+            var(--nice-timepicker-dialog-actions-padding-block-end);
+        gap: var(--nice-timepicker-dialog-actions-gap);
+        justify-content: flex-end;
+
+        button {
+            font-size: 18px;
+            line-height: 22px;
+        }
+    }
+}

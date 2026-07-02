@@ -1,6 +1,6 @@
 import { Provider } from "@angular/core";
-import { NICE_DROPZONE_TRANSLATION_KEYS } from "./constant";
 import { NiceDropzoneTranslationKeyConfig } from "./config";
+import { NICE_DROPZONE_TRANSLATION_KEYS } from "./constant";
 import { NiceDropzoneOptions } from "./options";
 
 const defaultTranslationKeys: NiceDropzoneTranslationKeyConfig = {
@@ -8,7 +8,11 @@ const defaultTranslationKeys: NiceDropzoneTranslationKeyConfig = {
         file: "components.dropzone.upload.file",
         files: "components.dropzone.upload.files",
         image: "components.dropzone.upload.image",
-        images: "components.dropzone.upload.images"
+        images: "components.dropzone.upload.images",
+        uploadingFile: "components.dropzone.upload.uploading.file",
+        uploadingFiles: "components.dropzone.upload.uploading.files",
+        uploadingImage: "components.dropzone.upload.uploading.image",
+        uploadingImages: "components.dropzone.upload.uploading.images"
     },
     format: {
         label: "components.dropzone.format.label"

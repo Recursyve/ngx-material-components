@@ -8,7 +8,6 @@ import {
     computed,
     DestroyRef,
     Directive, DoCheck,
-    effect,
     ElementRef,
     inject,
     input,
@@ -47,7 +46,11 @@ import {
  * Implementation of the same panel and overlay logic as the official Angular MatSelect.
  * This used some of the logic from MatSelect to make this component look and feel like a MatSelect.
  */
-@Directive()
+@Directive({
+    host: {
+        "[attr.tabindex]": "disabled ? -1 : tabIndex"
+    }
+})
 export class NiceTypeaheadBase<T>
     implements
         MatFormFieldControl<T>,
@@ -117,6 +120,9 @@ export class NiceTypeaheadBase<T>
     public readonly ngControl = inject(NgControl, { optional: true, self: true });
 
     public readonly _panelDoneAnimatingStream = new Subject<string>();
+
+    /** Tab index of the typeahead trigger, aligned with `MatSelect`. */
+    public tabIndex = 0;
 
     public _keyManager!: ActiveDescendantKeyManager<MatOption>;
     public _preferredOverlayOrigin?: CdkOverlayOrigin | ElementRef;
@@ -199,8 +205,6 @@ export class NiceTypeaheadBase<T>
     }
 
     constructor() {
-        effect(() => this._input()?.nativeElement.focus());
-
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -258,8 +262,9 @@ export class NiceTypeaheadBase<T>
         }
 
         this.stateChanges.next();
+
         if ((event.target as Element).tagName.toLowerCase() !== "input") {
-            this.onFocusChanged(true);
+            this.open();
         }
     }
 
@@ -275,10 +280,6 @@ export class NiceTypeaheadBase<T>
     public onFocusChanged(isFocused: boolean): void {
         this.focused = isFocused;
         this.stateChanges.next();
-
-        if (isFocused) {
-            this.open();
-        }
     }
 
     public writeValue(value: T): void {
@@ -402,6 +403,17 @@ export class NiceTypeaheadBase<T>
         this._overlayDir()?.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this._positioningSettled();
+            this._focusSearchInput();
+        });
+    }
+
+    protected _focusSearchInput(): void {
+        queueMicrotask(() => {
+            const input = this._input()?.nativeElement;
+
+            if (this.panelOpen && input) {
+                input.focus({ preventScroll: true });
+            }
         });
     }
 

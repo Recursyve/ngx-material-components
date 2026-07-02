@@ -1,7 +1,9 @@
 {
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../dist/components",
+    "assets": [{ "glob": "**/_*.scss", "input": ".", "output": "." }],
     "lib": {
         "entryFile": "index.ts"
-    }
+    },
+    "allowedNonPeerDependencies": ["@ctrl/tinycolor", "ngx-color"]
 }

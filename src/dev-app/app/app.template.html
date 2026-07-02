@@ -1,17 +1,11 @@
 <div style="padding: 16px" [niceLoadingOverlay]="loading">
     <h3>MyComponents</h3>
 
-    <div
-        style="display: flex; align-items: center; gap: 16px"
-        [formGroup]="formGroup"
-    >
+    <div style="display: flex; align-items: center; gap: 16px" [formGroup]="formGroup">
         <mat-form-field appearance="outline" niceFormFieldError>
             <mat-label>My Typeahead</mat-label>
 
-            <nice-typeahead
-                formControlName="typeahead"
-                [values]="items"
-            ></nice-typeahead>
+            <nice-typeahead formControlName="typeahead" [values]="items"></nice-typeahead>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -19,7 +13,7 @@
 
             <mat-select formControlName="select">
                 @for (item of items; track item) {
-                <mat-option [value]="item">{{ item }}</mat-option>
+                    <mat-option [value]="item">{{ item }}</mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -42,26 +36,16 @@
         <mat-form-field appearance="outline" style="width: 300px">
             <mat-label>My Typeahead (with object)</mat-label>
 
-            <nice-typeahead
-                [values]="objectItems"
-                labelProperty="value"
-            ></nice-typeahead>
+            <nice-typeahead [values]="objectItems" labelProperty="value"></nice-typeahead>
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="width: 300px">
             <mat-label>My Typeahead (with custom template)</mat-label>
 
-            <nice-async-typeahead
-                resource="colors"
-                [optionTemplate]="colorTemplate"
-            >
+            <nice-async-typeahead resource="colors" [optionTemplate]="colorTemplate">
                 <ng-template #colorTemplate let-item>
                     <div style="display: flex; align-items: center; gap: 4px">
-                        <span
-                            [style.width]="'16px'"
-                            [style.height]="'16px'"
-                            [style.background-color]="item.hex"
-                        ></span>
+                        <span [style.width]="'16px'" [style.height]="'16px'" [style.background-color]="item.hex"></span>
                         <span>{{ item.name }}</span>
                     </div>
                 </ng-template>
@@ -70,38 +54,25 @@
     </div>
 
     <div>
-        <button mat-flat-button (click)="prefill()">
-            Prefill with "Red"
-        </button>
+        <button mat-flat-button (click)="prefill()">Prefill with "Red"</button>
 
         <button mat-flat-button (click)="displayResult()">View results</button>
 
-        <button mat-flat-button (click)="patchSearchOptions()">
-            Patch search options
-        </button>
+        <button mat-flat-button (click)="patchSearchOptions()">Patch search options</button>
 
-        <button mat-flat-button (click)="disableAsyncTypeahead()">
-            Disable async typeahead
-        </button>
+        <button mat-flat-button (click)="disableAsyncTypeahead()">Disable async typeahead</button>
 
-        <button mat-flat-button (click)="forceRequired()">
-            Force required
-        </button>
+        <button mat-flat-button (click)="forceRequired()">Force required</button>
     </div>
 
-    <div
-        style="display: flex; align-items: center; gap: 4px; padding-top: 16px"
-    >
+    <div style="display: flex; align-items: center; gap: 4px; padding-top: 16px">
         <span>Value:</span>
         <span>{{ typeaheadValue() | json }}</span>
     </div>
 
     <div style="padding-top: 100px"></div>
 
-    <div
-        style="display: flex; align-items: center; gap: 16px"
-        [formGroup]="formGroupWithErrors"
-    >
+    <div style="display: flex; align-items: center; gap: 16px" [formGroup]="formGroupWithErrors">
         <mat-form-field appearance="outline" niceFormFieldError>
             <mat-label>Name</mat-label>
 
@@ -115,7 +86,7 @@
         </mat-form-field>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 16px; max-width: fit-content;">
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: fit-content">
         <h4 style="padding-top: 48px">Signal forms — niceSignalFormFieldError</h4>
 
         <mat-form-field appearance="outline" niceSignalFormFieldError>
@@ -128,13 +99,29 @@
             <input matInput [formField]="signalForm.email" />
         </mat-form-field>
 
+        <mat-form-field appearance="outline" niceSignalFormFieldError>
+            <mat-label>Color</mat-label>
+            <nice-colorpicker [field]="signalForm.color" />
+            <nice-colorpicker-toggle [field]="signalForm.color" matIconSuffix />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" niceSignalFormFieldError>
+            <mat-label>Time</mat-label>
+            <nice-timepicker [field]="signalForm.time" />
+            <nice-timepicker-toggle [field]="signalForm.time" matIconSuffix />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [formField]="signalForm.date" [matDatepicker]="datePicker" />
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker" />
+            <mat-datepicker #datePicker />
+        </mat-form-field>
+
         <button mat-flat-button (click)="submitSignalForm()">Submit signal form</button>
     </div>
 
-    <div
-        style="width: 750px; padding-top: 64px"
-        [formGroup]="chipListFormGroup"
-    >
+    <div style="width: 750px; padding-top: 64px" [formGroup]="chipListFormGroup">
         <mat-form-field appearance="outline">
             <mat-label>My Typeahead</mat-label>
 
@@ -149,10 +136,7 @@
         <nice-chip-list-items #listItems />
     </div>
 
-    <div
-        style="width: 750px; padding-top: 64px"
-        [formGroup]="dropzoneFormGroup"
-    >
+    <div style="width: 750px; padding-top: 64px" [formGroup]="dropzoneFormGroup">
         <nice-dropzone
             formControlName="dropzone"
             mode="file"
@@ -163,9 +147,7 @@
     </div>
 
     <div style="padding-top: 32px; display: flex; gap: 16px">
-        <button mat-flat-button (click)="disableDropzone()">
-            Disable dropzone
-        </button>
+        <button mat-flat-button (click)="disableDropzone()">Disable dropzone</button>
 
         <div>{{ $safeNavigationMigration(dropzoneFormGroup.get("dropzone")?.value) | json }}</div>
     </div>

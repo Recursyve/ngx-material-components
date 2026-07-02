@@ -1,14 +1,26 @@
 import { JsonPipe } from "@angular/common";
-import { AfterViewInit, Component, effect, inject, signal, viewChild, ChangeDetectionStrategy } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, signal, viewChild } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { email, form, FormField, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 import { MatButton } from "@angular/material/button";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from "@angular/material/datepicker";
+import { MatFormField, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NiceChipListDirective } from "@recursyve/ngx-material-components/chip-list";
-import { NiceDropzone, NiceDropzoneFileSizeConfig, NiceDropzoneImageConfig } from "@recursyve/ngx-material-components/dropzone";
-import { NiceFormFieldErrorDirective, NiceSignalFormFieldErrorDirective } from "@recursyve/ngx-material-components/form-field-error";
+import { niceColorFormat, NiceColorpicker, NiceColorpickerToggle } from "@recursyve/ngx-material-components/colorpicker";
+import { NICE_COMPONENTS_TRANSLATER, NiceTranslater } from "@recursyve/ngx-material-components/common";
+import {
+    NiceDropzone,
+    NiceDropzoneFileSizeConfig,
+    NiceDropzoneImageConfig
+} from "@recursyve/ngx-material-components/dropzone";
+import {
+    NiceFormFieldErrorDirective,
+    NiceSignalFormFieldErrorDirective
+} from "@recursyve/ngx-material-components/form-field-error";
 import { NiceLoadingDirective } from "@recursyve/ngx-material-components/loading";
+import { NiceTimepicker, NiceTimepickerToggle, niceTimeFormat } from "@recursyve/ngx-material-components/timepicker";
 import {
     NiceAsyncTypeahead,
     NiceTypeahead,
@@ -16,7 +28,6 @@ import {
 } from "@recursyve/ngx-material-components/typeahead";
 import { NiceChipListItems } from "../../material-components/chip-list/items/chip-list-items";
 import { ColorsTypeaheadResourceProvider, NiceColors } from "./providers/colors-typeahead-resource.provider";
-import { email, FormField, form, maxLength, minLength, required, submit, validate } from "@angular/forms/signals";
 
 @Component({
     selector: "nice-root",
@@ -37,17 +48,24 @@ import { email, FormField, form, maxLength, minLength, required, submit, validat
         FormField,
         MatInput,
         NiceChipListDirective,
-        NiceChipListItems
+        NiceChipListItems,
+        NiceColorpicker,
+        NiceColorpickerToggle,
+        NiceTimepicker,
+        NiceTimepickerToggle,
+        MatSuffix,
+        MatDatepicker,
+        MatDatepickerInput,
+        MatDatepickerToggle
     ],
     templateUrl: "./app.template.html",
     styleUrl: "./app.style.scss",
     changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [
-        provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])
-    ]
+    providers: [provideAsyncTypeaheadResources([ColorsTypeaheadResourceProvider])]
 })
 export class AppComponent implements AfterViewInit {
     private _fb = inject(FormBuilder);
+    private readonly translater = inject<NiceTranslater>(NICE_COMPONENTS_TRANSLATER);
 
     private readonly typeahead = viewChild<NiceAsyncTypeahead<NiceColors, object>>("typeahead");
 
@@ -95,10 +113,10 @@ export class AppComponent implements AfterViewInit {
 
     public formGroupWithErrors = this._fb.group({
         name: this._fb.control("", Validators.required),
-        count: this._fb.control(0, [Validators.required, Validators.min(1)]),
+        count: this._fb.control(0, [Validators.required, Validators.min(1)])
     });
 
-    public readonly signalFormModel = signal({ name: "", email: "" });
+    public readonly signalFormModel = signal({ name: "", email: "", color: "", time: "", date: new Date() });
     public readonly signalForm = form(this.signalFormModel, (schemaPath) => {
         required(schemaPath.name);
         maxLength(schemaPath.name, 10);
@@ -112,6 +130,8 @@ export class AppComponent implements AfterViewInit {
         required(schemaPath.email);
         minLength(schemaPath.email, 5);
         email(schemaPath.email);
+        niceColorFormat(schemaPath.color, this.translater("errors.colorpicker.invalidFormat"));
+        niceTimeFormat(schemaPath.time, this.translater("errors.timepicker.invalidFormat"));
     });
 
     public chipListFormGroup = this._fb.group({
@@ -130,13 +150,12 @@ export class AppComponent implements AfterViewInit {
         });
     }
 
-
     public ngAfterViewInit(): void {
         this.typeahead()?.setSearchOptions({ asearchOption: 20 });
     }
 
     public patchSearchOptions(): void {
-       this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
+        this.typeahead()?.patchSearchOptions({ anotherSearchOption: "Fuchsia" });
     }
 
     public prefill(): void {
