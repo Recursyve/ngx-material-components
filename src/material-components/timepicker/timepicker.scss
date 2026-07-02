@@ -292,6 +292,11 @@ body div.nice-timepicker-dialog {
             line-height: 22px;
             transition: none;
             pointer-events: none;
+            cursor: pointer;
+
+            &--under-fab {
+                color: var(--mat-sys-on-primary, #fff) !important;
+            }
         }
 
         .clock-face__clock-hand {

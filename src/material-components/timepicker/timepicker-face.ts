@@ -85,6 +85,31 @@ export class NiceTimepickerFace implements AfterViewInit {
         return !isMinuteLabelVisible(this.selectedValue(), labelGap);
     });
 
+    private static readonly FAB_OVERLAP_THRESHOLD_DEG = 13;
+
+    protected readonly optionsUnderFab = computed(() => {
+        const result = new Set<number>();
+
+        console.log("TTTT");
+        if (!this.showSelectionFab()) {
+            return result;
+        }
+
+        const fabAngle = this.selectedTime().angle;
+
+        for (const option of this.faceTime()) {
+            let diff = Math.abs(fabAngle - option.angle);
+            if (diff > 180) {
+                diff = 360 - diff;
+            }
+            if (diff <= NiceTimepickerFace.FAB_OVERLAP_THRESHOLD_DEG) {
+                result.add(option.value);
+            }
+        }
+
+        return result;
+    });
+
     public ngAfterViewInit(): void {
         this.addTouchEvents();
     }

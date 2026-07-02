@@ -40,6 +40,7 @@
                             type="button"
                             tabindex="-1"
                             class="mat-elevation-z0 nice-timepicker-face__button"
+                            [class.nice-timepicker-face__button--under-fab]="optionsUnderFab().has(option.value)"
                             [color]="isFaceOptionHighlighted(option) ? 'primary' : undefined"
                             [style.transform]="'rotateZ(-' + option.angle + 'deg)'"
                         >
