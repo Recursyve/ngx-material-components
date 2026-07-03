@@ -20,9 +20,13 @@
     <div class="nice-typeahead-suffix">
         @if (_empty()) {
             <div class="mat-mdc-select-arrow">
-                <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true">
-                    <path d="M7 10l5 5 5-5z"></path>
-                </svg>
+                @if (arrowIcon) {
+                    <mat-icon [svgIcon]="arrowIcon" />
+                } @else {
+                    <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true">
+                        <path d="M7 10l5 5 5-5z"></path>
+                    </svg>
+                }
             </div>
         } @else if (canRemoveValue()) {
             <button
@@ -32,9 +36,13 @@
                 tabindex="-1"
                 (click)="$event.stopPropagation(); removeActiveValue()"
             >
-                <svg viewBox="0 -960 960 960">
-                    <path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/>
-                </svg>
+                @if (removeIcon) {
+                    <mat-icon [svgIcon]="removeIcon" />
+                } @else {
+                    <svg viewBox="0 -960 960 960">
+                        <path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/>
+                    </svg>
+                }
             </button>
         }
     </div>
@@ -71,7 +79,11 @@
                     [formControl]="_searchControl"
                 >
 
-                <nice-typeahead-search-icon matIconPrefix />
+                @if (searchIcon) {
+                    <mat-icon matIconPrefix class="nice-typeahead-search-prefix" [svgIcon]="searchIcon" />
+                } @else {
+                    <nice-typeahead-search-icon matIconPrefix />
+                }
             </mat-form-field>
         </div>
 

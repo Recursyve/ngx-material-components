@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
 import { MatOption } from "@angular/material/core";
 import { MatFormField, MatFormFieldControl, MatPrefix } from "@angular/material/form-field";
+import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
 import { NiceTypeaheadBase } from "./typeahead-base";
@@ -22,6 +23,7 @@ export type SearchFunction<T> = (search: string, item: T) => boolean;
         MatInput,
         MatIconButton,
         MatPrefix,
+        MatIcon,
         NgClass,
         NgTemplateOutlet,
         NiceTypeaheadSearchIcon
