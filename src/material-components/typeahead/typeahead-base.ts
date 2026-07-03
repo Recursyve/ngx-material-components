@@ -29,6 +29,8 @@ import {
     MatOptionSelectionChange
 } from "@angular/material/core";
 import { MAT_FORM_FIELD, MatFormField, MatFormFieldControl } from "@angular/material/form-field";
+import { NICE_TYPEAHEAD_CONFIG } from "./constants";
+import { NiceTypeaheadConfig } from "./config";
 import {
     debounceTime,
     defer,
@@ -100,6 +102,12 @@ export class NiceTypeaheadBase<T>
     protected readonly _initialized = new Subject<void>();
 
     protected readonly _parentFormField = inject<MatFormField>(MAT_FORM_FIELD, { optional: true });
+
+    private readonly _config = inject<NiceTypeaheadConfig>(NICE_TYPEAHEAD_CONFIG, { optional: true });
+
+    protected readonly arrowIcon = this._config?.arrowIcon;
+    protected readonly removeIcon = this._config?.removeIcon;
+    protected readonly searchIcon = this._config?.searchIcon;
 
     public readonly id: string = `nice-typeahead-${NiceTypeaheadBase.nextId++}`;
     public readonly controlType: string = "nice-typeahead";
