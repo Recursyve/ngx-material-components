@@ -41,7 +41,7 @@ export class NiceSignalFormFieldErrorDirective {
                 return;
             }
 
-            for (const error of this.resolveErrors(state.errors())) {
+            for (const error of (state.errors())) {
                 const resolved = resolveSignalFormError(error, this.signalTransformers);
 
                 if (resolved.direct) {
@@ -70,16 +70,18 @@ export class NiceSignalFormFieldErrorDirective {
             return ngControl.field();
         }
 
+        const control = this.formField._control as { field?: () => Field<unknown> } | null;
+        if (control?.field) {
+            const field = control.field();
+            if (field) {
+                return field();
+            }
+        }
+
         return null;
     }
 
     private resolveErrors(stateErrors: ReturnType<ReturnType<Field<unknown>>["errors"]>) {
-        const formFieldDirective = this.formFieldDirective();
-        if (formFieldDirective) {
-            const directiveErrors = formFieldDirective.errors();
-            return directiveErrors.length > 0 ? directiveErrors : stateErrors;
-        }
-
         return stateErrors;
     }
 }
