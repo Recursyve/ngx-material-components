@@ -76,7 +76,8 @@ export class NiceSignalFormFieldErrorDirective {
     private resolveErrors(stateErrors: ReturnType<ReturnType<Field<unknown>>["errors"]>) {
         const formFieldDirective = this.formFieldDirective();
         if (formFieldDirective) {
-            return formFieldDirective.errors();
+            const directiveErrors = formFieldDirective.errors();
+            return directiveErrors.length > 0 ? directiveErrors : stateErrors;
         }
 
         return stateErrors;
