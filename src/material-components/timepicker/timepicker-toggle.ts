@@ -53,7 +53,9 @@ export class NiceTimepickerToggle {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((time) => {
                 if (time !== undefined) {
-                    this.field()().value.set(time);
+                    const state = this.field()();
+                    state.value.set(time);
+                    state.markAsTouched({ skipDescendants: true });
                 }
             });
     }
