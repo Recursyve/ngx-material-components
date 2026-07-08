@@ -41,7 +41,7 @@ export class NiceSignalFormFieldErrorDirective {
                 return;
             }
 
-            for (const error of (state.errors())) {
+            for (const error of state.errors()) {
                 const resolved = resolveSignalFormError(error, this.signalTransformers);
 
                 if (resolved.direct) {
@@ -79,9 +79,5 @@ export class NiceSignalFormFieldErrorDirective {
         }
 
         return null;
-    }
-
-    private resolveErrors(stateErrors: ReturnType<ReturnType<Field<unknown>>["errors"]>) {
-        return stateErrors;
     }
 }
