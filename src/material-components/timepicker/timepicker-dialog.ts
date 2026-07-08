@@ -6,6 +6,7 @@ import { NiceTranslatePipe } from "@recursyve/ngx-material-components/common";
 
 import type { ClockFaceOption, ParsedTime, TimePeriod } from "./time-utils";
 import { formatTime, getHourFaceOptions, getMinuteFaceOptions, resolveTime } from "./time-utils";
+import { NICE_TIMEPICKER_CONFIG } from "./constant";
 import { NiceTimepickerFace } from "./timepicker-face";
 
 export type NiceTimepickerDialogData = {
@@ -27,10 +28,11 @@ type ActiveUnit = "hour" | "minute";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NiceTimepickerDialog {
+    private readonly config = inject(NICE_TIMEPICKER_CONFIG);
     private readonly dialogRef = inject(MatDialogRef<NiceTimepickerDialog, string | undefined>);
     protected readonly data = inject<NiceTimepickerDialogData>(MAT_DIALOG_DATA);
 
-    private readonly parsedTime = resolveTime(this.data.time);
+    private readonly parsedTime = resolveTime(this.data.time, this.config.defaultTime);
 
     protected readonly activeUnit = signal<ActiveUnit>("hour");
     protected readonly hour = signal(this.parsedTime.hour);
