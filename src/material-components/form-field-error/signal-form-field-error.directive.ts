@@ -82,7 +82,7 @@ export class NiceSignalFormFieldErrorDirective {
             return;
         }
 
-        if (state.valid() || (!state.touched() && !state.dirty())) {
+        if (state.valid() || !state.touched()) {
             this.display.setError("", {});
             return;
         }

@@ -9,7 +9,7 @@ export function hasNiceTimeFormatError(value: string | null | undefined): boolea
 }
 
 export function niceTimeFieldErrorState(state: FieldState<string>): boolean {
-    if (!state.touched() && !state.dirty()) {
+    if (!state.touched()) {
         return false;
     }
 
