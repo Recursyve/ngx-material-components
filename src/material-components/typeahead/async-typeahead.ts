@@ -23,6 +23,7 @@ import {
     MatFormFieldControl,
     MatPrefix
 } from "@angular/material/form-field";
+import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { Observable } from "rxjs";
 import { NiceTypeaheadSearchIcon } from "./icons/search/typeahead-search-icon";
@@ -40,6 +41,7 @@ import { NiceTypeaheadBase } from "./typeahead-base";
         MatInput,
         MatIconButton,
         MatPrefix,
+        MatIcon,
         NgClass,
         NgTemplateOutlet,
         NiceTypeaheadSearchIcon

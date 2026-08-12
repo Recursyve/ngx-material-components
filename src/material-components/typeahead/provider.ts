@@ -1,6 +1,20 @@
 import { Provider, Type } from "@angular/core";
-import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER } from "./constants";
+import { NiceTypeaheadConfig } from "./config";
+import { NICE_ASYNC_TYPEAHEAD_RESOURCES_PROVIDER, NICE_TYPEAHEAD_CONFIG } from "./constants";
 import { NiceAsyncTypeaheadResourceProvider } from "./providers/async-typeahead.provider";
+
+export type NiceTypeaheadOptions = {
+    config?: NiceTypeaheadConfig;
+};
+
+export function provideTypeahead(options?: NiceTypeaheadOptions): Provider[] {
+    return [
+        {
+            provide: NICE_TYPEAHEAD_CONFIG,
+            useValue: options?.config ?? {}
+        }
+    ];
+}
 
 export function provideAsyncTypeaheadResources(
     providers: Type<NiceAsyncTypeaheadResourceProvider<unknown, unknown>>[]

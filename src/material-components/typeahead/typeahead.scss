@@ -44,6 +44,13 @@ nice-typeahead, nice-async-typeahead {
 
         --mdc-icon-button-state-layer-size: 24px;
 
+        .mat-mdc-select-arrow mat-icon,
+        .nice-typeahead-remove mat-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 24px;
+        }
+
         .nice-typeahead-remove {
             margin-right: -6px;
         }
@@ -128,11 +135,13 @@ div.nice-typeahead-panel {
     position: static;
     background-color: var(--mat-select-panel-background-color, var(--mat-app-surface-container));
 
-    nice-typeahead-search-icon {
+    nice-typeahead-search-icon,
+    .nice-typeahead-search-prefix {
         width: 16px;
         height: 16px;
         margin-right: 8px;
         margin-left: 16px;
+        font-size: 16px;
 
         svg {
             width: 16px;
