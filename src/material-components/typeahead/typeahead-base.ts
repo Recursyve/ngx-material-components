@@ -105,9 +105,9 @@ export class NiceTypeaheadBase<T>
 
     private readonly _config = inject<NiceTypeaheadConfig>(NICE_TYPEAHEAD_CONFIG, { optional: true });
 
-    protected readonly arrowIcon = this._config?.arrowIcon;
-    protected readonly removeIcon = this._config?.removeIcon;
-    protected readonly searchIcon = this._config?.searchIcon;
+    protected readonly arrowIcon = this._config?.icons?.arrow;
+    protected readonly removeIcon = this._config?.icons?.remove;
+    protected readonly searchIcon = this._config?.icons?.search;
 
     public readonly id: string = `nice-typeahead-${NiceTypeaheadBase.nextId++}`;
     public readonly controlType: string = "nice-typeahead";
