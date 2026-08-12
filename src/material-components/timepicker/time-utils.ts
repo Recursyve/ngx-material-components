@@ -58,7 +58,24 @@ export function formatTime(time: ParsedTime): string {
     return `${time.hour}:${pad(time.minute)} ${time.period}`;
 }
 
-export function getDefaultTime(): ParsedTime {
+const DEFAULT_TIME_ALIASES: Record<string, ParsedTime> = {
+    midnight: { hour: 12, minute: 0, period: "AM" },
+    noon: { hour: 12, minute: 0, period: "PM" }
+};
+
+export function getDefaultTime(defaultTime?: string): ParsedTime {
+    if (defaultTime) {
+        const alias = DEFAULT_TIME_ALIASES[defaultTime.toLowerCase()];
+        if (alias) {
+            return alias;
+        }
+
+        const configured = parseTime(defaultTime);
+        if (configured) {
+            return configured;
+        }
+    }
+
     const now = new Date();
     const hour24 = now.getHours();
 
@@ -69,8 +86,8 @@ export function getDefaultTime(): ParsedTime {
     };
 }
 
-export function resolveTime(value: string | null | undefined): ParsedTime {
-    return parseTime(value) ?? getDefaultTime();
+export function resolveTime(value: string | null | undefined, defaultTime?: string): ParsedTime {
+    return parseTime(value) ?? getDefaultTime(defaultTime);
 }
 
 export function getHourFaceOptions(): ClockFaceOption[] {
