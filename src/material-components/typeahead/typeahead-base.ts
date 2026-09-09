@@ -193,7 +193,7 @@ export class NiceTypeaheadBase<T>
     }
 
     public get shouldLabelFloat(): boolean {
-        return this.focused || !this.empty;
+        return this.panelOpen || this.focused || !this.empty;
     }
 
     public get errorState(): boolean {
@@ -271,7 +271,12 @@ export class NiceTypeaheadBase<T>
 
         this.stateChanges.next();
 
-        if ((event.target as Element).tagName.toLowerCase() !== "input") {
+        const target = event.target as Element | null;
+        if (target?.closest(".nice-typeahead-remove")) {
+            return;
+        }
+
+        if (target?.tagName.toLowerCase() !== "input") {
             this.open();
         }
     }
@@ -339,8 +344,11 @@ export class NiceTypeaheadBase<T>
     public removeActiveValue(): void {
         this.value = null;
         this._selectionModel.clear();
-        this._keyManager.setActiveItem(-1);
+        this._keyManager?.setActiveItem(-1);
+        this._focused = false;
+        this._elementRef.nativeElement.blur();
         this._changeDetectorRef.markForCheck();
+        this.stateChanges.next();
     }
 
     public updateErrorState(): void {
@@ -664,6 +672,7 @@ export class NiceTypeaheadBase<T>
             }
 
             this._value.set(newValue);
+            this.stateChanges.next();
             return true;
         }
         return false;
