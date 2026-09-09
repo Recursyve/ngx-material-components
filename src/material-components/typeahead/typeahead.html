@@ -34,7 +34,8 @@
                 type="button"
                 mat-icon-button
                 tabindex="-1"
-                (click)="$event.stopPropagation(); removeActiveValue()"
+                (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+                (click)="$event.stopPropagation(); $event.preventDefault(); removeActiveValue()"
             >
                 @if (removeIcon) {
                     <mat-icon [svgIcon]="removeIcon" />
